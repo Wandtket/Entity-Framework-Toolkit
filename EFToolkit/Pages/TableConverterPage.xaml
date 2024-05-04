@@ -6,7 +6,8 @@
     xmlns:local="using:EFToolkit.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:EFToolkit="using:EFToolkit"
     mc:Ignorable="d">
 
     <Grid>
@@ -69,14 +70,14 @@
                            AutoGenerateColumns="False"
                            CanUserReorderColumns="False"
                            CanUserResizeColumns="True"
-                           AlternatingRowBackground="{ThemeResource BoxColor}"
+                           GridLinesVisibility="Horizontal"
                            Grid.Column="0" Grid.Row="0"                           
                            BorderBrush="{ThemeResource BoxColor}"
                            BorderThickness="2"
                            KeyUp="DesignerGrid_KeyUp">
 
                 <controls:DataGrid.DataContext>
-                    <local:DesignItem/>
+                    <EFToolkit:DesignItem/>
                 </controls:DataGrid.DataContext>
 
                 <controls:DataGrid.KeyboardAccelerators>
