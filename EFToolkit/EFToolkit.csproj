@@ -19,6 +19,7 @@
     <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="Pages\TableConverterPage.xaml" />
     <None Remove="Properties\NativeMethods.txt" />
+    <None Remove="Resources\Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="Properties\NativeMethods.txt" />
@@ -83,6 +84,7 @@
     <Content Include="Resources\Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Resources\Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Resources\Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Resources\Images\logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -135,7 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\Dialogs\" />
-    <Folder Include="Resources\Images\" />
   </ItemGroup>
 
   <!-- 
