@@ -29,7 +29,12 @@
                     SelectedItem="{Binding ElementName=TableConverterViewItem}">
 
             <NavigationView.Header>
-                <TextBlock Margin="-40,-35,0,0" FontSize="22" Text="{Binding ElementName=MainView, Path=SelectedItem.Content}"   />
+                <StackPanel Orientation="Horizontal" Margin="-50,-35,0,0">
+                    <Image Source="\Resources\Images\logo.png" Height="30" VerticalAlignment="Top" 
+                           Margin="5,0,5,5"/>
+                    <TextBlock FontSize="22" Text="{Binding ElementName=MainView, Path=SelectedItem.Content}" 
+                               Margin="10,-1,0,0"   />
+                </StackPanel>
             </NavigationView.Header>
             
             <NavigationView.MenuItems>
