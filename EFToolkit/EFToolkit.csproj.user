@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Source>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</Source>
+    <SmallTileSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</SmallTileSource>
+    <MediumTileSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</MediumTileSource>
+    <WideTileSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</WideTileSource>
+    <LargeTileSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</LargeTileSource>
+    <AppIconSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</AppIconSource>
+    <SplashScreenSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</SplashScreenSource>
+    <PackageLogoSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</PackageLogoSource>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="App.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </None>
+    <Page Update="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ModelFixerPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\TableConverterPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

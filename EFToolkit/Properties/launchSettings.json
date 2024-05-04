@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "EFToolkit (Package)": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": true,
+      "remoteDebugEnabled": false,
+      "authenticationMode": "Windows"
+    },
+    "EFToolkit (Unpackaged)": {
+      "commandName": "Project",
+      "nativeDebugging": true,
+      "remoteDebugEnabled": false,
+      "authenticationMode": "Windows"
+    }
+  }
+}
