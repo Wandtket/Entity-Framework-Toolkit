@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|c:\\users\\wandt\\source\\repos\\eftoolkit\\eftoolkit\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|solutionrelative:eftoolkit\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|c:\\users\\wandt\\source\\repos\\eftoolkit\\eftoolkit\\pages\\tableconverterpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|solutionrelative:eftoolkit\\pages\\tableconverterpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|c:\\users\\wandt\\source\\repos\\eftoolkit\\eftoolkit\\package.appxmanifest||{4D47164B-07B6-4A52-A855-728D6A2E2AA3}",
       "RelativeMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|solutionrelative:eftoolkit\\package.appxmanifest||{4D47164B-07B6-4A52-A855-728D6A2E2AA3}"
     },
@@ -21,14 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|c:\\users\\wandt\\source\\repos\\eftoolkit\\eftoolkit\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|solutionrelative:eftoolkit\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|c:\\users\\wandt\\source\\repos\\eftoolkit\\eftoolkit\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|solutionrelative:eftoolkit\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|c:\\users\\wandt\\source\\repos\\eftoolkit\\eftoolkit\\pages\\tableconverterpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|solutionrelative:eftoolkit\\pages\\tableconverterpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{10316FF9-2603-4616-8248-1CBF6215C519}|EFToolkit\\EFToolkit.csproj|c:\\users\\wandt\\source\\repos\\eftoolkit\\eftoolkit\\pages\\tableconverterpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -58,7 +58,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 16,
           "Children": [
             {
               "$type": "Bookmark",
@@ -82,7 +82,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Package.appxmanifest",
               "DocumentMoniker": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\Package.appxmanifest",
               "RelativeDocumentMoniker": "EFToolkit\\Package.appxmanifest",
@@ -94,7 +94,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "EFToolkit\\Properties\\launchSettings.json",
@@ -102,8 +102,19 @@
               "RelativeToolTip": "EFToolkit\\Properties\\launchSettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-05-04T16:27:47.906Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-04T16:27:47.906Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EFToolkit.csproj",
+              "DocumentMoniker": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\EFToolkit.csproj",
+              "RelativeDocumentMoniker": "EFToolkit\\EFToolkit.csproj",
+              "ToolTip": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\EFToolkit.csproj",
+              "RelativeToolTip": "EFToolkit\\EFToolkit.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-05-04T16:26:21.263Z"
             },
             {
               "$type": "Document",
@@ -113,26 +124,12 @@
               "RelativeDocumentMoniker": "EFToolkit\\EFToolkit.csproj",
               "ToolTip": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\EFToolkit.csproj",
               "RelativeToolTip": "EFToolkit\\EFToolkit.csproj",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-05-04T16:26:21.263Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-04T16:26:02.511Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "EFToolkit",
-              "DocumentMoniker": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\EFToolkit.csproj",
-              "RelativeDocumentMoniker": "EFToolkit\\EFToolkit.csproj",
-              "ToolTip": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\EFToolkit.csproj",
-              "RelativeToolTip": "EFToolkit\\EFToolkit.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-05-04T16:26:02.511Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "TableConverterPage.g.cs",
               "DocumentMoniker": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\obj\\x64\\Debug\\net8.0-windows10.0.22621\\Pages\\TableConverterPage.g.cs",
               "RelativeDocumentMoniker": "EFToolkit\\obj\\x64\\Debug\\net8.0-windows10.0.22621\\Pages\\TableConverterPage.g.cs",
@@ -140,8 +137,7 @@
               "RelativeToolTip": "EFToolkit\\obj\\x64\\Debug\\net8.0-windows10.0.22621\\Pages\\TableConverterPage.g.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-03T21:21:13.948Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-05-03T21:21:13.948Z"
             },
             {
               "$type": "Document",
@@ -205,25 +201,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "TableConverterPage.xaml",
               "DocumentMoniker": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\Pages\\TableConverterPage.xaml",
               "RelativeDocumentMoniker": "EFToolkit\\Pages\\TableConverterPage.xaml",
               "ToolTip": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\Pages\\TableConverterPage.xaml",
               "RelativeToolTip": "EFToolkit\\Pages\\TableConverterPage.xaml",
-              "ViewState": "AQIAAGsAAAAAAAAAAAAGwHkAAAAAAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-05-03T18:40:00.842Z"
+              "WhenOpened": "2024-05-03T18:40:00.842Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\MainWindow.xaml",
               "RelativeDocumentMoniker": "EFToolkit\\MainWindow.xaml",
               "ToolTip": "C:\\Users\\wandt\\source\\repos\\EFToolkit\\EFToolkit\\MainWindow.xaml",
               "RelativeToolTip": "EFToolkit\\MainWindow.xaml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAIAAAA",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAABcAAAAhAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2024-05-03T18:32:34.981Z",
               "EditorCaption": ""
