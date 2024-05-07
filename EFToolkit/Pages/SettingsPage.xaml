@@ -6,9 +6,40 @@
     xmlns:local="using:EFToolkit.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
+    
+    
+    <StackPanel>
 
-    <Grid>
+        <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
+            <controls:HeaderedContentControl.Header>
+                <TextBlock Text="SQL Table Converter" FontSize="14" Opacity=".6" Margin="5"/>
+            </controls:HeaderedContentControl.Header>
+            
+            <StackPanel Spacing="3">
 
-    </Grid>
+                <controls:SettingsCard Description="Choose the starting directory the save file dialog will open to."
+                    Header="Project Directory"                               
+                    IsEnabled="True">
+
+                    <Button Content="Choose Directory"/>
+                </controls:SettingsCard>
+
+                <controls:SettingsCard Description="Choose whether the output should use the standard INotifyPropertyChanged format or MVVM Observable Objects."
+                               Header="Data Transfer Object (DTO) Output"                               
+                               IsEnabled="True">
+
+                    <ComboBox SelectedIndex="0" Width="200">
+                        <x:String>INotifyPropertyChanged</x:String>
+                        <x:String>MVVM</x:String>
+                    </ComboBox>
+                </controls:SettingsCard>
+
+            </StackPanel>
+        </controls:HeaderedContentControl>
+
+
+
+    </StackPanel>
 </Page>
