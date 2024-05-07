@@ -53,9 +53,6 @@
                 <AppBarSeparator />
             </CommandBar.PrimaryCommands>
 
-            <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Export to file"/>
-            </CommandBar.SecondaryCommands>
             
         </CommandBar>
 
@@ -117,8 +114,9 @@
 
             <CommandBar DefaultLabelPosition="Right" Grid.Row="1">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton Label="Copy" Icon="Copy" Click="CopyOutput_Click"/>
                     <AppBarButton Label="Clear" Icon="ClearSelection" Click="ClearOutput_Click"/>
+                    <AppBarButton Label="Copy" Icon="Copy" Click="CopyOutput_Click"/>
+                    <AppBarButton Label="Export to file" Icon="Save" Click="Export_Click"/>
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
