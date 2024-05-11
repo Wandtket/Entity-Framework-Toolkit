@@ -14,12 +14,14 @@ namespace EFToolkit
     public static class Toolkit
     {
 
+        #region Table Converter
+
         /// <summary>
         /// Converts a SQL Designer Table to C# Entity Framework Model
         /// </summary>
         /// <param name="DesignItems"></param>
         /// <returns></returns>
-        public static string ConvertToModel(IList<DesignItem> DesignItems, string TableName)
+        public static string ConvertTableToModel(IList<DesignItem> DesignItems, string TableName)
         {
             string Objects = "";
             foreach (DesignItem Item in DesignItems)
@@ -55,7 +57,7 @@ namespace EFToolkit
         /// </summary>
         /// <param name="DesignItems"></param>
         /// <returns></returns>
-        public static string ConvertToConfiguration(ObservableCollection<DesignItem> DesignItems)
+        public static string ConvertTableToConfiguration(ObservableCollection<DesignItem> DesignItems)
         {
             string Body = "";
             foreach (DesignItem Item in DesignItems)
@@ -79,7 +81,7 @@ namespace EFToolkit
         /// <param name="DesignItems"></param>
         /// <param name="TableName"></param>
         /// <returns></returns>
-        public static string ConvertToDto(ObservableCollection<DesignItem> DesignItems, string TableName, DTO_Options Options = DTO_Options.INotifyPropertyChanged)
+        public static string ConvertTableToDto(ObservableCollection<DesignItem> DesignItems, string TableName, DTO_Options Options = DTO_Options.INotifyPropertyChanged)
         {
             string Objects = "";
             foreach (DesignItem Item in DesignItems)
@@ -171,6 +173,25 @@ namespace EFToolkit
             return CType;
         }
 
+        #endregion
+
+
+        #region ModelFixer
+
+        /// <summary>
+        /// Adds MVVM or INotifyPropertyChanged to an existing model or switches them.
+        /// </summary>
+        /// <param name="Options"></param>
+        /// <returns></returns>
+        public static string ConvertModel(DTO_Options Options = DTO_Options.INotifyPropertyChanged)
+        {
+
+
+
+            return "";
+        }
+
+        #endregion
     }
 
 
