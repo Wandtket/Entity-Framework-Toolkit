@@ -9,6 +9,42 @@
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+
+        <RichEditBox x:Name="Input" 
+             AcceptsReturn="True" 
+             IsTextPredictionEnabled="False"
+             IsSpellCheckEnabled="False"
+             Grid.Row="1" Grid.Column="0"
+             Margin="20,10,10,20">
+            
+            <RichEditBox.Header>
+                <TextBlock Text="Input Model" FontSize="20"/>
+            </RichEditBox.Header>
+        </RichEditBox>
+
+        <RichEditBox x:Name="Output" 
+             AcceptsReturn="True"   
+             IsTextPredictionEnabled="False"
+             IsSpellCheckEnabled="False"
+             Grid.Row="1" Grid.Column="2"
+             Margin="10,10,20,20">
+
+            <RichEditBox.Header>
+                <TextBlock Text="Output Model" FontSize="20"/>
+            </RichEditBox.Header>
+
+        </RichEditBox>
+        
+        
     </Grid>
 </Page>

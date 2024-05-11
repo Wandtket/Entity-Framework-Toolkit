@@ -173,15 +173,15 @@ namespace EFToolkit.Pages
 
             if (ModelToggleButton.IsChecked == true) 
             {
-                Output.SetText(Toolkit.ConvertToModel(DesignItems, TableName.Text));
+                Output.SetText(Toolkit.ConvertTableToModel(DesignItems, TableName.Text));
             }
             if (ConfigurationToggleButton.IsChecked == true) 
             {
-                Output.SetText(Toolkit.ConvertToConfiguration(DesignItems));
+                Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems));
             }
             if (DTOToggleButton.IsChecked == true) 
             {
-                Output.SetText(Toolkit.ConvertToDto(DesignItems, TableName.Text));
+                Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Text));
             }
         }
 
