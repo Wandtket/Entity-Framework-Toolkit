@@ -175,6 +175,23 @@ namespace EFToolkit
 
         #endregion
 
+        #region Select Describer
+
+
+        public static string ConvertSelectToDescriber(string SelectStatement)
+        {           
+            string Prefix = "EXEC sp_describe_first_result_set @tsql = N' \n";
+
+            string Body = SelectStatement.Replace("'", "") + "' \n";
+
+            string Suffix = ", @params = NULL, @browse_information_mode = 0;";
+
+            string DescribeCommand = Prefix + Body + Suffix;
+            return DescribeCommand;
+        }
+
+        #endregion
+
 
         #region ModelFixer
 
