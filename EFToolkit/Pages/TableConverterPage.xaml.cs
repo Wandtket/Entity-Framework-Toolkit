@@ -47,7 +47,7 @@ namespace EFToolkit.Pages
                 DesignItem item = (DesignItem)DesignerGrid.SelectedItem;
                 DesignItems.Remove(item);
 
-                Convert();
+                ConvertTable();
             }
         }
 
@@ -87,35 +87,61 @@ namespace EFToolkit.Pages
                     //cycle through cell values
                     int iCol = 0;
 
-                    //Set Column Indexes
-                    int NameColumnIndex = 0;
-                    int DataTypeColumnIndex = 1;
-                    int AllowNullsColumnIndex = 2;
-                    int DefaultColumnIndex = 3;
 
-                    //Visual Studio SQL Serber Objet Explorer has an empty column to account for
-                    if (valuesInRow[0] == string.Empty) 
+                    //Pasting from Table Designer SQL Management Studio / Visual Studio SQL Object Explorer
+                    if (valuesInRow.Count() < 4)
                     {
-                        NameColumnIndex = 1;
-                        DataTypeColumnIndex = 2;
-                        AllowNullsColumnIndex = 3;
-                        DefaultColumnIndex = 4;
+                        //Set Column Indexes
+                        int NameColumnIndex = 0;
+                        int DataTypeColumnIndex = 1;
+                        int AllowNullsColumnIndex = 2;
+                        int DefaultColumnIndex = 3;
+
+                        //Visual Studio SQL Serber Objet Explorer has an empty column to account for
+                        if (valuesInRow[0] == string.Empty)
+                        {
+                            NameColumnIndex = 1;
+                            DataTypeColumnIndex = 2;
+                            AllowNullsColumnIndex = 3;
+                            DefaultColumnIndex = 4;
+                        }
+
+                        //Convert string to bool
+                        bool AllowNulls = false;
+                        if (valuesInRow[AllowNullsColumnIndex].ToLower() == "checked") { AllowNulls = true; }
+                        else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "unchecked") { AllowNulls = false; }
+                        else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "true") { AllowNulls = true; }
+                        else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "false") { AllowNulls = false; }
+
+
+                        DesignItems.Add(new DesignItem()
+                        {
+                            ColumnName = valuesInRow[NameColumnIndex],
+                            DataType = valuesInRow[DataTypeColumnIndex],
+                            AllowNulls = AllowNulls,
+                        });
+                    }
+                    //Pasting from Select Statement Describer
+                    else
+                    {
+                        int NameColumnIndex = 2;
+                        int DataTypeColumnIndex = 5;
+                        int AllowNullsColumnIndex = 3;
+
+                        bool AllowNulls = false;
+                        if (valuesInRow[AllowNullsColumnIndex].ToLower() == "1") { AllowNulls = true; }
+                        else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "0") { AllowNulls = false; }
+
+                        DesignItems.Add(new DesignItem()
+                        {
+                            ColumnName = valuesInRow[NameColumnIndex],
+                            DataType = valuesInRow[DataTypeColumnIndex],
+                            AllowNulls = AllowNulls,
+                        });
                     }
 
-                    //Convert string to bool
-                    bool AllowNulls = false;
-                    if (valuesInRow[AllowNullsColumnIndex].ToLower() == "checked") { AllowNulls = true; }
-                    else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "unchecked") { AllowNulls = false; }
-                    else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "true") { AllowNulls = true; }
-                    else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "false") { AllowNulls = false; }
-                    
 
-                    DesignItems.Add(new DesignItem() 
-                    { 
-                        ColumnName = valuesInRow[NameColumnIndex],
-                        DataType = valuesInRow[DataTypeColumnIndex],
-                        AllowNulls = AllowNulls,
-                    });
+
 
                     while (iCol < valuesInRow.Length) { iCol += 1; }
                     iRow += 1;
@@ -145,7 +171,7 @@ namespace EFToolkit.Pages
             DTOToggleButton.IsChecked = false;
             ModelToggleButton.IsChecked = true;
 
-            Convert();
+            ConvertTable();
         }
 
         private void ConfigurationToggleButton_Click(object sender, RoutedEventArgs e)
@@ -154,7 +180,7 @@ namespace EFToolkit.Pages
             DTOToggleButton.IsChecked = false;
             ConfigurationToggleButton.IsChecked = true;
 
-            Convert();
+            ConvertTable();
         }
 
         private void DTOToggleButton_Click(object sender, RoutedEventArgs e)
@@ -163,11 +189,11 @@ namespace EFToolkit.Pages
             ConfigurationToggleButton.IsChecked = false;
             DTOToggleButton.IsChecked = true;
 
-            Convert();
+            ConvertTable();
         }
 
 
-        private void Convert()
+        private void ConvertTable()
         {
             Output.SetText("");
 

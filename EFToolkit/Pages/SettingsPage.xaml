@@ -7,18 +7,30 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
     
     
     <StackPanel>
 
+        <controls:SettingsCard Description="Choose the starting directory the save file dialog will open to."
+                Header="Preferred "                               
+                IsEnabled="True">
+
+            <ComboBox SelectedIndex="0" Width="200">
+                <x:String>INotifyPropertyChanged</x:String>
+                <x:String>MVVM</x:String>
+            </ComboBox>
+            
+        </controls:SettingsCard>
+
         <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
             <controls:HeaderedContentControl.Header>
-                <TextBlock Text="SQL Table Converter" FontSize="14" Opacity=".6" Margin="5"/>
+                <TextBlock Text="Table Converter" FontSize="14" Opacity=".6" Margin="5"/>
             </controls:HeaderedContentControl.Header>
             
             <StackPanel Spacing="3">
-
+                           
                 <controls:SettingsCard Description="Choose the starting directory the save file dialog will open to."
                     Header="Project Directory"                               
                     IsEnabled="True">
