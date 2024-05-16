@@ -159,6 +159,10 @@ namespace EFToolkit
             {
                 PageFrame.Navigate(typeof(ModelFixerPage));
             }
+            else if (args.SelectedItem == AcronymLibraryItem)
+            {
+                PageFrame.Navigate(typeof(AcronymLibraryPage));
+            }
             else if (args.IsSettingsSelected == true)
             {
                 PageFrame.Navigate(typeof(SettingsPage));

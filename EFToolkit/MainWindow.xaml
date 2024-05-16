@@ -46,7 +46,7 @@
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="SelectDescriberViewItem" Content="Select Describer">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF156;" FontFamily="Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xE762;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="ModelFixerViewItem" Content="Model Fixer">
@@ -54,6 +54,17 @@
                         <FontIcon Glyph="&#xE90F;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+
+                <NavigationViewItemHeader Content="Library"/>
+
+                <NavigationViewItem x:Name="AcronymLibraryItem" Content="Acronyms"
+                    ToolTipService.ToolTip="A library to translate Acronyms to and from SQL Columns">
+                    
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8F1;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                
             </NavigationView.MenuItems>
 
             <NavigationView.Content>
