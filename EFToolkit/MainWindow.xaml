@@ -39,17 +39,30 @@
             <NavigationView.MenuItems>
                 <NavigationViewItemHeader Content="Tools"/>
 
-                <NavigationViewItem x:Name="TableConverterViewItem" Content="Table Converter">
+                <NavigationViewItem x:Name="TableConverterViewItem" Content="Table Converter"
+                    ToolTipService.ToolTip="Convert SQL Columns to C# Models">
+                    
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xF156;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="SelectDescriberViewItem" Content="Select Describer">
+                <NavigationViewItem x:Name="SelectDescriberViewItem" Content="Select Describer"
+                    ToolTipService.ToolTip="Get SQL Column information from a custom select statement">
+                    
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE762;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="ModelFixerViewItem" Content="Model Fixer">
+                <NavigationViewItem x:Name="DataVisualizerViewItem" Content="Data Visualizer"
+                    ToolTipService.ToolTip="Create a custom SQL Select Statement from a Query">
+                    
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE773;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="ModelFixerViewItem" Content="Model Fixer"
+                    ToolTipService.ToolTip="Convert a model to and from Standard, INotifyPropertyChanged, and MVVM">
+                    
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE90F;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
@@ -58,7 +71,7 @@
                 <NavigationViewItemHeader Content="Library"/>
 
                 <NavigationViewItem x:Name="AcronymLibraryItem" Content="Acronyms"
-                    ToolTipService.ToolTip="A library to translate Acronyms to and from SQL Columns">
+                    ToolTipService.ToolTip="A library to translate Acronyms throughout the Toolkit">
                     
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8F1;" FontFamily="Segoe MDL2 Assets"/>

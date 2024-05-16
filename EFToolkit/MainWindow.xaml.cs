@@ -155,6 +155,10 @@ namespace EFToolkit
             {
                 PageFrame.Navigate(typeof(SelectDescriberPage));
             }
+            else if (args.SelectedItem == DataVisualizerViewItem)
+            {
+                PageFrame.Navigate(typeof(DataVisualizerPage));
+            }           
             else if (args.SelectedItem == ModelFixerViewItem)
             {
                 PageFrame.Navigate(typeof(ModelFixerPage));
