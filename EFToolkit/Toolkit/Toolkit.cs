@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using EFToolkit.Controls.Dialogs;
+using EFToolkit.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -277,11 +278,42 @@ namespace EFToolkit
         #endregion
 
 
+        #region Data Visualizer
+
+        public static string ConvertTableToSelectStatement(IList<VisualizerItem> VisualizerItems, string TableName)
+        {
+            string Objects = "";
+            for (int i = 0; i < VisualizerItems.Count; i++)
+            {
+                if (VisualizerItems[i].ColumnName != "" && VisualizerItems[i].Include == true)
+                {
+                    string ColumnName = VisualizerItems[i].ColumnName.Trim();
+
+                    string Delimiter = ", ";
+                    if (i.ToString().EndsWith("5") || i.ToString().EndsWith("0")) { Delimiter = ", \n"; }
+                    if (i == VisualizerItems.IndexOf(VisualizerItems.Last())) { Delimiter = ""; }
+
+                    Objects = Objects + TableName + "." + ColumnName + Delimiter;
+                }
+            }
+
+            //Objects = Objects.ReplaceNthOccurrence(", ", ", \n", 5);
+
+            string Body = @"" + Objects +
+                                "\n" + "--Paste joins, unions, clauses, etc here...--";
+
+            return Body;
+        }
+            
+
+        #endregion
+
         #region AcronymTranslator
 
         public static ObservableCollection<AcronymLibrary> AcronymLibraries = new();
         public static string AcronymLibraryFileName = "AcronymLibraries.efal";
 
+        
         public static async void LoadLibaries()
         {
             StorageFolder Folder = ApplicationData.Current.LocalFolder;
@@ -292,7 +324,14 @@ namespace EFToolkit
                 var Libraries = JsonSerializer.Deserialize<ObservableCollection<AcronymLibrary>>(File.ReadAllText(file.Path));
                 if (Libraries != null)
                 {
-                    AcronymLibraries = Libraries;
+                    //Order everything alphabetically on load.
+                    var List = Libraries.Select(x => x.LibraryItems).ToArray();
+                    for (int i  = 0; i < List.Length; i++)
+                    {
+                        List[i] = new ObservableCollection<AcronymItem>(List[i].OrderBy(x => x.Acronym));
+                    }
+
+                    AcronymLibraries = new ObservableCollection<AcronymLibrary>(Libraries.OrderBy(x => x.Title));
                 }
             }
         }
@@ -313,11 +352,35 @@ namespace EFToolkit
             {
                 foreach (var Item in library.LibraryItems)
                 {
-                    if (Item.Acronym != null)
+                    if (!string.IsNullOrEmpty(Item.Acronym))
                     {
-                        if (SQLColumnName.Contains(Item.Acronym))
+                        if (Item.Options == "Contains")
                         {
-                            SQLColumnName = SQLColumnName.Replace(Item.Acronym, Item.Translation);
+                            if (SQLColumnName.Contains(Item.Acronym))
+                            {
+                                SQLColumnName = SQLColumnName.Replace(Item.Acronym, Item.Translation);
+                            }
+                        }
+                        else if (Item.Options == "Equals")
+                        {
+                            if (SQLColumnName == Item.Acronym)
+                            {
+                                SQLColumnName = SQLColumnName = Item.Translation;
+                            }
+                        }
+                        else if (Item.Options == "Starts With")
+                        {
+                            if (SQLColumnName.StartsWith(Item.Acronym))
+                            {
+                                SQLColumnName = SQLColumnName.ReplaceFirstOccurrence(Item.Acronym, Item.Translation);
+                            }
+                        }
+                        else if (Item.Options == "Ends With")
+                        {
+                            if (SQLColumnName.EndsWith(Item.Acronym))
+                            {
+                                SQLColumnName = SQLColumnName.ReplaceLastOccurrence(Item.Acronym, Item.Translation);
+                            }
                         }
                     }
                 }
@@ -356,6 +419,9 @@ namespace EFToolkit
         private string columnName = string.Empty;
 
         [ObservableProperty]
+        private string objectName = string.Empty;
+
+        [ObservableProperty]
         private string dataType = string.Empty;
 
         [ObservableProperty]
@@ -364,10 +430,23 @@ namespace EFToolkit
         [ObservableProperty]
         private string defaultValue = string.Empty;
 
+    }
+
+    public partial class VisualizerItem : ObservableObject
+    {
+        [ObservableProperty]
+        private bool? include = true;
+
+        [ObservableProperty]
+        private string columnName = string.Empty;
+
         [ObservableProperty]
         private string objectName = string.Empty;
 
+        [ObservableProperty]
+        private string value = string.Empty;
     }
+
 
     public partial class AcronymLibrary : ObservableObject
     {
@@ -382,6 +461,9 @@ namespace EFToolkit
 
     public partial class AcronymItem : ObservableObject
     {
+
+        [ObservableProperty]
+        private string options = "Contains";
 
         [ObservableProperty]
         private string acronym;
