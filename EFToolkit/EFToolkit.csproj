@@ -16,6 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\AcronymLibraryPage.xaml" />
+    <None Remove="Pages\DataVisualizerPage.xaml" />
     <None Remove="Pages\ModelFixerPage.xaml" />
     <None Remove="Pages\SelectDescriberPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
@@ -144,6 +145,11 @@
   <ItemGroup>
     <Folder Include="Controls\Dialogs\" />
     <Folder Include="Controls\Widgets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\DataVisualizerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\AcronymLibraryPage.xaml">
