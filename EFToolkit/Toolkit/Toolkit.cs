@@ -36,7 +36,7 @@ namespace EFToolkit
         /// </summary>
         /// <param name="DesignItems"></param>
         /// <returns></returns>
-        public static string ConvertTableToModel(IList<DesignItem> DesignItems, string TableName)
+        public static string ConvertTableToModel(IList<DesignItem> DesignItems, string TableName, string ClassName)
         {
             string Objects = "";
             foreach (DesignItem Item in DesignItems)
@@ -61,7 +61,7 @@ namespace EFToolkit
             string Body = @"/// <summary>" + "\n" +
                                 @"/// dbo." + TableName + "\n" +
                                 @"/// </summary>" + "\n" +
-                                "public class " + TableName + "\n" + "{" + "\n" +
+                                "public class " + ClassName + "\n" + "{" + "\n" +
                                 Objects +
                                 "\n" + "}";
 
@@ -98,7 +98,7 @@ namespace EFToolkit
         /// <param name="DesignItems"></param>
         /// <param name="TableName"></param>
         /// <returns></returns>
-        public static string ConvertTableToDto(ObservableCollection<DesignItem> DesignItems, string TableName, DTO_Options Options = DTO_Options.MVVM)
+        public static string ConvertTableToDto(ObservableCollection<DesignItem> DesignItems, string TableName, string ClassName, DTO_Options Options = DTO_Options.MVVM)
         {
             string Objects = "";
 
@@ -126,7 +126,7 @@ namespace EFToolkit
                 string Body = @"/// <summary>" + "\n" +
                                     @"/// dbo." + TableName + "\n" +
                                     @"/// </summary>" + "\n" +
-                                    "public class " + TableName + "Dto" + "\n" + "{" + "\n \n" +
+                                    "public class " + ClassName + "Dto" + "\n" + "{" + "\n \n" +
                                     Objects +
                                     "}";
 
@@ -283,15 +283,17 @@ namespace EFToolkit
         public static string ConvertTableToSelectStatement(IList<VisualizerItem> VisualizerItems, string TableName)
         {
             string Objects = "";
-            for (int i = 0; i < VisualizerItems.Count; i++)
+
+            List<VisualizerItem> SelectedItems = VisualizerItems.Where(x => x.Include == true).ToList();
+            for (int i = 0; i < SelectedItems.Count; i++)
             {
-                if (VisualizerItems[i].ColumnName != "" && VisualizerItems[i].Include == true)
+                if (SelectedItems[i].ColumnName != "")
                 {
-                    string ColumnName = VisualizerItems[i].ColumnName.Trim();
+                    string ColumnName = SelectedItems[i].ColumnName.Trim();
 
                     string Delimiter = ", ";
-                    if (i.ToString().EndsWith("5") || i.ToString().EndsWith("0")) { Delimiter = ", \n"; }
-                    if (i == VisualizerItems.IndexOf(VisualizerItems.Last())) { Delimiter = ""; }
+                    if (i.ToString().EndsWith("5") || i.ToString().Length > 1 && i.ToString().EndsWith("0")) { Delimiter = ", \n"; }
+                    if (i == SelectedItems.IndexOf(SelectedItems.Last())) { Delimiter = ""; }
 
                     Objects = Objects + TableName + "." + ColumnName + Delimiter;
                 }
@@ -324,11 +326,9 @@ namespace EFToolkit
                 var Libraries = JsonSerializer.Deserialize<ObservableCollection<AcronymLibrary>>(File.ReadAllText(file.Path));
                 if (Libraries != null)
                 {
-                    //Order everything alphabetically on load.
-                    var List = Libraries.Select(x => x.LibraryItems).ToArray();
-                    for (int i  = 0; i < List.Length; i++)
+                    foreach (var Library in Libraries)
                     {
-                        List[i] = new ObservableCollection<AcronymItem>(List[i].OrderBy(x => x.Acronym));
+                        Library.LibraryItems = new ObservableCollection<AcronymItem>(Library.LibraryItems.OrderBy(x => x.Acronym).ToList());
                     }
 
                     AcronymLibraries = new ObservableCollection<AcronymLibrary>(Libraries.OrderBy(x => x.Title));

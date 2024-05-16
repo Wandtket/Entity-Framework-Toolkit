@@ -37,14 +37,32 @@ namespace EFToolkit.Pages
         }
 
 
-        private void DesignerGrid_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void VisualizerGrid_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Delete)
             {
-                VisualizerItem item = (VisualizerItem)DesignerGrid.SelectedItem;
-                VisualizerItems.Remove(item);
-                VisualizerItemCount.Text = VisualizerItems.Count().ToString();
+                if (VisualizerGrid.SelectedItems.Count == 1)
+                {
+                    VisualizerItem item = (VisualizerItem)VisualizerGrid.SelectedItem;
+                    VisualizerItems.Remove(item);
+                }
+                else if (VisualizerGrid.SelectedItems.Count > 1)
+                {
+                    List<VisualizerItem> ItemsToDelete = new List<VisualizerItem>();
+                    for (int i = 0; i < VisualizerGrid.SelectedItems.Count; i++)
+                    {
+                        VisualizerItem item = (VisualizerItem)VisualizerGrid.SelectedItems[i];
+                        ItemsToDelete.Add(item);                
+                    }
 
+                    foreach (var item in ItemsToDelete)
+                    {
+                        VisualizerItems.Remove(item);
+                    }
+
+                }
+
+                VisualizerItemCount.Text = VisualizerItems.Count().ToString();
                 ConvertTable();
             }
         }
@@ -85,6 +103,8 @@ namespace EFToolkit.Pages
                 //split it into lines
                 string[] rowsInClipboard = dataInClipboard.Split(rowSplitter, StringSplitOptions.RemoveEmptyEntries);
 
+                if (rowsInClipboard.Length == 1) { await MessageBox.Show("Could not find SQL Column Name, did you copy the result table with headers?", "ERROR"); return; }
+
                 // loop through the lines, split them into cells and place the values in the corresponding cell.
                 int iRow = 0;             
                 while (iRow < rowsInClipboard.Length)
@@ -120,7 +140,7 @@ namespace EFToolkit.Pages
                 }
             }
 
-            DesignerGrid.ItemsSource = VisualizerItems;
+            VisualizerGrid.ItemsSource = VisualizerItems;
             VisualizerItemCount.Text = VisualizerItems.Count().ToString();
 
             ConvertTable();
@@ -165,7 +185,7 @@ namespace EFToolkit.Pages
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput && sender.Text.Length > 0)
             {
-                DesignerGrid.SelectedItems.Clear();
+                VisualizerGrid.SelectedItems.Clear();
 
                 int FoundCount = 0;
                 VisualizerItem? FoundItem = null;
@@ -175,21 +195,21 @@ namespace EFToolkit.Pages
 
                     if (Item.ColumnName.ToLower().Contains(sender.Text.ToLower()))
                     {
-                        DesignerGrid.SelectedItems.Add(Item);
+                        VisualizerGrid.SelectedItems.Add(Item);
                         FoundCount = FoundCount + 1;
                         FoundItem = Item;
                     }
 
                     if (Item.ObjectName.ToLower().Contains(sender.Text.ToLower()))
                     {
-                        DesignerGrid.SelectedItems.Add(Item);
+                        VisualizerGrid.SelectedItems.Add(Item);
                         FoundCount = FoundCount + 1;
                         FoundItem = Item;
                     }
 
                     if (Item.Value.ToLower().Contains(sender.Text.ToLower()))
                     {
-                        DesignerGrid.SelectedItems.Add(Item);
+                        VisualizerGrid.SelectedItems.Add(Item);
                         FoundCount = FoundCount + 1;
                         FoundItem = Item;
                     }
@@ -197,12 +217,12 @@ namespace EFToolkit.Pages
 
                 if (FoundCount == 1)
                 {
-                    DesignerGrid.ScrollIntoView(FoundItem, DesignerGrid.Columns[0]);
+                    VisualizerGrid.ScrollIntoView(FoundItem, VisualizerGrid.Columns[0]);
                 }
             }
             else
             {
-                DesignerGrid.SelectedItems.Clear();
+                VisualizerGrid.SelectedItems.Clear();
             }
         }
 

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using EFToolkit.Controls.Dialogs;
+using EFToolkit.Extensions;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -131,9 +132,10 @@ namespace EFToolkit.Pages
         }
 
 
-        private void SaveLibrary_Click(object sender, RoutedEventArgs e)
+        private async void SaveLibrary_Click(object sender, RoutedEventArgs e)
         {
             Toolkit.SaveLibraries();
+            await MessageBox.Show("Libraries should save automatically but this button feels good to press sometimes...", "Libraries Saved!");
         }
 
         private async void RemoveLibrary_Click(object sender, RoutedEventArgs e)
@@ -146,6 +148,7 @@ namespace EFToolkit.Pages
 
                 AcronymLibrary Library = (AcronymLibrary)AcronymLibraryList.SelectedItem;
                 Toolkit.AcronymLibraries.Remove(Library);
+                Toolkit.SaveLibraries();
             }
         }
 
@@ -229,12 +232,29 @@ namespace EFToolkit.Pages
 
             SelectedItem.LibraryItems.Remove(Item);
             TranslationsTotal.Text = SelectedItem.LibraryItems.Count.ToString();
+
+            Toolkit.SaveLibraries();
         }
 
-        private void Acronym_LostFocus(object sender, RoutedEventArgs e)
+        private async void Acronym_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = (TextBox)sender;
             box.Text = box.Text.Trim().Replace(" ", "");
+
+            AcronymLibrary SelectedItem = (AcronymLibrary)AcronymLibraryList.SelectedItem;
+
+            var Duplicate = SelectedItem.LibraryItems.Where(x => x.Acronym == box.Text).Count();
+            if (Duplicate > 1) 
+            {
+                box.ShowError("Duplicate Found!", true, Duration: 5);
+
+                var DuplicateList = SelectedItem.LibraryItems.Where(x => x.Acronym == box.Text);
+                foreach (var item in DuplicateList)
+                {
+                    AcronymItemList.SelectedItems.Add(item);
+                }
+            }
+
             Toolkit.SaveLibraries();
         }
 

@@ -45,10 +45,27 @@ namespace EFToolkit.Pages
         {
             if (e.Key == Windows.System.VirtualKey.Delete)
             {
-                DesignItem item = (DesignItem)DesignerGrid.SelectedItem;
-                DesignItems.Remove(item);
-                DesignItemCount.Text = DesignItems.Count().ToString();
+                if (DesignerGrid.SelectedItems.Count == 1)
+                {
+                    DesignItem item = (DesignItem)DesignerGrid.SelectedItem;
+                    DesignItems.Remove(item);
+                }
+                else if (DesignerGrid.SelectedItems.Count > 1)
+                {
+                    List<DesignItem> ItemsToDelete = new List<DesignItem>();
+                    for (int i = 0; i < DesignerGrid.SelectedItems.Count; i++)
+                    {
+                        DesignItem item = (DesignItem)DesignerGrid.SelectedItems[i];
+                        ItemsToDelete.Add(item);
+                    }
 
+                    foreach (var item in ItemsToDelete)
+                    {
+                        DesignItems.Remove(item);
+                    }
+                }
+
+                DesignItemCount.Text = DesignItems.Count().ToString();
                 ConvertTable();
             }
         }
@@ -160,6 +177,8 @@ namespace EFToolkit.Pages
 
             DesignerGrid.ItemsSource = DesignItems;
             DesignItemCount.Text = DesignItems.Count().ToString();
+
+            ConvertTable();
         }
 
         private void ClearTable_Click(object sender, RoutedEventArgs e)
@@ -212,7 +231,7 @@ namespace EFToolkit.Pages
 
             if (ModelToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToModel(DesignItems, TableName.Text));
+                await Output.SetText(Toolkit.ConvertTableToModel(DesignItems, TableName.Text, ClassName.Text));
             }
             if (ConfigurationToggleButton.IsChecked == true) 
             {
@@ -220,7 +239,7 @@ namespace EFToolkit.Pages
             }
             if (DTOToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Text, Settings.DTO_Options));
+                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Text, ClassName.Text, Settings.DTO_Options));
             }
 
             OutputProgress.Visibility = Visibility.Collapsed;
@@ -234,6 +253,75 @@ namespace EFToolkit.Pages
         private void Export_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void AllowNulls_Click(object sender, RoutedEventArgs e)
+        {
+            ConvertTable();
+        }
+
+
+        private void TableName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ConvertTable();
+        }
+
+        private void TableName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(ClassName.Text))
+            {
+                ClassName.Text = Toolkit.ConvertSQLColumnName(TableName.Text);
+            }
+        }
+
+        private void ClassName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ConvertTable();
+        }
+
+        private void SearchTable_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput && sender.Text.Length > 0)
+            {
+                DesignerGrid.SelectedItems.Clear();
+
+                int FoundCount = 0;
+                DesignItem? FoundItem = null;
+                for (int i = 0; i < DesignItems.Count; i++)
+                {
+                    DesignItem Item = (DesignItem)DesignItems[i];
+
+                    if (Item.ColumnName.ToLower().Contains(sender.Text.ToLower()))
+                    {
+                        DesignerGrid.SelectedItems.Add(Item);
+                        FoundCount = FoundCount + 1;
+                        FoundItem = Item;
+                    }
+
+                    if (Item.ObjectName.ToLower().Contains(sender.Text.ToLower()))
+                    {
+                        DesignerGrid.SelectedItems.Add(Item);
+                        FoundCount = FoundCount + 1;
+                        FoundItem = Item;
+                    }
+
+                    if (Item.DataType.ToLower().Contains(sender.Text.ToLower()))
+                    {
+                        DesignerGrid.SelectedItems.Add(Item);
+                        FoundCount = FoundCount + 1;
+                        FoundItem = Item;
+                    }
+                }
+
+                if (FoundCount == 1)
+                {
+                    DesignerGrid.ScrollIntoView(FoundItem, DesignerGrid.Columns[0]);
+                }
+            }
+            else
+            {
+                DesignerGrid.SelectedItems.Clear();
+            }
         }
     }
 

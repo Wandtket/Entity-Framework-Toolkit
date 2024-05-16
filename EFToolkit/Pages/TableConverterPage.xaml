@@ -23,55 +23,81 @@
 
         <Grid Margin="15" ColumnSpacing="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="TableName" Header="Table Name" PlaceholderText=""/>
-            <AutoSuggestBox x:Name="SearchTable" PlaceholderText="Search Table" 
-                            QueryIcon="Find"
-                            VerticalAlignment="Bottom" Grid.Column="1"/>
+            <TextBox x:Name="TableName" Header="SQL Table Name" 
+                     PlaceholderText="SQL Table Name (without schema ex: Accounting)"
+                     TextChanged="TableName_TextChanged"
+                     LostFocus="TableName_LostFocus"/>
+            
+            <AutoSuggestBox x:Name="SearchTable" PlaceholderText="Search Table" QueryIcon="Find"
+                            TextChanged="SearchTable_TextChanged"
+                            VerticalAlignment="Bottom" Grid.Column="2"/>
         </Grid>
 
-        <CommandBar Grid.Column="1" Grid.Row="0" DefaultLabelPosition="Right" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <CommandBar.Content>
-                <TextBlock Text="Convert To:" FontSize="18" FontWeight="Bold" Margin="0,14,0,0"/>
-            </CommandBar.Content>
-            
-            <CommandBar.PrimaryCommands>
-                <AppBarSeparator />
-                <AppBarToggleButton x:Name="ModelToggleButton" Label="Model" 
-                                    Click="ModelToggleButton_Click"
-                                    IsChecked="True">
-                    <AppBarToggleButton.Icon>
-                        <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarSeparator />
-                <AppBarToggleButton x:Name="ConfigurationToggleButton" Label="Configuration" 
-                                    Click="ConfigurationToggleButton_Click">
-                    <AppBarToggleButton.Icon>
-                        <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarSeparator />
-                <AppBarToggleButton x:Name="DTOToggleButton" Label="Data Transfer Object (DTO)" 
-                                    Click="DTOToggleButton_Click" >
-                    <AppBarToggleButton.Icon>
-                        <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarSeparator />
-            </CommandBar.PrimaryCommands>
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <CommandBar.SecondaryCommands>
-                <AppBarElementContainer>
-                    <ComboBox Header="Acronym Library: " Width="150" Margin="15" AllowFocusOnInteraction="True">
-                        <ComboBoxItem Content="All"/>
-                    </ComboBox>
-                </AppBarElementContainer>
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
+            <TextBox x:Name="ClassName" Header="Class Name" PlaceholderText="" 
+                    TextChanged="ClassName_TextChanged" Width="200" Margin="0,0,0,16"
+                    VerticalAlignment="Bottom"/>
+
+            <CommandBar Grid.Column="1" Grid.Row="0"
+                    DefaultLabelPosition="Right" 
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    Margin="-5,0,0,6">
+                <CommandBar.PrimaryCommands>
+                    <AppBarElementContainer>
+                        <TextBlock Text="Convert To:" FontSize="16" Margin="0,12,15,0"/>
+                    </AppBarElementContainer>
+                    <AppBarSeparator VerticalAlignment="Bottom"/>
+                    <AppBarToggleButton x:Name="ModelToggleButton" Label="Model" 
+                                    Click="ModelToggleButton_Click"
+                                    VerticalAlignment="Bottom"
+                                    IsChecked="True">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarSeparator VerticalAlignment="Bottom"/>
+                    <AppBarToggleButton x:Name="ConfigurationToggleButton" Label="Configuration" 
+                                    Click="ConfigurationToggleButton_Click"
+                                    VerticalAlignment="Bottom">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarSeparator VerticalAlignment="Bottom"/>
+
+                    <AppBarToggleButton x:Name="DTOToggleButton" Label="Data Transfer Object (DTO)" 
+                                    Click="DTOToggleButton_Click"
+                                    VerticalAlignment="Bottom">
+                        <AppBarToggleButton.Icon>
+                            <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
+                    <AppBarSeparator />
+                </CommandBar.PrimaryCommands>
+
+                <CommandBar.SecondaryCommands>
+                    <AppBarElementContainer>
+                        <ComboBox Header="Acronym Library: " Width="150" Margin="15" AllowFocusOnInteraction="True" >
+                            <ComboBoxItem Content="All"/>
+                        </ComboBox>
+                    </AppBarElementContainer>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+
+
+        </Grid>
+        
+
 
         <Grid Grid.Column="0" Grid.Row="1" Margin="15,0,15,15">
             <Grid.RowDefinitions>
@@ -97,12 +123,21 @@
                 </controls:DataGrid.DataContext>
 
                 <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Header="SQL Column Name" MinWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:DataGridTextColumn Header="SQL Column Name" MinWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
                     <controls:DataGridTextColumn Header="Object Name" MinWidth="160" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                  ToolTipService.ToolTip="Use the Acronym Library to convert object names."/>
 
-                    <controls:DataGridTextColumn Header="Data Type" Binding="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <controls:DataGridCheckBoxColumn Header="Allow Nulls" MaxWidth="110" Binding="{Binding AllowNulls, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <controls:DataGridTextColumn Header="Data Type" Binding="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+
+                    <controls:DataGridTemplateColumn Header="Allow Nulls" Width="105" >
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox x:Name="AllowNulls" IsChecked="{Binding AllowNulls, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                        Click="AllowNulls_Click" Margin="35,0,0,0"/>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
+                                        
                     <controls:DataGridTextColumn Header="Default Value" MaxWidth="125" Binding="{Binding DefaultValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                  Visibility="Collapsed"/>
                     

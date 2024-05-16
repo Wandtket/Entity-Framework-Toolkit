@@ -49,7 +49,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <controls:DataGrid x:Name="DesignerGrid"
+            <controls:DataGrid x:Name="VisualizerGrid"
                            ItemsSource="{x:Bind VisualizerItems}"
                            AutoGenerateColumns="False"
                            CanUserReorderColumns="False"
@@ -58,7 +58,7 @@
                            Grid.Column="0" Grid.Row="0"                           
                            BorderBrush="{ThemeResource BoxColor}"
                            BorderThickness="2"
-                           KeyUp="DesignerGrid_KeyUp"
+                           KeyUp="VisualizerGrid_KeyUp"
                            FrozenColumnCount="3"
                            SelectionMode="Extended"
                            MaxWidth="900">
@@ -77,11 +77,9 @@
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
                     
-                    <controls:DataGridTextColumn Header="SQL Column Name" MinWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:DataGridTextColumn Header="Object Name" MinWidth="160" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                 ToolTipService.ToolTip="Use the Acronym Library to convert object names."/>
-
-                    <controls:DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <controls:DataGridTextColumn Header="SQL Column Name" MinWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
+                    <controls:DataGridTextColumn Header="Object Name" MinWidth="160" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+                    <controls:DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
                 </controls:DataGrid.Columns>
 
             </controls:DataGrid>
