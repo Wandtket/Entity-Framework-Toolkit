@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="EFToolkit.Pages.TableConverterPage"
+    x:Class="EFToolkit.Pages.DataVisualizerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:EFToolkit.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:widgets="using:EFToolkit.Controls.Widgets" 
     xmlns:EFToolkit="using:EFToolkit"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     mc:Ignorable="d"
     NavigationCacheMode="Required">
+
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -21,56 +22,25 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+
         <Grid Margin="15" ColumnSpacing="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="TableName" Header="Table Name" PlaceholderText=""/>
-            <AutoSuggestBox x:Name="SearchTable" PlaceholderText="Search Table" 
-                            QueryIcon="Find"
+            <TextBox x:Name="TableName" Header="Table Name" PlaceholderText="" TextChanged="TableName_TextChanged"/>
+            <AutoSuggestBox x:Name="SearchTable" PlaceholderText="Search Table" QueryIcon="Find"
+                            TextChanged="SearchTable_TextChanged"
                             VerticalAlignment="Bottom" Grid.Column="1"/>
         </Grid>
-
+   
+        
         <CommandBar Grid.Column="1" Grid.Row="0" DefaultLabelPosition="Right" VerticalAlignment="Bottom" Margin="0,0,0,10">
             <CommandBar.Content>
-                <TextBlock Text="Convert To:" FontSize="18" FontWeight="Bold" Margin="0,14,0,0"/>
+                <TextBlock Text="Select Statement Output:" FontSize="18" FontWeight="Bold" Margin="0,14,0,0"/>
             </CommandBar.Content>
-            
-            <CommandBar.PrimaryCommands>
-                <AppBarSeparator />
-                <AppBarToggleButton x:Name="ModelToggleButton" Label="Model" 
-                                    Click="ModelToggleButton_Click"
-                                    IsChecked="True">
-                    <AppBarToggleButton.Icon>
-                        <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarSeparator />
-                <AppBarToggleButton x:Name="ConfigurationToggleButton" Label="Configuration" 
-                                    Click="ConfigurationToggleButton_Click">
-                    <AppBarToggleButton.Icon>
-                        <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarSeparator />
-                <AppBarToggleButton x:Name="DTOToggleButton" Label="Data Transfer Object (DTO)" 
-                                    Click="DTOToggleButton_Click" >
-                    <AppBarToggleButton.Icon>
-                        <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
-                    </AppBarToggleButton.Icon>
-                </AppBarToggleButton>
-                <AppBarSeparator />
-            </CommandBar.PrimaryCommands>
-
-            <CommandBar.SecondaryCommands>
-                <AppBarElementContainer>
-                    <ComboBox Header="Acronym Library: " Width="150" Margin="15" AllowFocusOnInteraction="True">
-                        <ComboBoxItem Content="All"/>
-                    </ComboBox>
-                </AppBarElementContainer>
-            </CommandBar.SecondaryCommands>
+          
         </CommandBar>
 
         <Grid Grid.Column="0" Grid.Row="1" Margin="15,0,15,15">
@@ -78,9 +48,9 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            
+
             <controls:DataGrid x:Name="DesignerGrid"
-                           ItemsSource="{x:Bind DesignItems}"
+                           ItemsSource="{x:Bind VisualizerItems}"
                            AutoGenerateColumns="False"
                            CanUserReorderColumns="False"
                            CanUserResizeColumns="True"
@@ -89,41 +59,47 @@
                            BorderBrush="{ThemeResource BoxColor}"
                            BorderThickness="2"
                            KeyUp="DesignerGrid_KeyUp"
-                           FrozenColumnCount="2"
-                           MaxWidth="600">
+                           FrozenColumnCount="3"
+                           SelectionMode="Extended"
+                           MaxWidth="900">
 
                 <controls:DataGrid.DataContext>
-                    <EFToolkit:DesignItem/>
+                    <EFToolkit:VisualizerItem/>
                 </controls:DataGrid.DataContext>
 
                 <controls:DataGrid.Columns>
+                    <controls:DataGridTemplateColumn Header="Include" Width="90" >
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Include, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                          Click="Include_Click" Margin="35,0,0,0"/>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
+                    
                     <controls:DataGridTextColumn Header="SQL Column Name" MinWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <controls:DataGridTextColumn Header="Object Name" MinWidth="160" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                  ToolTipService.ToolTip="Use the Acronym Library to convert object names."/>
 
-                    <controls:DataGridTextColumn Header="Data Type" Binding="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <controls:DataGridCheckBoxColumn Header="Allow Nulls" MaxWidth="110" Binding="{Binding AllowNulls, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <controls:DataGridTextColumn Header="Default Value" MaxWidth="125" Binding="{Binding DefaultValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Visibility="Collapsed"/>
-                    
+                    <controls:DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </controls:DataGrid.Columns>
 
             </controls:DataGrid>
 
             <CommandBar Grid.Row="1" HorizontalAlignment="Left" DefaultLabelPosition="Right">
                 <CommandBar.PrimaryCommands>
+                    <AppBarToggleButton x:Name="IncludeAll" Label="Include All" Icon="SelectAll" IsChecked="True" Click="IncludeAll_Click" />
                     <AppBarButton Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"/>
                     <AppBarButton Label="Clear Table" Icon="Delete" Click="ClearTable_Click"/>
-
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
             <StackPanel Orientation="Horizontal" Grid.Row="1" 
                         HorizontalAlignment="Right" VerticalAlignment="Center"
                         Spacing="5">
-                
+
                 <TextBlock Text="Total: " FontSize="16" FontWeight="Bold"/>
-                <TextBlock x:Name="DesignItemCount" Text="0" FontSize="16"/>
+                <TextBlock x:Name="VisualizerItemCount" Text="0" FontSize="16"/>
             </StackPanel>
 
         </Grid>
@@ -151,6 +127,7 @@
             </CommandBar>
 
         </Grid>
-       
+
+
     </Grid>
 </Page>

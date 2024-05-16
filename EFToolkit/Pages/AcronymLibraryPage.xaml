@@ -19,7 +19,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
         <Grid Margin="15,15,0,0">
@@ -92,11 +92,14 @@
 
             <AutoSuggestBox PlaceholderText="Search Translations" 
                             TextChanged="SearchTranslation_TextChanged"
+                            QueryIcon="Find"
                             Grid.Row="1" Margin="0,0,0,10" />
 
             <ListView x:Name="AcronymItemList" Grid.Row="2"
                       CanDragItems="True" AllowDrop="True" CanReorderItems="True"
+                      ItemsSource="{Binding ElementName=AcronymLibraryList, Path=SelectedItem.LibraryItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       SelectionMode="Extended">
+                
                 <ListView.DataContext>
                     <EFToolkit:AcronymLibrary/>
                 </ListView.DataContext>
@@ -106,7 +109,10 @@
                         <Grid ColumnSpacing="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
@@ -115,16 +121,33 @@
                                 ToolTipService.ToolTip="Drag and drop to reorder"
                                 VerticalAlignment="Center"
                                 Grid.Column="0"/>
+
+                            <TextBlock Text="if value" Grid.Column="1" VerticalAlignment="Center"/>
+
+                            <ComboBox x:Name="TranslationOptions" 
+                                      SelectedItem="{Binding Options, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      LostFocus="TranslationOptions_LostFocus"
+                                      Width="120" Grid.Column="2">
+
+                                <ComboBox.Items>
+                                    <x:String>Contains</x:String>
+                                    <x:String>Equals</x:String>
+                                    <x:String>Starts With</x:String>
+                                    <x:String>Ends With</x:String>
+                                </ComboBox.Items>
+                            </ComboBox>
                             
                             <TextBox PlaceholderText="Acronym" 
                                      Text="{Binding Acronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                     Grid.Column="1" KeyUp="Acronym_KeyUp" LostFocus="Acronym_LostFocus"/>
-                            
+                                     Grid.Column="3" KeyUp="Acronym_KeyUp" LostFocus="Acronym_LostFocus"/>
+
+                            <TextBlock Text="Replace With" Grid.Column="4"  VerticalAlignment="Center"/>
+
                             <TextBox PlaceholderText="Translation" 
                                      Text="{Binding Translation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                     Grid.Column="2" KeyUp="Acronym_KeyUp" LostFocus="Translation_LostFocus"/>
+                                     Grid.Column="5" KeyUp="Acronym_KeyUp" LostFocus="Translation_LostFocus"/>
                             
-                            <Button x:Name="RemoveItem" Content="X" Click="RemoveItem_Click" Grid.Column="3" IsTabStop="False"/>
+                            <Button x:Name="RemoveItem" Content="X" Click="RemoveItem_Click" Grid.Column="6" IsTabStop="False"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

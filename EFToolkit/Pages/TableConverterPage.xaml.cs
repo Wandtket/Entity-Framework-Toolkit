@@ -121,10 +121,10 @@ namespace EFToolkit.Pages
                         DesignItems.Add(new DesignItem()
                         {
                             ColumnName = valuesInRow[NameColumnIndex],
+                            ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
                             DataType = valuesInRow[DataTypeColumnIndex],
                             AllowNulls = AllowNulls,
                             DefaultValue = DefaultColumn,
-                            ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
                         });
                     }
                     //Pasting from Select Statement Describer
@@ -146,9 +146,9 @@ namespace EFToolkit.Pages
                         DesignItems.Add(new DesignItem()
                         {
                             ColumnName = valuesInRow[NameColumnIndex],
+                            ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
                             DataType = valuesInRow[DataTypeColumnIndex],
                             AllowNulls = AllowNulls,
-                            ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
                         });
                     }
 

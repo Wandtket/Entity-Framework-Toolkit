@@ -31,6 +31,7 @@ namespace EFToolkit.Pages
     public sealed partial class AcronymLibraryPage : Page
     {
 
+        
 
         public AcronymLibraryPage()
         {
@@ -53,7 +54,7 @@ namespace EFToolkit.Pages
         private void AddTranslation_Click(object sender, RoutedEventArgs e)
         {
             AcronymLibrary SelectedItem = (AcronymLibrary)AcronymLibraryList.SelectedItem;
-            SelectedItem.LibraryItems.Add(new AcronymItem());
+            SelectedItem.LibraryItems.Insert(0, new AcronymItem());
             TranslationsTotal.Text = SelectedItem.LibraryItems.Count.ToString();
         }
 
@@ -196,7 +197,6 @@ namespace EFToolkit.Pages
             AcronymLibrary SelectedItem = (AcronymLibrary)AcronymLibraryList.SelectedItem;
             if (SelectedItem != null)
             {
-                AcronymItemList.ItemsSource = SelectedItem.LibraryItems;
                 TranslationsTotal.Text = SelectedItem.LibraryItems.Count.ToString();
             }
         }
@@ -252,6 +252,12 @@ namespace EFToolkit.Pages
             }
             Toolkit.SaveLibraries();
         }
+
+        private void TranslationOptions_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Toolkit.SaveLibraries();
+        }
+
 
     }
 
