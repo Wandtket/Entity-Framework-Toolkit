@@ -23,13 +23,13 @@
         <Grid Margin="20,10,10,20" Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            
+
             <RichEditBox x:Name="Input" 
                  AcceptsReturn="True" 
                  IsTextPredictionEnabled="False"
                  IsSpellCheckEnabled="False"
-                 Grid.Row="1" Grid.Column="0"
                  TextChanged="Input_TextChanged"
                  PlaceholderText="Input your custom select statement here...">
 
@@ -43,20 +43,20 @@
         <Grid Margin="10,10,20,20" Grid.Row="1" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             
             <RichEditBox x:Name="Output" 
-             AcceptsReturn="True"   
-             IsTextPredictionEnabled="False"
-             IsSpellCheckEnabled="False">
+                 AcceptsReturn="True"   
+                 IsTextPredictionEnabled="False"
+                 IsSpellCheckEnabled="False">
 
                 <RichEditBox.Header>
                     <TextBlock Text="Select Statement Description" FontSize="20"/>
                 </RichEditBox.Header>
 
             </RichEditBox>
-            
-            
+
         </Grid>
 
         
