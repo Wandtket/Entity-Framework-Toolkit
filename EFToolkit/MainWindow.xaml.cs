@@ -151,9 +151,17 @@ namespace EFToolkit
             {
                 PageFrame.Navigate(typeof(TableConverterPage));
             }
+            else if (args.SelectedItem == SelectDescriberViewItem)
+            {
+                PageFrame.Navigate(typeof(SelectDescriberPage));
+            }
             else if (args.SelectedItem == ModelFixerViewItem)
             {
                 PageFrame.Navigate(typeof(ModelFixerPage));
+            }
+            else if (args.SelectedItem == AcronymLibraryItem)
+            {
+                PageFrame.Navigate(typeof(AcronymLibraryPage));
             }
             else if (args.IsSettingsSelected == true)
             {

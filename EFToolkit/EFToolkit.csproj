@@ -15,10 +15,13 @@
 	<SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>	  
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Pages\AcronymLibraryPage.xaml" />
     <None Remove="Pages\ModelFixerPage.xaml" />
+    <None Remove="Pages\SelectDescriberPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="Pages\TableConverterPage.xaml" />
     <None Remove="Properties\NativeMethods.txt" />
+    <None Remove="Resources\Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="Properties\NativeMethods.txt" />
@@ -83,6 +86,7 @@
     <Content Include="Resources\Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Resources\Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Resources\Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Resources\Images\logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,7 +104,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Core" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.Primitives" Version="7.1.2" />
-    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta">
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -119,6 +123,10 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Pages\SelectDescriberPage.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Pages\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -135,7 +143,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\Dialogs\" />
-    <Folder Include="Resources\Images\" />
+    <Folder Include="Controls\Widgets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\AcronymLibraryPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!-- 

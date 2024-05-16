@@ -119,8 +119,20 @@ namespace EFToolkit.Extensions
                 // Note: Be sure to have "using WinRT;" to support the Window.As<...>() call.
                 m_micaController.AddSystemBackdropTarget(window.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
                 m_micaController.SetSystemBackdropConfiguration(m_configurationSource);
+
+                window.Closed += delegate (object sender, WindowEventArgs args)
+                {
+                    if (m_micaController is not null)
+                    {
+                        m_micaController.Dispose();
+                        m_micaController = null;
+                    }
+
+                    m_configurationSource = null;
+                };
             }
         }
+
 
         private static void SetConfigurationSourceTheme(Window window)
         {

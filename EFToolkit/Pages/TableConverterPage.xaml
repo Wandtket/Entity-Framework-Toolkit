@@ -5,8 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:EFToolkit.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
-    mc:Ignorable="d">
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
+    xmlns:EFToolkit="using:EFToolkit"
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -52,9 +55,12 @@
             </CommandBar.PrimaryCommands>
 
             <CommandBar.SecondaryCommands>
-                <AppBarButton Label="Export to file"/>
+                <AppBarElementContainer>
+                    <ComboBox Header="Acronym Library: " Width="150" Margin="15" AllowFocusOnInteraction="True">
+                        <ComboBoxItem Content="All"/>
+                    </ComboBox>
+                </AppBarElementContainer>
             </CommandBar.SecondaryCommands>
-            
         </CommandBar>
 
         <Grid Grid.Column="0" Grid.Row="1" Margin="15,0,15,15">
@@ -68,14 +74,15 @@
                            AutoGenerateColumns="False"
                            CanUserReorderColumns="False"
                            CanUserResizeColumns="True"
-                           AlternatingRowBackground="{ThemeResource BoxColor}"
+                           GridLinesVisibility="Horizontal"
                            Grid.Column="0" Grid.Row="0"                           
                            BorderBrush="{ThemeResource BoxColor}"
                            BorderThickness="2"
-                           KeyUp="DesignerGrid_KeyUp">
+                           KeyUp="DesignerGrid_KeyUp"
+                           Width="600">
 
                 <controls:DataGrid.DataContext>
-                    <local:DesignItem/>
+                    <EFToolkit:DesignItem/>
                 </controls:DataGrid.DataContext>
 
                 <controls:DataGrid.KeyboardAccelerators>
@@ -83,9 +90,11 @@
                 </controls:DataGrid.KeyboardAccelerators>
 
                 <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Header="Column Name" MaxWidth="125" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:DataGridTextColumn Header="SQL Column Name" MaxWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <controls:DataGridTextColumn Header="Data Type" Binding="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <controls:DataGridCheckBoxColumn Header="Allow Nulls" MaxWidth="110" Binding="{Binding AllowNulls, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <controls:DataGridTextColumn Header="Default Value" MaxWidth="125" Binding="{Binding DefaultValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:DataGridTextColumn Header="Object Name" MaxWidth="145" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </controls:DataGrid.Columns>
 
             </controls:DataGrid>
@@ -97,26 +106,36 @@
 
                 </CommandBar.PrimaryCommands>
             </CommandBar>
-            
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1" 
+                        HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Spacing="5">
+                
+                <TextBlock Text="Total: " FontSize="16" FontWeight="Bold"/>
+                <TextBlock x:Name="DesignItemCount" Text="0" FontSize="16"/>
+            </StackPanel>
 
         </Grid>
 
-        <Grid Grid.Column="1" Grid.Row="1" Margin="0,0,15,15">
+        <Grid Grid.Column="2" Grid.Row="1" Margin="0,0,15,15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            
+
+            <ProgressRing x:Name="OutputProgress" IsIndeterminate="True" Visibility="Collapsed" Height="50" Width="50" Grid.Row="0"/>
+
             <RichEditBox x:Name="Output" 
                  AcceptsReturn="True"   
                  IsTextPredictionEnabled="False"
-                 IsSpellCheckEnabled="False"
+                 IsSpellCheckEnabled="False"                    
                  Grid.Row="0"/>
 
             <CommandBar DefaultLabelPosition="Right" Grid.Row="1">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton Label="Copy" Icon="Copy" Click="CopyOutput_Click"/>
                     <AppBarButton Label="Clear" Icon="ClearSelection" Click="ClearOutput_Click"/>
+                    <AppBarButton Label="Copy" Icon="Copy" Click="CopyOutput_Click"/>
+                    <AppBarButton Label="Export to file" Icon="Save" Click="Export_Click"/>
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
