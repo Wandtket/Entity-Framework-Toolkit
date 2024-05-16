@@ -1,11 +1,24 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using EFToolkit.Pages;
+using CommunityToolkit.WinUI;
+using EFToolkit.Controls.Dialogs;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.Json;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.Storage;
 
 namespace EFToolkit
 {
@@ -81,56 +94,123 @@ namespace EFToolkit
         /// <param name="DesignItems"></param>
         /// <param name="TableName"></param>
         /// <returns></returns>
-        public static string ConvertTableToDto(ObservableCollection<DesignItem> DesignItems, string TableName, DTO_Options Options = DTO_Options.INotifyPropertyChanged)
+        public static string ConvertTableToDto(ObservableCollection<DesignItem> DesignItems, string TableName, DTO_Options Options = DTO_Options.MVVM)
         {
             string Objects = "";
-            foreach (DesignItem Item in DesignItems)
+
+            if (Options == DTO_Options.Standard)
             {
-                if (Item.ColumnName.Trim() != "")
+                foreach (DesignItem Item in DesignItems)
                 {
-                    string AllowNull = "";
-                    if (Item.AllowNulls == true) { AllowNull = "?"; }
+                    if (Item.ColumnName.Trim() != "")
+                    {
+                        string AllowNull = "";
+                        if (Item.AllowNulls == true) { AllowNull = "?"; }
 
-                    string ColumnName = Item.ColumnName.Trim();
-                    string ColumnType = ConvertSQLType(Item.DataType.Trim(), true);
+                        string ColumnName = Item.ColumnName.Trim();
+                        string ColumnType = ConvertSQLType(Item.DataType.Trim(), true);
 
-                    string Trim = "";
-                    if (ColumnType == "string") { Trim = ".Trim()"; }
+                        if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
 
-                    if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
-
-                    Objects = Objects +
-                    "\t" + $"[JsonPropertyName(\"{ColumnName}\")]" + "\n" +
-                    "\t" + "public " + ColumnType + AllowNull + " " + ColumnName + "\n" +
-                    "\t" + "{" + "\n" +
-                    "\t" + "\t" + "get { return " + ColumnName.ToLower() + "; }" + "\n" +
-                    "\t" + "\t" + "set { " + "\n" +
-                    "\t" + "\t" + "\t" + "if (" + ColumnName.ToLower() + " != value" + Trim + ")" + "\n" +
-                    "\t" + "\t" + "\t" + "{" + "\n" +
-                    "\t" + "\t" + "\t" + "\t" + ColumnName.ToLower() + " = value" + Trim + ";" + "\n" +
-                    "\t" + "\t" + "\t" + "\t" + $"NotifyPropertyChanged(\"{ColumnName}\");" + "\n" +
-                    "\t" + "\t" + "\t" + "}" + "\n" +
-                    "\t" + "\t" + "}" + "\n" +
-                    "\t" + "}" + "\n" +
-                    "\t private " + ColumnType + AllowNull + " " + ColumnName.ToLower() + "; " + "\n" + "\n" + "\n";
+                        Objects = Objects +
+                        "\t" + $"[JsonPropertyName(\"{ColumnName}\")]" + "\n" +
+                        "\t" + "public " + ColumnType + AllowNull + " " + ColumnName + " { get; set; } \n \n \n";
+                    }
                 }
+
+                string Body = @"/// <summary>" + "\n" +
+                                    @"/// dbo." + TableName + "\n" +
+                                    @"/// </summary>" + "\n" +
+                                    "public class " + TableName + "Dto" + "\n" + "{" + "\n \n" +
+                                    Objects +
+                                    "}";
+
+                return Body;
+            }
+            else if (Options == DTO_Options.INotifyPropertyChanged)
+            {
+                foreach (DesignItem Item in DesignItems)
+                {
+                    if (Item.ColumnName.Trim() != "")
+                    {
+                        string AllowNull = "";
+                        if (Item.AllowNulls == true) { AllowNull = "?"; }
+
+                        string ColumnName = Item.ColumnName.Trim();
+                        string ColumnType = ConvertSQLType(Item.DataType.Trim(), true);
+
+                        string Trim = "";
+                        if (ColumnType == "string") { Trim = ".Trim()"; }
+
+                        if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
+
+                        Objects = Objects +
+                        "\t" + $"[JsonPropertyName(\"{ColumnName}\")]" + "\n" +
+                        "\t" + "public " + ColumnType + AllowNull + " " + ColumnName + "\n" +
+                        "\t" + "{" + "\n" +
+                        "\t" + "\t" + "get { return " + ColumnName.ToLower() + "; }" + "\n" +
+                        "\t" + "\t" + "set { " + "\n" +
+                        "\t" + "\t" + "\t" + "if (" + ColumnName.ToLower() + " != value" + Trim + ")" + "\n" +
+                        "\t" + "\t" + "\t" + "{" + "\n" +
+                        "\t" + "\t" + "\t" + "\t" + ColumnName.ToLower() + " = value" + Trim + ";" + "\n" +
+                        "\t" + "\t" + "\t" + "\t" + $"NotifyPropertyChanged(\"{ColumnName}\");" + "\n" +
+                        "\t" + "\t" + "\t" + "}" + "\n" +
+                        "\t" + "\t" + "}" + "\n" +
+                        "\t" + "}" + "\n" +
+                        "\t private " + ColumnType + AllowNull + " " + ColumnName.ToLower() + "; " + "\n" + "\n" + "\n";
+                    }
+                }
+
+                string Body = @"/// <summary>" + "\n" +
+                                    @"/// dbo." + TableName + "\n" +
+                                    @"/// </summary>" + "\n" +
+                                    "public class " + TableName + "Dto" + " : INotifyPropertyChanged" + "\n" + "{" + "\n" +
+                                    Objects +
+
+                                    "\t" + "public event PropertyChangedEventHandler PropertyChanged;" + "\n" +
+                                    "\t" + "public void NotifyPropertyChanged(string propertyName)" + "\n" +
+                                    "\t" + "{" + "\n" +
+                                    "\t" + "\t" + "PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));" + "\n" +
+                                    "\t" + "}" +
+
+                                    "\n" + "}";
+
+                return Body;
+            }
+            else if (Options == DTO_Options.MVVM)
+            {
+
+                foreach (DesignItem Item in DesignItems)
+                {
+                    if (Item.ColumnName.Trim() != "")
+                    {
+                        string AllowNull = "";
+                        if (Item.AllowNulls == true) { AllowNull = "?"; }
+
+                        string ColumnName = Item.ColumnName.Trim();
+                        ColumnName = char.ToLowerInvariant(ColumnName[0]) + ColumnName.Substring(1);
+                        if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
+
+                        string ColumnType = ConvertSQLType(Item.DataType.Trim(), true);
+
+                        Objects = Objects +
+                        "\t" + $"[JsonPropertyName(\"{ColumnName}\")]" + "\n" +
+                        "\t" + $"[ObservableProperty]" + "\n" +
+                        "\t" + "private " + ColumnType + AllowNull + " " + ColumnName + "; \n \n \n";
+                    }
+                }
+
+                string Body = @"/// <summary>" + "\n" +
+                                    @"/// dbo." + TableName + "\n" +
+                                    @"/// </summary>" + "\n" +
+                                    "public partial class " + TableName + "Dto" + " : ObservableObject" + "\n" + "{" + "\n" +
+                                    Objects +
+                                    "}";
+
+                return Body;
             }
 
-            string Body = @"/// <summary>" + "\n" +
-                                @"/// dbo." + TableName + "\n" +
-                                @"/// </summary>" + "\n" +
-                                "public class " + TableName + "Dto" + " : INotifyPropertyChanged" + "\n" + "{" + "\n" +
-                                Objects +
-
-                                "\t" + "public event PropertyChangedEventHandler PropertyChanged;" + "\n" +
-                                "\t" + "public void NotifyPropertyChanged(string propertyName)" + "\n" +
-                                "\t" + "{" + "\n" +
-                                "\t" + "\t" + "PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));" + "\n" +
-                                "\t" + "}" +
-
-                                "\n" + "}";
-
-            return Body;
+            return "";
         }
 
 
@@ -143,7 +223,7 @@ namespace EFToolkit
         private static string ConvertSQLType(string sqlType, bool Dto = false)
         {
             string CType = "";
-
+            
             if (sqlType.StartsWith("varbinary")) { CType = "byte"; }
             else if (sqlType.StartsWith("binary")) { CType = "byte"; }
             else if (sqlType.StartsWith("varchar")) { CType = "string"; }
@@ -165,7 +245,7 @@ namespace EFToolkit
             else if (sqlType.StartsWith("float")) { CType = "double"; }
             else if (sqlType.StartsWith("real")) { CType = "Single"; }
             else if (sqlType.StartsWith("smalldatetime")) { CType = "DateTime"; }
-            else if (sqlType.StartsWith("sql_variant")) { CType = "Object"; }
+            else if (sqlType.StartsWith("sql_variant")) { CType = "object"; }
 
             if (Dto == true) { if (sqlType.StartsWith("smallint")) { CType = "int"; } }
             if (Dto == true) { if (sqlType.StartsWith("bigint")) { CType = "int"; } }
@@ -192,6 +272,58 @@ namespace EFToolkit
 
         #endregion
 
+
+        #region AcronymTranslator
+
+        public static ObservableCollection<AcronymLibrary> AcronymLibraries = new();
+        public static string AcronymLibraryFileName = "AcronymLibraries.efal";
+
+        public static async void LoadLibaries()
+        {
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            if (File.Exists(Folder.Path + "\\" + AcronymLibraryFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync("AcronymLibraries.efal");
+                var Libraries = JsonSerializer.Deserialize<ObservableCollection<AcronymLibrary>>(File.ReadAllText(file.Path));
+                if (Libraries != null)
+                {
+                    AcronymLibraries = Libraries;
+                }
+            }
+        }
+
+        public static async void SaveLibraries()
+        {
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            StorageFile file = await Folder.CreateFileAsync("AcronymLibraries.efal", CreationCollisionOption.OpenIfExists);
+            var Json = JsonSerializer.Serialize(AcronymLibraries);
+            File.WriteAllText(file.Path, Json);
+        }
+
+        public static string ConvertSQLColumnName(string SQLColumnName)
+        {
+            foreach (AcronymLibrary library in AcronymLibraries)
+            {
+                foreach (var Item in library.LibraryItems)
+                {
+                    if (Item.Acronym != null)
+                    {
+                        if (SQLColumnName.Contains(Item.Acronym))
+                        {
+                            SQLColumnName = SQLColumnName.Replace(Item.Acronym, Item.Translation);
+                        }
+                    }
+                }
+            }
+
+            return "";
+        }
+
+
+
+        #endregion
 
         #region ModelFixer
 
@@ -223,13 +355,55 @@ namespace EFToolkit
 
         [ObservableProperty]
         private bool allowNulls = false;
+
+        [ObservableProperty]
+        private string defaultValue = string.Empty;
+
+        [ObservableProperty]
+        private string objectName = string.Empty;
+
     }
+
+
+
+    public partial class AcronymLibrary : ObservableObject
+    {
+
+        [ObservableProperty]
+        private string title;
+
+        [ObservableProperty]
+        private ObservableCollection<AcronymItem> libraryItems = new();
+
+    }
+
+    public partial class AcronymItem : ObservableObject
+    {
+
+        [ObservableProperty]
+        private string acronym;
+
+        [ObservableProperty]
+        private string translation;
+
+    }
+
+
+
 
     public enum DTO_Options
     {
+        Standard,
         INotifyPropertyChanged,
         MVVM,
     }
+
+    public enum CodeFormatOptions
+    {
+        CamelCase,
+        Snake_Case,
+    }
+
 
 
 }
