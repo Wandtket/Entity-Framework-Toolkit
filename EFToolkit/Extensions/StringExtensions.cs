@@ -10,6 +10,28 @@ namespace EFToolkit.Extensions
     public static class StringExtensions
     {
 
+        public static string ReplaceFirstOccurrence(this string String, string find, string replace)
+        {
+            int pos = String.IndexOf(find);
+            if (pos < 0)
+            {
+                return String;
+            }
+            return String.Substring(0, pos) + replace + String.Substring(pos + find.Length);
+        }
+
+        public static string ReplaceLastOccurrence(this string String, string find, string replace)
+        {
+            int pos = String.LastIndexOf(find);
+
+            if (pos == -1)
+                return String;
+
+            return String.Remove(pos, find.Length).Insert(pos, replace);
+        }
+
+
+
         public static IEnumerable<int> AllIndicesOf(this string text, string pattern)
         {
             int M = pattern.Length;
