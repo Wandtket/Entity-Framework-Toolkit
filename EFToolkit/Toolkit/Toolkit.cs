@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -46,12 +47,13 @@ namespace EFToolkit
 
                     string ColumnName = Item.ColumnName.Trim();
                     string ColumnType = Item.DataType.Trim();
+                    string ObjectName = Item.ObjectName.Trim();
 
                     Objects = Objects +
                         "\t" + @"/// <summary>" + "\n" +
                         "\t" + @"/// " + ColumnName + " - " + ColumnType + "\n" +
                         "\t" + @"/// </summary>" + "\n" +
-                        "\t" + "public " + ConvertSQLType(ColumnType) + AllowNull + " " + ColumnName + " { get; set; }" + "\n" + "\n";
+                        "\t" + "public " + ConvertSQLType(ColumnType) + AllowNull + " " + ObjectName + " { get; set; }" + "\n" + "\n";
                 }
             }
 
@@ -78,9 +80,10 @@ namespace EFToolkit
                 if (Item.ColumnName.Trim() != "")
                 {
                     string ColumnName = Item.ColumnName.Trim();
+                    string ObjectName = Item.ObjectName.Trim();
 
                     Body = Body +
-                        $"\t builder.Property(s => s.{ColumnName}) \n" +
+                        $"\t builder.Property(s => s.{ObjectName}) \n" +
                         $"\t \t .HasColumnName(\"{ColumnName}\"); \n \n";
                 }
             }
@@ -109,12 +112,13 @@ namespace EFToolkit
 
                         string ColumnName = Item.ColumnName.Trim();
                         string ColumnType = ConvertSQLType(Item.DataType.Trim(), true);
+                        string ObjectName = Item.ObjectName.Trim();
 
                         if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
 
                         Objects = Objects +
-                        "\t" + $"[JsonPropertyName(\"{ColumnName}\")]" + "\n" +
-                        "\t" + "public " + ColumnType + AllowNull + " " + ColumnName + " { get; set; } \n \n \n";
+                        "\t" + $"[JsonPropertyName(\"{ObjectName}\")]" + "\n" +
+                        "\t" + "public " + ColumnType + AllowNull + " " + ObjectName + " { get; set; } \n \n \n";
                     }
                 }
 
@@ -304,6 +308,7 @@ namespace EFToolkit
 
         public static string ConvertSQLColumnName(string SQLColumnName)
         {
+
             foreach (AcronymLibrary library in AcronymLibraries)
             {
                 foreach (var Item in library.LibraryItems)
@@ -318,7 +323,7 @@ namespace EFToolkit
                 }
             }
 
-            return "";
+            return SQLColumnName;
         }
 
 
@@ -363,8 +368,6 @@ namespace EFToolkit
         private string objectName = string.Empty;
 
     }
-
-
 
     public partial class AcronymLibrary : ObservableObject
     {
