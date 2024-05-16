@@ -53,10 +53,6 @@ namespace EFToolkit.Pages
             }
         }
 
-        private async void PasteAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            PasteTable_Click(null, null);
-        }
 
         private async void PasteTable_Click(object sender, RoutedEventArgs e)
         {
@@ -91,13 +87,26 @@ namespace EFToolkit.Pages
 
 
                     //Pasting from Table Designer SQL Management Studio / Visual Studio SQL Object Explorer
-                    if (valuesInRow.Count() < 4)
+                    if (valuesInRow.Count() < 6)
                     {
                         //Set Column Indexes
                         int NameColumnIndex = 0;
                         int DataTypeColumnIndex = 1;
                         int AllowNullsColumnIndex = 2;
-                     
+
+                        int DefaultColumnIndex = 4;
+                        string DefaultColumn = "";
+
+                        //Visual Studio SQL Serber Objet Explorer has an empty column to account for
+                        if (valuesInRow[0] == string.Empty)
+                        {
+                            NameColumnIndex = 1;
+                            DataTypeColumnIndex = 2;
+                            AllowNullsColumnIndex = 3;
+                            DefaultColumn = valuesInRow[DefaultColumnIndex];
+                        }
+                        
+
                         //Convert string to bool
                         bool AllowNulls = false;
                         try
@@ -114,6 +123,7 @@ namespace EFToolkit.Pages
                             ColumnName = valuesInRow[NameColumnIndex],
                             DataType = valuesInRow[DataTypeColumnIndex],
                             AllowNulls = AllowNulls,
+                            DefaultValue = DefaultColumn,
                             ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
                         });
                     }
@@ -123,16 +133,7 @@ namespace EFToolkit.Pages
                         int NameColumnIndex = 2;
                         int DataTypeColumnIndex = 5;
                         int AllowNullsColumnIndex = 3;
-                        int DefaultColumnIndex = 3;
 
-                        //Visual Studio SQL Serber Objet Explorer has an empty column to account for
-                        if (valuesInRow[0] == string.Empty)
-                        {
-                            NameColumnIndex = 1;
-                            DataTypeColumnIndex = 2;
-                            AllowNullsColumnIndex = 3;
-                            DefaultColumnIndex = 4;
-                        }
 
                         bool AllowNulls = false;
                         try
@@ -147,12 +148,9 @@ namespace EFToolkit.Pages
                             ColumnName = valuesInRow[NameColumnIndex],
                             DataType = valuesInRow[DataTypeColumnIndex],
                             AllowNulls = AllowNulls,
-                            DefaultValue = valuesInRow[DefaultColumnIndex],
                             ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
                         });
                     }
-
-
 
 
                     while (iCol < valuesInRow.Length) { iCol += 1; }

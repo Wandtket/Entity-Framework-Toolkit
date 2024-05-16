@@ -87,23 +87,27 @@ namespace EFToolkit.Pages
 
                     //cycle through cell values
                     int iCol = 0;
-                
-                    if (Settings.CodeFormatOptions == CodeFormatOptions.CamelCase)
+                    
+                    try
                     {
-                        SelectedItem.LibraryItems.Add(new AcronymItem()
+                        if (Settings.CodeFormatOptions == CodeFormatOptions.CamelCase)
                         {
-                            Acronym = valuesInRow[0].Trim().Replace(" ", ""),
-                            Translation = valuesInRow[1].Trim().Replace(" ", ""),
-                        });
-                    }
-                    else if (Settings.CodeFormatOptions == CodeFormatOptions.Snake_Case)
-                    {
-                        SelectedItem.LibraryItems.Add(new AcronymItem()
+                            SelectedItem.LibraryItems.Add(new AcronymItem()
+                            {
+                                Acronym = valuesInRow[0].Trim().Replace(" ", ""),
+                                Translation = valuesInRow[1].Trim().Replace(" ", ""),
+                            });
+                        }
+                        else if (Settings.CodeFormatOptions == CodeFormatOptions.Snake_Case)
                         {
-                            Acronym = valuesInRow[0].Trim().Replace(" ", ""),
-                            Translation = valuesInRow[1].Trim().Replace(" ", "_"),
-                        });
+                            SelectedItem.LibraryItems.Add(new AcronymItem()
+                            {
+                                Acronym = valuesInRow[0].Trim().Replace(" ", ""),
+                                Translation = valuesInRow[1].Trim().Replace(" ", "_"),
+                            });
+                        }
                     }
+                    catch { await MessageBox.Show("There was an error copying from excel, please copy the columns and try again.", "Error"); return; }
 
                     while (iCol < valuesInRow.Length) { iCol += 1; }
                     iRow += 1;

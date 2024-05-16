@@ -79,22 +79,21 @@
                            BorderBrush="{ThemeResource BoxColor}"
                            BorderThickness="2"
                            KeyUp="DesignerGrid_KeyUp"
-                           Width="600">
+                           Width="480">
 
                 <controls:DataGrid.DataContext>
                     <EFToolkit:DesignItem/>
                 </controls:DataGrid.DataContext>
 
-                <controls:DataGrid.KeyboardAccelerators>
-                    <KeyboardAccelerator Modifiers="Control" Key="V" Invoked="PasteAccelerator_Invoked"/>
-                </controls:DataGrid.KeyboardAccelerators>
-
                 <controls:DataGrid.Columns>
                     <controls:DataGridTextColumn Header="SQL Column Name" MaxWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <controls:DataGridTextColumn Header="Data Type" Binding="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <controls:DataGridCheckBoxColumn Header="Allow Nulls" MaxWidth="110" Binding="{Binding AllowNulls, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <controls:DataGridTextColumn Header="Default Value" MaxWidth="125" Binding="{Binding DefaultValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <controls:DataGridTextColumn Header="Object Name" MaxWidth="145" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:DataGridTextColumn Header="Default Value" MaxWidth="125" Binding="{Binding DefaultValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Visibility="Collapsed"/>
+                    
+                    <controls:DataGridTextColumn Header="Object Name" MaxWidth="160" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 ToolTipService.ToolTip="Use the Acronym Library to convert object names."/>
                 </controls:DataGrid.Columns>
 
             </controls:DataGrid>
