@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using EFToolkit.Extensions;
+using static System.Net.Mime.MediaTypeNames;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -46,6 +47,7 @@ namespace EFToolkit.Pages
             {
                 DesignItem item = (DesignItem)DesignerGrid.SelectedItem;
                 DesignItems.Remove(item);
+                DesignItemCount.Text = DesignItems.Count().ToString();
 
                 ConvertTable();
             }
@@ -95,6 +97,32 @@ namespace EFToolkit.Pages
                         int NameColumnIndex = 0;
                         int DataTypeColumnIndex = 1;
                         int AllowNullsColumnIndex = 2;
+                     
+                        //Convert string to bool
+                        bool AllowNulls = false;
+                        try
+                        {
+                            if (valuesInRow[AllowNullsColumnIndex].ToLower() == "checked") { AllowNulls = true; }
+                            else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "unchecked") { AllowNulls = false; }
+                            else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "true") { AllowNulls = true; }
+                            else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "false") { AllowNulls = false; }
+                        }
+                        catch { await MessageBox.Show("There was an error copying the SQL Table, please copy the table and try again.", "Error"); return; }
+
+                        DesignItems.Add(new DesignItem()
+                        {
+                            ColumnName = valuesInRow[NameColumnIndex],
+                            DataType = valuesInRow[DataTypeColumnIndex],
+                            AllowNulls = AllowNulls,
+                            ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
+                        });
+                    }
+                    //Pasting from Select Statement Describer
+                    else
+                    {
+                        int NameColumnIndex = 2;
+                        int DataTypeColumnIndex = 5;
+                        int AllowNullsColumnIndex = 3;
                         int DefaultColumnIndex = 3;
 
                         //Visual Studio SQL Serber Objet Explorer has an empty column to account for
@@ -106,37 +134,21 @@ namespace EFToolkit.Pages
                             DefaultColumnIndex = 4;
                         }
 
-                        //Convert string to bool
                         bool AllowNulls = false;
-                        if (valuesInRow[AllowNullsColumnIndex].ToLower() == "checked") { AllowNulls = true; }
-                        else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "unchecked") { AllowNulls = false; }
-                        else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "true") { AllowNulls = true; }
-                        else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "false") { AllowNulls = false; }
-
+                        try
+                        {
+                            if (valuesInRow[AllowNullsColumnIndex].ToLower() == "1") { AllowNulls = true; }
+                            else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "0") { AllowNulls = false; }
+                        }
+                        catch { await MessageBox.Show("There was an error copying the SQL Table, please copy the table and try again.", "Error"); return; }
 
                         DesignItems.Add(new DesignItem()
                         {
                             ColumnName = valuesInRow[NameColumnIndex],
                             DataType = valuesInRow[DataTypeColumnIndex],
                             AllowNulls = AllowNulls,
-                        });
-                    }
-                    //Pasting from Select Statement Describer
-                    else
-                    {
-                        int NameColumnIndex = 2;
-                        int DataTypeColumnIndex = 5;
-                        int AllowNullsColumnIndex = 3;
-
-                        bool AllowNulls = false;
-                        if (valuesInRow[AllowNullsColumnIndex].ToLower() == "1") { AllowNulls = true; }
-                        else if (valuesInRow[AllowNullsColumnIndex].ToLower() == "0") { AllowNulls = false; }
-
-                        DesignItems.Add(new DesignItem()
-                        {
-                            ColumnName = valuesInRow[NameColumnIndex],
-                            DataType = valuesInRow[DataTypeColumnIndex],
-                            AllowNulls = AllowNulls,
+                            DefaultValue = valuesInRow[DefaultColumnIndex],
+                            ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
                         });
                     }
 
@@ -149,11 +161,13 @@ namespace EFToolkit.Pages
             }
 
             DesignerGrid.ItemsSource = DesignItems;
+            DesignItemCount.Text = DesignItems.Count().ToString();
         }
 
         private void ClearTable_Click(object sender, RoutedEventArgs e)
         {
             DesignItems.Clear();
+            DesignItemCount.Text = DesignItems.Count().ToString();
         }
 
 
@@ -193,27 +207,30 @@ namespace EFToolkit.Pages
         }
 
 
-        private void ConvertTable()
+        private async void ConvertTable()
         {
-            Output.SetText("");
+            OutputProgress.Visibility = Visibility.Visible;
+            await Output.SetText("");
 
             if (ModelToggleButton.IsChecked == true) 
             {
-                Output.SetText(Toolkit.ConvertTableToModel(DesignItems, TableName.Text));
+                await Output.SetText(Toolkit.ConvertTableToModel(DesignItems, TableName.Text));
             }
             if (ConfigurationToggleButton.IsChecked == true) 
             {
-                Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems));
+                await Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems));
             }
             if (DTOToggleButton.IsChecked == true) 
             {
-                Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Text));
+                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Text, Settings.DTO_Options));
             }
+
+            OutputProgress.Visibility = Visibility.Collapsed;
         }
 
-        private void ClearOutput_Click(object sender, RoutedEventArgs e)
+        private async void ClearOutput_Click(object sender, RoutedEventArgs e)
         {
-
+            await Output.SetText("");
         }
 
         private void Export_Click(object sender, RoutedEventArgs e)

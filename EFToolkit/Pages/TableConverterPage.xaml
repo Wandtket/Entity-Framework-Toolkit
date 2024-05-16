@@ -54,7 +54,13 @@
                 <AppBarSeparator />
             </CommandBar.PrimaryCommands>
 
-            
+            <CommandBar.SecondaryCommands>
+                <AppBarElementContainer>
+                    <ComboBox Header="Acronym Library: " Width="150" Margin="15" AllowFocusOnInteraction="True">
+                        <ComboBoxItem Content="All"/>
+                    </ComboBox>
+                </AppBarElementContainer>
+            </CommandBar.SecondaryCommands>
         </CommandBar>
 
         <Grid Grid.Column="0" Grid.Row="1" Margin="15,0,15,15">
@@ -72,7 +78,8 @@
                            Grid.Column="0" Grid.Row="0"                           
                            BorderBrush="{ThemeResource BoxColor}"
                            BorderThickness="2"
-                           KeyUp="DesignerGrid_KeyUp">
+                           KeyUp="DesignerGrid_KeyUp"
+                           Width="600">
 
                 <controls:DataGrid.DataContext>
                     <EFToolkit:DesignItem/>
@@ -83,9 +90,11 @@
                 </controls:DataGrid.KeyboardAccelerators>
 
                 <controls:DataGrid.Columns>
-                    <controls:DataGridTextColumn Header="Column Name" MaxWidth="125" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:DataGridTextColumn Header="SQL Column Name" MaxWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <controls:DataGridTextColumn Header="Data Type" Binding="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <controls:DataGridCheckBoxColumn Header="Allow Nulls" MaxWidth="110" Binding="{Binding AllowNulls, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <controls:DataGridTextColumn Header="Default Value" MaxWidth="125" Binding="{Binding DefaultValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <controls:DataGridTextColumn Header="Object Name" MaxWidth="145" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </controls:DataGrid.Columns>
 
             </controls:DataGrid>
@@ -97,20 +106,29 @@
 
                 </CommandBar.PrimaryCommands>
             </CommandBar>
-            
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1" 
+                        HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Spacing="5">
+                
+                <TextBlock Text="Total: " FontSize="16" FontWeight="Bold"/>
+                <TextBlock x:Name="DesignItemCount" Text="0" FontSize="16"/>
+            </StackPanel>
 
         </Grid>
 
-        <Grid Grid.Column="1" Grid.Row="1" Margin="0,0,15,15">
+        <Grid Grid.Column="2" Grid.Row="1" Margin="0,0,15,15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            
+
+            <ProgressRing x:Name="OutputProgress" IsIndeterminate="True" Visibility="Collapsed" Height="50" Width="50" Grid.Row="0"/>
+
             <RichEditBox x:Name="Output" 
                  AcceptsReturn="True"   
                  IsTextPredictionEnabled="False"
-                 IsSpellCheckEnabled="False"
+                 IsSpellCheckEnabled="False"                    
                  Grid.Row="0"/>
 
             <CommandBar DefaultLabelPosition="Right" Grid.Row="1">
