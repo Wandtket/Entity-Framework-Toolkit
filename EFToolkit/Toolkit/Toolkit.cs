@@ -2,6 +2,7 @@
 using CommunityToolkit.WinUI;
 using EFToolkit.Controls.Dialogs;
 using EFToolkit.Extensions;
+using EFToolkit.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -50,20 +51,33 @@ namespace EFToolkit
                     string ColumnType = Item.DataType.Trim();
                     string ObjectName = Item.ObjectName.Trim();
 
-                    Objects = Objects +
+                    string Summary = "";
+                    if (Settings.ModelSummary == true)
+                    {
+                        Summary =
                         "\t" + @"/// <summary>" + "\n" +
                         "\t" + @"/// " + ColumnName + " - " + ColumnType + "\n" +
-                        "\t" + @"/// </summary>" + "\n" +
+                        "\t" + @"/// </summary>" + "\n";
+                    }
+
+                    Objects = Objects +
+                        Summary +
                         "\t" + "public " + ConvertSQLType(ColumnType) + AllowNull + " " + ObjectName + " { get; set; }" + "\n" + "\n";
                 }
             }
 
-            string Body = @"/// <summary>" + "\n" +
-                                @"/// dbo." + TableName + "\n" +
-                                @"/// </summary>" + "\n" +
-                                "public class " + ClassName + "\n" + "{" + "\n" +
-                                Objects +
-                                "\n" + "}";
+            string Header = "";
+            if (Settings.ModelSummary == true)
+            {
+                Header = @"/// <summary>" + "\n" +
+                                @"/// " + TableName + "\n" +
+                                @"/// </summary>" + "\n";
+            }
+
+            string Body = Header +
+                         "public class " + ClassName + "\n" + "{" + "\n" +
+                          Objects +
+                         "" + "}";
 
             return Body;
         }
@@ -73,7 +87,7 @@ namespace EFToolkit
         /// </summary>
         /// <param name="DesignItems"></param>
         /// <returns></returns>
-        public static string ConvertTableToConfiguration(ObservableCollection<DesignItem> DesignItems)
+        public static string ConvertTableToConfiguration(ObservableCollection<DesignItem> DesignItems, string TableName)
         {
             string Body = "";
             foreach (DesignItem Item in DesignItems)
@@ -88,6 +102,9 @@ namespace EFToolkit
                         $"\t \t .HasColumnName(\"{ColumnName}\"); \n \n";
                 }
             }
+
+            string Header = "\t" + @"builder.ToTable(\" + TableName + "\");" + "\n \n";
+            Body = Header + Body;
 
             return Body;
         }
@@ -117,18 +134,33 @@ namespace EFToolkit
 
                         if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
 
-                        Objects = Objects +
+                        string Summary = "";
+                        if (Settings.DtoSummary == true)
+                        {
+                            Summary =
+                            "\t" + @"/// <summary>" + "\n" +
+                            "\t" + @"/// " + ColumnName + " - " + Item.DataType.Trim() + "\n" +
+                            "\t" + @"/// </summary>" + "\n";
+                        }
+
+                        Objects = Objects + Summary +
                         "\t" + $"[JsonPropertyName(\"{ObjectName}\")]" + "\n" +
                         "\t" + "public " + ColumnType + AllowNull + " " + ObjectName + " { get; set; } \n \n \n";
                     }
                 }
 
-                string Body = @"/// <summary>" + "\n" +
-                                    @"/// dbo." + TableName + "\n" +
-                                    @"/// </summary>" + "\n" +
-                                    "public class " + ClassName + "Dto" + "\n" + "{" + "\n \n" +
-                                    Objects +
-                                    "}";
+                string Header = "";
+                if (Settings.DtoSummary == true)
+                {
+                    Header = @"/// <summary>" + "\n" +
+                                    @"/// " + TableName + "\n" +
+                                    @"/// </summary>" + "\n";
+                }
+
+                string Body = Header +
+                            "public class " + ClassName + "Dto" + "\n" + "{" + "\n \n" +
+                            Objects +
+                            "}";
 
                 return Body;
             }
@@ -149,7 +181,16 @@ namespace EFToolkit
 
                         if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
 
-                        Objects = Objects +
+                        string Summary = "";
+                        if (Settings.DtoSummary == true)
+                        {
+                            Summary =
+                            "\t" + @"/// <summary>" + "\n" +
+                            "\t" + @"/// " + ColumnName + " - " + Item.DataType.Trim() + "\n" +
+                            "\t" + @"/// </summary>" + "\n";
+                        }
+
+                        Objects = Objects + Summary + 
                         "\t" + $"[JsonPropertyName(\"{ColumnName}\")]" + "\n" +
                         "\t" + "public " + ColumnType + AllowNull + " " + ColumnName + "\n" +
                         "\t" + "{" + "\n" +
@@ -166,19 +207,25 @@ namespace EFToolkit
                     }
                 }
 
-                string Body = @"/// <summary>" + "\n" +
-                                    @"/// dbo." + TableName + "\n" +
-                                    @"/// </summary>" + "\n" +
-                                    "public class " + TableName + "Dto" + " : INotifyPropertyChanged" + "\n" + "{" + "\n" +
-                                    Objects +
+                string Header = "";
+                if (Settings.DtoSummary == true)
+                {
+                    Header = @"/// <summary>" + "\n" +
+                                    @"/// " + TableName + "\n" +
+                                    @"/// </summary>" + "\n";
+                }
 
-                                    "\t" + "public event PropertyChangedEventHandler PropertyChanged;" + "\n" +
-                                    "\t" + "public void NotifyPropertyChanged(string propertyName)" + "\n" +
-                                    "\t" + "{" + "\n" +
-                                    "\t" + "\t" + "PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));" + "\n" +
-                                    "\t" + "}" +
+                string Body = Header +
+                            "public class " + TableName + "Dto" + " : INotifyPropertyChanged" + "\n" + "{" + "\n" +
+                            Objects +
 
-                                    "\n" + "}";
+                            "\t" + "public event PropertyChangedEventHandler PropertyChanged;" + "\n" +
+                            "\t" + "public void NotifyPropertyChanged(string propertyName)" + "\n" +
+                            "\t" + "{" + "\n" +
+                            "\t" + "\t" + "PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));" + "\n" +
+                            "\t" + "}" +
+
+                            "\n" + "}";
 
                 return Body;
             }
@@ -260,6 +307,7 @@ namespace EFToolkit
 
         #endregion
 
+
         #region Select Describer
 
 
@@ -310,19 +358,23 @@ namespace EFToolkit
 
         #endregion
 
-        #region AcronymTranslator
+
+        #region Acronym Libraries
 
         public static ObservableCollection<AcronymLibrary> AcronymLibraries = new();
-        public static string AcronymLibraryFileName = "AcronymLibraries.efal";
+        public static ObservableCollection<AcronymLibrary> SelectedAcronymLibraries = new();
 
-        
-        public static async void LoadLibaries()
+        private static string AcronymLibraryFileName = "AcronymLibraries.efal";
+        private static string SelectedAcronymLibraryFileName = "SelectedAcronymLibraries.efal";
+
+
+        public static async Task LoadAcronymLibaries()
         {
             StorageFolder Folder = ApplicationData.Current.LocalFolder;
 
             if (File.Exists(Folder.Path + "\\" + AcronymLibraryFileName))
             {
-                StorageFile file = await Folder.GetFileAsync("AcronymLibraries.efal");
+                StorageFile file = await Folder.GetFileAsync(AcronymLibraryFileName);
                 var Libraries = JsonSerializer.Deserialize<ObservableCollection<AcronymLibrary>>(File.ReadAllText(file.Path));
                 if (Libraries != null)
                 {
@@ -334,21 +386,47 @@ namespace EFToolkit
                     AcronymLibraries = new ObservableCollection<AcronymLibrary>(Libraries.OrderBy(x => x.Title));
                 }
             }
+
+            if (File.Exists(Folder.Path + "\\" + SelectedAcronymLibraryFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync(SelectedAcronymLibraryFileName);
+                var Libraries = JsonSerializer.Deserialize<ObservableCollection<AcronymLibrary>>(File.ReadAllText(file.Path));
+                if (Libraries != null)
+                {
+                    foreach (var Library in Libraries)
+                    {
+                        Library.LibraryItems = new ObservableCollection<AcronymItem>(Library.LibraryItems.OrderBy(x => x.Acronym).ToList());
+                    }
+
+                    SelectedAcronymLibraries = new ObservableCollection<AcronymLibrary>(Libraries.OrderBy(x => x.Title));
+                }
+            }
         }
 
-        public static async void SaveLibraries()
+        public static async void SaveAcronymLibaries()
         {
+            //await Task.Delay(500);
+
             StorageFolder Folder = ApplicationData.Current.LocalFolder;
 
-            StorageFile file = await Folder.CreateFileAsync("AcronymLibraries.efal", CreationCollisionOption.OpenIfExists);
+            //All Libaries
+            StorageFile file = await Folder.CreateFileAsync(AcronymLibraryFileName, CreationCollisionOption.OpenIfExists);
             var Json = JsonSerializer.Serialize(AcronymLibraries);
-            File.WriteAllText(file.Path, Json);
+            await File.WriteAllTextAsync(file.Path, Json);
+
+            //Selected Libaries
+            StorageFile sfile = await Folder.CreateFileAsync(SelectedAcronymLibraryFileName, CreationCollisionOption.OpenIfExists);
+            var sJson = JsonSerializer.Serialize(SelectedAcronymLibraries);
+            await File.WriteAllTextAsync(sfile.Path, sJson);
         }
 
         public static string ConvertSQLColumnName(string SQLColumnName)
         {
+            ObservableCollection<AcronymLibrary> List = new();
+            if (SelectedAcronymLibraries.Count == 0) { List = AcronymLibraries; }
+            else { List = SelectedAcronymLibraries; }
 
-            foreach (AcronymLibrary library in AcronymLibraries)
+            foreach (AcronymLibrary library in List)
             {
                 foreach (var Item in library.LibraryItems)
                 {
@@ -393,6 +471,60 @@ namespace EFToolkit
 
         #endregion
 
+        #region Schema Libraries
+
+        public static ObservableCollection<SchemaLibrary> SchemaLibraries = new();
+        public static ObservableCollection<SchemaLibrary> SelectedSchemaLibraries = new();
+
+        private static string SchemaLibraryFileName = "SchemaLibraries.efsl";
+        private static string SelectedSchemaLibraryFileName = "SelectedSchemaLibraries.efsl";
+
+
+        public static async Task LoadSchemaLibaries()
+        {
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            if (File.Exists(Folder.Path + "\\" + SchemaLibraryFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync(SchemaLibraryFileName);
+                var Libraries = JsonSerializer.Deserialize<ObservableCollection<SchemaLibrary>>(File.ReadAllText(file.Path));
+                if (Libraries != null)
+                {
+                    SchemaLibraries = new ObservableCollection<SchemaLibrary>(Libraries.OrderBy(x => x.Schema));
+                }
+            }
+
+            if (File.Exists(Folder.Path + "\\" + SelectedSchemaLibraryFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync(SelectedSchemaLibraryFileName);
+                var Libraries = JsonSerializer.Deserialize<ObservableCollection<SchemaLibrary>>(File.ReadAllText(file.Path));
+                if (Libraries != null)
+                {
+                    SelectedSchemaLibraries = new ObservableCollection<SchemaLibrary>(Libraries.OrderBy(x => x.Schema));
+                }
+            }
+        }
+
+        public static async void SaveSchemaLibaries()
+        {
+            //await Task.Delay(500);
+
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            StorageFile file = await Folder.CreateFileAsync(SchemaLibraryFileName, CreationCollisionOption.OpenIfExists);
+            var Json = JsonSerializer.Serialize(SchemaLibraries);
+            await File.WriteAllTextAsync(file.Path, Json);
+
+            StorageFile sfile = await Folder.CreateFileAsync(SelectedSchemaLibraryFileName, CreationCollisionOption.OpenIfExists);
+            var sJson = JsonSerializer.Serialize(SelectedSchemaLibraries);
+            await File.WriteAllTextAsync(sfile.Path, sJson);
+        }
+
+
+
+        #endregion
+
+
         #region ModelFixer
 
         /// <summary>
@@ -409,7 +541,10 @@ namespace EFToolkit
         }
 
         #endregion
+
     }
+
+
 
 
     public partial class DesignItem : ObservableObject
@@ -447,16 +582,13 @@ namespace EFToolkit
         private string value = string.Empty;
     }
 
-
     public partial class AcronymLibrary : ObservableObject
     {
-
         [ObservableProperty]
         private string title;
 
         [ObservableProperty]
         private ObservableCollection<AcronymItem> libraryItems = new();
-
     }
 
     public partial class AcronymItem : ObservableObject
@@ -473,7 +605,11 @@ namespace EFToolkit
 
     }
 
-
+    public partial class SchemaLibrary : ObservableObject
+    {
+        [ObservableProperty]
+        private string schema;
+    }
 
 
     public enum DTO_Options
