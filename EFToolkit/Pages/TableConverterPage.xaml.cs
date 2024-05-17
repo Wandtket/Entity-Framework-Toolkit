@@ -20,6 +20,8 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using EFToolkit.Extensions;
 using static System.Net.Mime.MediaTypeNames;
+using CommunityToolkit.WinUI.Controls;
+using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -40,6 +42,16 @@ namespace EFToolkit.Pages
             this.InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            TableName.SuggestedItemsSource = Toolkit.SchemaLibraries;
+            TableName.ItemsSource = Toolkit.SelectedSchemaLibraries;
+
+            AcronymLibrarySelector.SuggestedItemsSource = Toolkit.AcronymLibraries;
+            AcronymLibrarySelector.ItemsSource = Toolkit.SelectedAcronymLibraries;
+        }
 
         private void DesignerGrid_KeyUp(object sender, KeyRoutedEventArgs e)
         {
@@ -231,15 +243,15 @@ namespace EFToolkit.Pages
 
             if (ModelToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToModel(DesignItems, TableName.Text, ClassName.Text));
+                await Output.SetText(Toolkit.ConvertTableToModel(DesignItems, TableName.Value, ClassName.Text));
             }
             if (ConfigurationToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems));
+                await Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems, TableName.Text));
             }
             if (DTOToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Text, ClassName.Text, Settings.DTO_Options));
+                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Value, ClassName.Text, Settings.DTO_Options));
             }
 
             OutputProgress.Visibility = Visibility.Collapsed;
@@ -266,10 +278,13 @@ namespace EFToolkit.Pages
             ConvertTable();
         }
 
-        private void TableName_LostFocus(object sender, RoutedEventArgs e)
+        private async void TableName_LostFocus(object sender, RoutedEventArgs e)
         {
+            //Delay to see if user is selecting a token item.
+            await Task.Delay(100);
+
             if (string.IsNullOrEmpty(ClassName.Text))
-            {
+            {            
                 ClassName.Text = Toolkit.ConvertSQLColumnName(TableName.Text);
             }
         }
@@ -323,6 +338,7 @@ namespace EFToolkit.Pages
                 DesignerGrid.SelectedItems.Clear();
             }
         }
+
     }
 
 }

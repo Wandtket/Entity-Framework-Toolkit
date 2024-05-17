@@ -7,7 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
-    xmlns:EFToolkit="using:EFToolkit"
+    xmlns:controls2="using:CommunityToolkit.WinUI.Controls" 
+    xmlns:EFToolkit="using:EFToolkit" 
+    xmlns:widgets="using:EFToolkit.Controls.Widgets"
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 
@@ -23,18 +25,15 @@
 
         <Grid Margin="15" ColumnSpacing="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="TableName" Header="SQL Table Name" 
-                     PlaceholderText="SQL Table Name (without schema ex: Accounting)"
-                     TextChanged="TableName_TextChanged"
-                     LostFocus="TableName_LostFocus"/>
-            
+            <widgets:SchemaBox x:Name="TableName" LostFocus="TableName_LostFocus"/>
+
             <AutoSuggestBox x:Name="SearchTable" PlaceholderText="Search Table" QueryIcon="Find"
                             TextChanged="SearchTable_TextChanged"
-                            VerticalAlignment="Bottom" Grid.Column="2"/>
+                            VerticalAlignment="Bottom" Grid.Column="1"/>
         </Grid>
 
         <Grid Grid.Column="1">
@@ -43,7 +42,8 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox x:Name="ClassName" Header="Class Name" PlaceholderText="" 
+
+            <TextBox x:Name="ClassName" Header="Class Name" PlaceholderText="ex: Accounting" 
                     TextChanged="ClassName_TextChanged" Width="200" Margin="0,0,0,16"
                     VerticalAlignment="Bottom"/>
 
@@ -62,7 +62,7 @@
                                     VerticalAlignment="Bottom"
                                     IsChecked="True">
                         <AppBarToggleButton.Icon>
-                            <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xF158;" FontFamily="Segoe MDL2 Assets"/>
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
                     <AppBarSeparator VerticalAlignment="Bottom"/>
@@ -70,7 +70,7 @@
                                     Click="ConfigurationToggleButton_Click"
                                     VerticalAlignment="Bottom">
                         <AppBarToggleButton.Icon>
-                            <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE2F7;" FontFamily="Segoe MDL2 Assets"/>
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
                     <AppBarSeparator VerticalAlignment="Bottom"/>
@@ -79,19 +79,11 @@
                                     Click="DTOToggleButton_Click"
                                     VerticalAlignment="Bottom">
                         <AppBarToggleButton.Icon>
-                            <FontIcon Glyph="&#xE176;" FontFamily="Segoe MDL2 Assets"/>
+                            <FontIcon Glyph="&#xE8F3;" FontFamily="Segoe MDL2 Assets"/>
                         </AppBarToggleButton.Icon>
                     </AppBarToggleButton>
                     <AppBarSeparator />
                 </CommandBar.PrimaryCommands>
-
-                <CommandBar.SecondaryCommands>
-                    <AppBarElementContainer>
-                        <ComboBox Header="Acronym Library: " Width="150" Margin="15" AllowFocusOnInteraction="True" >
-                            <ComboBoxItem Content="All"/>
-                        </ComboBox>
-                    </AppBarElementContainer>
-                </CommandBar.SecondaryCommands>
             </CommandBar>
 
 
@@ -99,12 +91,12 @@
         
 
 
-        <Grid Grid.Column="0" Grid.Row="1" Margin="15,0,15,15">
+        <Grid Grid.Column="0" Grid.Row="1" Margin="15,0,15,10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            
+
             <controls:DataGrid x:Name="DesignerGrid"
                            ItemsSource="{x:Bind DesignItems}"
                            AutoGenerateColumns="False"
@@ -153,10 +145,10 @@
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
-            <StackPanel Orientation="Horizontal" Grid.Row="1" 
+            <StackPanel Orientation="Horizontal" Grid.Row="1"
                         HorizontalAlignment="Right" VerticalAlignment="Center"
                         Spacing="5">
-                
+
                 <TextBlock Text="Total: " FontSize="16" FontWeight="Bold"/>
                 <TextBlock x:Name="DesignItemCount" Text="0" FontSize="16"/>
             </StackPanel>
@@ -177,13 +169,22 @@
                  IsSpellCheckEnabled="False"                    
                  Grid.Row="0"/>
 
-            <CommandBar DefaultLabelPosition="Right" Grid.Row="1">
-                <CommandBar.PrimaryCommands>
-                    <AppBarButton Label="Clear" Icon="ClearSelection" Click="ClearOutput_Click"/>
-                    <AppBarButton Label="Copy" Icon="Copy" Click="CopyOutput_Click"/>
-                    <AppBarButton Label="Export to file" Icon="Save" Click="Export_Click"/>
-                </CommandBar.PrimaryCommands>
-            </CommandBar>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <widgets:AcronymBox x:Name="AcronymLibrarySelector"/>
+               
+                <CommandBar Grid.Column="1" DefaultLabelPosition="Right" Margin="0,0,0,-10" VerticalAlignment="Center">
+                    <CommandBar.PrimaryCommands>
+                        <AppBarButton Label="Clear" Icon="ClearSelection" Click="ClearOutput_Click"/>
+                        <AppBarButton Label="Copy" Icon="Copy" Click="CopyOutput_Click"/>
+                        <AppBarButton Label="Export to file" Icon="Save" Click="Export_Click"/>
+                    </CommandBar.PrimaryCommands>
+                </CommandBar>
+            </Grid>
 
         </Grid>
        

@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -127,14 +128,14 @@ namespace EFToolkit.Pages
             {
                 SelectedItem.LibraryItems.Clear();
                 TranslationsTotal.Text = SelectedItem.LibraryItems.Count.ToString();
-                Toolkit.SaveLibraries();
+                Toolkit.SaveAcronymLibaries();
             }
         }
 
 
         private async void SaveLibrary_Click(object sender, RoutedEventArgs e)
         {
-            Toolkit.SaveLibraries();
+            Toolkit.SaveAcronymLibaries();
             await MessageBox.Show("Libraries should save automatically but this button feels good to press sometimes...", "Libraries Saved!");
         }
 
@@ -148,7 +149,7 @@ namespace EFToolkit.Pages
 
                 AcronymLibrary Library = (AcronymLibrary)AcronymLibraryList.SelectedItem;
                 Toolkit.AcronymLibraries.Remove(Library);
-                Toolkit.SaveLibraries();
+                Toolkit.SaveAcronymLibaries();
             }
         }
 
@@ -233,7 +234,7 @@ namespace EFToolkit.Pages
             SelectedItem.LibraryItems.Remove(Item);
             TranslationsTotal.Text = SelectedItem.LibraryItems.Count.ToString();
 
-            Toolkit.SaveLibraries();
+            Toolkit.SaveAcronymLibaries();
         }
 
         private async void Acronym_LostFocus(object sender, RoutedEventArgs e)
@@ -255,7 +256,7 @@ namespace EFToolkit.Pages
                 }
             }
 
-            Toolkit.SaveLibraries();
+            Toolkit.SaveAcronymLibaries();
         }
 
 
@@ -270,12 +271,12 @@ namespace EFToolkit.Pages
             {
                 box.Text = box.Text.Trim().Replace(" ", "_");
             }
-            Toolkit.SaveLibraries();
+            Toolkit.SaveAcronymLibaries();
         }
 
         private void TranslationOptions_LostFocus(object sender, RoutedEventArgs e)
         {
-            Toolkit.SaveLibraries();
+            Toolkit.SaveAcronymLibaries();
         }
 
 

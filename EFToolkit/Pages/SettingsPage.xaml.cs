@@ -72,14 +72,68 @@ namespace EFToolkit.Pages
         private static string projectdirectory = "project_directory";
 
 
-        public static bool AcronymModelSummary
+        public static bool ModelSummary
         {
-            get { return localSettings.Values[acronymmodelsummary] as bool? ?? true; }
-            set { localSettings.Values[acronymmodelsummary] = value; }
+            get { return localSettings.Values[modelsummary] as bool? ?? true; }
+            set { localSettings.Values[modelsummary] = value; }
         }
-        private static string acronymmodelsummary = "acronym_model_summary";
+        private static string modelsummary = "model_summary";
+
+        public static string ModelPrefix
+        {
+
+            get { return localSettings.Values[modelprefix] as string ?? ""; }
+            set { localSettings.Values[modelprefix] = value; }
+        }
+        private static string modelprefix = "model_prefix";
+
+        public static string ModelSuffix
+        {
+
+            get { return localSettings.Values[modelsuffix] as string ?? ""; }
+            set { localSettings.Values[modelsuffix] = value; }
+        }
+        private static string modelsuffix = "model_suffix";
 
 
+
+        public static bool DtoSummary
+        {
+            get { return localSettings.Values[dtosummary] as bool? ?? true; }
+            set { localSettings.Values[dtosummary] = value; }
+        }
+        private static string dtosummary = "dto_summary";
+
+        public static string DTOPrefix
+        {
+
+            get { return localSettings.Values[dtoprefix] as string ?? ""; }
+            set { localSettings.Values[dtoprefix] = value; }
+        }
+        private static string dtoprefix = "dto_prefix";
+
+        public static string DTOSuffix
+        {
+
+            get { return localSettings.Values[dtosuffix] as string ?? ""; }
+            set { localSettings.Values[dtosuffix] = value; }
+        }
+        private static string dtosuffix = "dto_suffix";
+
+
+        public static string ConfigurationName
+        {
+
+            get { return localSettings.Values[configurationname] as string ?? "builder"; }
+            set { localSettings.Values[configurationname] = value; }
+        }
+        private static string configurationname = "configuration_name";
+
+
+
+        /// <summary>
+        /// Determines if the RichEditBoxes should color code.
+        /// </summary>
         public static bool CodeColoring
         {
             get { return localSettings.Values[codecoloring] as bool? ?? true; }
@@ -88,6 +142,19 @@ namespace EFToolkit.Pages
         private static string codecoloring = "code_coloring";
 
 
+
+        public static string DatabaseSchema
+        {
+            get { return localSettings.Values[databaseschema] as string ?? "dbo."; }
+            set { localSettings.Values[databaseschema] = value; }
+        }
+        private static string databaseschema = "database_schema";
+
+
+
+        /// <summary>
+        /// Determines how DTO's should be built.
+        /// </summary>
         public static DTO_Options DTO_Options
         {
             get { try { return JsonSerializer.Deserialize<DTO_Options>(localSettings.Values[dto_options] as string); } catch { return DTO_Options.Standard; } }
@@ -97,7 +164,9 @@ namespace EFToolkit.Pages
         public static IList<DTO_Options> DTO_OptionList = Enum.GetValues(typeof(DTO_Options)).Cast<DTO_Options>().ToList();
 
 
-
+        /// <summary>
+        /// How object names should formatted throughout the application
+        /// </summary>
         public static CodeFormatOptions CodeFormatOptions
         {
             get { try { return JsonSerializer.Deserialize<CodeFormatOptions>(localSettings.Values[codeformatoptions] as string); } catch { return CodeFormatOptions.CamelCase; } }

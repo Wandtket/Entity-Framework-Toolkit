@@ -141,7 +141,7 @@
                                      Text="{Binding Acronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                      Grid.Column="3" KeyUp="Acronym_KeyUp" LostFocus="Acronym_LostFocus"/>
 
-                            <TextBlock Text="Replace With" Grid.Column="4"  VerticalAlignment="Center"/>
+                            <TextBlock Text="replace with" Grid.Column="4"  VerticalAlignment="Center"/>
 
                             <TextBox PlaceholderText="Translation" 
                                      Text="{Binding Translation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 

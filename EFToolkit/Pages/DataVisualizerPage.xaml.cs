@@ -36,6 +36,16 @@ namespace EFToolkit.Pages
             this.InitializeComponent();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            TableName.SuggestedItemsSource = Toolkit.SchemaLibraries;
+            TableName.ItemsSource = Toolkit.SelectedSchemaLibraries;
+
+            AcronymLibrarySelector.SuggestedItemsSource = Toolkit.AcronymLibraries;
+            AcronymLibrarySelector.ItemsSource = Toolkit.SelectedAcronymLibraries;
+        }
 
         private void VisualizerGrid_KeyUp(object sender, KeyRoutedEventArgs e)
         {
@@ -235,5 +245,7 @@ namespace EFToolkit.Pages
         {
             ConvertTable();
         }
+
+
     }
 }

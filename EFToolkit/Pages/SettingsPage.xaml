@@ -13,122 +13,208 @@
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 
-    <Page.Resources>
-        <Converters:EnumToDisplayNameConverter x:Key="EnumToDisplayNameConverter" />
-    </Page.Resources>
+
+    <ScrollViewer>
+        <StackPanel>
+
+            <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
+                <controls:HeaderedContentControl.Header>
+                    <TextBlock Text="Table Converter" FontSize="14" Opacity=".6" Margin="5"/>
+                </controls:HeaderedContentControl.Header>
+
+                <StackPanel Spacing="5">
+
+                    <controls:SettingsExpander Header="Models" Description="Settings for Model Converter">
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xF158;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsExpander.HeaderIcon>
+                        
+                        <controls:SettingsExpander.ItemsFooter>
+                            <StackPanel>
+                                <controls:SettingsCard Description="Will include original SQL column name and type in model summary."
+                                       Header="Model Summary"                                   
+                                       IsEnabled="True">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xEF16;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
+
+                                    <ToggleSwitch IsOn="{x:Bind EF:Settings.ModelSummary, Mode=TwoWay}" OnContent="On" OffContent="Off" Toggled="ToggleSwitch_Toggled"/>
+                                </controls:SettingsCard>
+
+                                <controls:SettingsCard Description="Defining a prefix/suffix will be used when the app suggests a model name."
+                                   Header="Model Naming"                                   
+                                   IsEnabled="True">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xE13E;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBox Text="{x:Bind EF:Settings.ModelPrefix, Mode=TwoWay}" PlaceholderText="Prefix"/>
+                                        <TextBlock Text="ModelName" VerticalAlignment="Center"/>
+                                        <TextBox Text="{x:Bind EF:Settings.ModelSuffix, Mode=TwoWay}" PlaceholderText="Suffix"/>
+                                    </StackPanel>
+                                </controls:SettingsCard>
+
+                            </StackPanel>
+
+                        </controls:SettingsExpander.ItemsFooter>
+                        
+                    </controls:SettingsExpander>
+
+                    <controls:SettingsExpander Header="Configuration" Description="Settings for Configuration Converter">
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xE2F7;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsExpander.HeaderIcon>
+
+                        <controls:SettingsExpander.ItemsFooter>
+                            <StackPanel>
+                                <controls:SettingsCard Description="The name given to the Entity Framework Type Builder"
+                                   Header="Entity Type Builder Name"                                   
+                                   IsEnabled="True">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xE13E;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBox Text="{x:Bind EF:Settings.ConfigurationName, Mode=TwoWay}" 
+                                                 PlaceholderText="ex: builder" Width="200"/>
+                                    </StackPanel>
+                                </controls:SettingsCard>
+
+                            </StackPanel>
+
+                        </controls:SettingsExpander.ItemsFooter>
+
+                    </controls:SettingsExpander>
+
+                    <controls:SettingsExpander Header="Data Transfer Objects (DTOs)" Description="Settings for DTO Converter">
+                        <controls:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xE8F3;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsExpander.HeaderIcon>
 
 
-    <StackPanel>
+                        <controls:SettingsExpander.ItemsFooter>
+                            <StackPanel>
+                                <controls:SettingsCard Description="Will include original SQL Table name, column name, and data type in Data Transfer Object (DTO) summary."
+                                        Header="DTO Summary"                                   
+                                        IsEnabled="True">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xEF16;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
-        <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
-            <controls:HeaderedContentControl.Header>
-                <TextBlock Text="Table Converter" FontSize="14" Opacity=".6" Margin="5"/>
-            </controls:HeaderedContentControl.Header>
-            
-            <StackPanel Spacing="3">
+                                    <ToggleSwitch IsOn="{x:Bind EF:Settings.DtoSummary, Mode=TwoWay}" OnContent="On" OffContent="Off" Toggled="ToggleSwitch_Toggled"/>
+                                </controls:SettingsCard>
 
-                <controls:SettingsCard Description="Will include acronym conversion in model summary in addition to original SQL field name and data type."
-                               Header="Acronym Conversion in Model Summary"                                   
-                               IsEnabled="True">
-                    <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xF180;" FontFamily="Segoe MDL2 Assets"/>
-                    </controls:SettingsCard.HeaderIcon>
+                                <controls:SettingsCard Description="Defining a prefix/suffix will be used when suggesting a Dto object name."
+                                   Header="DTO Naming"                                   
+                                   IsEnabled="True">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xE13E;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
-                    <ToggleSwitch IsOn="{x:Bind EF:Settings.AcronymModelSummary, Mode=TwoWay}" OnContent="On" OffContent="Off" Toggled="ToggleSwitch_Toggled"/>
-                </controls:SettingsCard>
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBox Text="{x:Bind EF:Settings.DTOPrefix, Mode=TwoWay}" PlaceholderText="Prefix"/>
+                                        <TextBlock Text="DTOName" VerticalAlignment="Center"/>
+                                        <TextBox Text="{x:Bind EF:Settings.DTOSuffix, Mode=TwoWay}" PlaceholderText="Suffix"/>
+                                    </StackPanel>
+                                </controls:SettingsCard>
 
-                <controls:SettingsCard Description="Toggle the coloring for code on or off to improve performance on large models."
-                               Header="Source Code Beautifier"                               
-                               IsEnabled="True">
+                                <controls:SettingsCard Description="Choose whether the output should use Standard, INotifyPropertyChanged, or MVVM formats."
+                                               Header="Data Transfer Object (DTO) Output"                               
+                                               IsEnabled="True">
 
-                    <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xF354;" FontFamily="Segoe MDL2 Assets"/>
-                    </controls:SettingsCard.HeaderIcon>
-                    
-                    <ToggleSwitch IsOn="{x:Bind EF:Settings.CodeColoring, Mode=TwoWay}" OnContent="On" OffContent="Off" Toggled="ToggleSwitch_Toggled"/>
-                </controls:SettingsCard>
-                
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xEBC3;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
 
-                <controls:SettingsCard Description="Choose whether the output should use the standard INotifyPropertyChanged format or MVVM Observable Objects."
-                               Header="Data Transfer Object (DTO) Output"                               
-                               IsEnabled="True">
-                    
-                    <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xEBC3;" FontFamily="Segoe MDL2 Assets"/>
-                    </controls:SettingsCard.HeaderIcon>
+                                    <ComboBox x:Name="DTOPreference"
+                                              ItemsSource="{x:Bind EF:Settings.DTO_OptionList}" 
+                                              SelectedItem="{x:Bind EF:Settings.DTO_Options, Mode=TwoWay}"
+                                              Width="200">
+                                    </ComboBox>
+                                </controls:SettingsCard>
 
-                    <ComboBox x:Name="DTOPreference"
-                              ItemsSource="{x:Bind EF:Settings.DTO_OptionList}" 
-                              SelectedItem="{x:Bind EF:Settings.DTO_Options, Mode=TwoWay}"
-                              Width="200">
-                    </ComboBox>
-                </controls:SettingsCard>
+                            </StackPanel>
+                        </controls:SettingsExpander.ItemsFooter>
 
-            </StackPanel>
-        </controls:HeaderedContentControl>
+                    </controls:SettingsExpander>
 
+                </StackPanel>
+            </controls:HeaderedContentControl>
 
+            <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
+                <controls:HeaderedContentControl.Header>
+                    <TextBlock Text="Acronym Library" FontSize="14" Opacity=".6" Margin="5"/>
+                </controls:HeaderedContentControl.Header>
 
-        <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
-            <controls:HeaderedContentControl.Header>
-                <TextBlock Text="Acronym Library" FontSize="14" Opacity=".6" Margin="5"/>
-            </controls:HeaderedContentControl.Header>
+                <StackPanel Spacing="3">
+                    <controls:SettingsCard Description="Should the "
+                                       Header="Replace Spaces"                                   
+                                       IsEnabled="True">
 
-            <StackPanel Spacing="3">
-                <controls:SettingsCard Description="Should the "
-                                   Header="Replace Spaces"                                   
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xF180;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+                        <ToggleSwitch IsOn="{x:Bind EF:Settings.AcronymCharacterReplacer, Mode=TwoWay}" OnContent="On" OffContent="Off" Toggled="ToggleSwitch_Toggled"/>
+
+                    </controls:SettingsCard>
+                </StackPanel>
+
+            </controls:HeaderedContentControl>
+
+            <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
+                <controls:HeaderedContentControl.Header>
+                    <TextBlock Text="Miscellaneous" FontSize="14" Opacity=".6" Margin="5"/>
+                </controls:HeaderedContentControl.Header>
+
+                <StackPanel Spacing="3">
+
+                    <controls:SettingsCard Description="Any spaces that are detected will be converted to either CamelCase or Snake_Case."
+                       Header="Code Formatting"                                   
+                       IsEnabled="True">
+
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE943;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+                        <ComboBox x:Name="SpacesPreference"
+                           ItemsSource="{x:Bind EF:Settings.CodeFormatOptionsList}" 
+                           SelectedItem="{x:Bind EF:Settings.CodeFormatOptions, Mode=TwoWay}"
+                           Width="200">
+                        </ComboBox>
+                    </controls:SettingsCard>
+
+                    <controls:SettingsCard Description="Toggle the coloring for code on or off to improve performance on large models."
+                                   Header="Source Code Beautifier"                               
                                    IsEnabled="True">
 
-                    <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xF180;" FontFamily="Segoe MDL2 Assets"/>
-                    </controls:SettingsCard.HeaderIcon>
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE2B1;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsCard.HeaderIcon>
 
-                    <ToggleSwitch IsOn="{x:Bind EF:Settings.AcronymCharacterReplacer, Mode=TwoWay}" OnContent="On" OffContent="Off" Toggled="ToggleSwitch_Toggled"/>
-
-                </controls:SettingsCard>
-            </StackPanel>
-
-        </controls:HeaderedContentControl>
+                        <ToggleSwitch IsOn="{x:Bind EF:Settings.CodeColoring, Mode=TwoWay}" OnContent="On" OffContent="Off" Toggled="ToggleSwitch_Toggled"/>
+                    </controls:SettingsCard>
 
 
-        <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
-            <controls:HeaderedContentControl.Header>
-                <TextBlock Text="Miscellaneous" FontSize="14" Opacity=".6" Margin="5"/>
-            </controls:HeaderedContentControl.Header>
+                    <controls:SettingsCard Description="Open Application Resources for advanced troubleshooting."
+                               Header="Application Resources"                                   
+                               IsEnabled="True">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xF180;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsCard.HeaderIcon>
 
-            <StackPanel Spacing="3">
-
-                <controls:SettingsCard Description="Any spaces that are detected will be converted to either CamelCase or Snake_Case."
-                   Header="Code Formatting"                                   
-                   IsEnabled="True">
-
-                    <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE943;" FontFamily="Segoe MDL2 Assets"/>
-                    </controls:SettingsCard.HeaderIcon>
-
-                    <ComboBox x:Name="SpacesPreference"
-                       ItemsSource="{x:Bind EF:Settings.CodeFormatOptionsList}" 
-                       SelectedItem="{x:Bind EF:Settings.CodeFormatOptions, Mode=TwoWay}"
-                       Width="200">
-                    </ComboBox>
-                </controls:SettingsCard>
-
-                <controls:SettingsCard Description="Open Application Resources for advanced troubleshooting."
-                           Header="Application Resources"                                   
-                           IsEnabled="True">
-                    <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xF180;" FontFamily="Segoe MDL2 Assets"/>
-                    </controls:SettingsCard.HeaderIcon>
-
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Button Content="Open App Folder" Click="AppFolder_Click"/>
-                        <Button Content="Open Local Folder" Click="LocalFolder_Click"/>
-                    </StackPanel>
-                </controls:SettingsCard>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button Content="Open App Folder" Click="AppFolder_Click"/>
+                            <Button Content="Open Local Folder" Click="LocalFolder_Click"/>
+                        </StackPanel>
+                    </controls:SettingsCard>
                 
-            </StackPanel>
+                </StackPanel>
             
-        </controls:HeaderedContentControl>
+            </controls:HeaderedContentControl>
 
-    </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+
 </Page>
