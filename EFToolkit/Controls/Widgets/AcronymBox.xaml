@@ -34,7 +34,7 @@
         </controls:TokenizingTextBox.TokenItemTemplate>
 
         <controls:TokenizingTextBox.QueryIcon>
-            <FontIconSource Glyph="&#xE82D;" FontFamily="Segoe MDL2 Assets" FontSize="14"/>
+            <FontIconSource Glyph="&#xE82D;" FontFamily="Segoe MDL2 Assets" FontSize="18"/>
         </controls:TokenizingTextBox.QueryIcon>
     </controls:TokenizingTextBox>
 </UserControl>

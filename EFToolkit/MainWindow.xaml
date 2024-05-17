@@ -82,7 +82,7 @@
                         ToolTipService.ToolTip="A library to translate Acronyms throughout the Toolkit">
 
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF003;" FontFamily="Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xE62F;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
