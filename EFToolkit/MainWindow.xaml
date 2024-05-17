@@ -74,10 +74,18 @@
                     ToolTipService.ToolTip="A library to translate Acronyms throughout the Toolkit">
                     
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE8F1;" FontFamily="Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xE82D;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                
+
+                <NavigationViewItem x:Name="SchemaLibraryItem" Content="Schemas"
+                        ToolTipService.ToolTip="A library to translate Acronyms throughout the Toolkit">
+
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xF003;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
             </NavigationView.MenuItems>
 
             <NavigationView.Content>
@@ -85,16 +93,12 @@
             </NavigationView.Content>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Name="ThemeLight" Visibility="Collapsed" SelectsOnInvoked="False">
+                <NavigationViewItem x:Name="Coffee" Content="Buy me a coffee" Visibility="Visible" SelectsOnInvoked="False">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE793;" FontFamily="Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xEC32;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="ThemeDark" SelectsOnInvoked="False">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEC46;" FontFamily="Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+
             </NavigationView.FooterMenuItems>
         </NavigationView>
 

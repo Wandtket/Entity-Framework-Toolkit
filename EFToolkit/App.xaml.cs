@@ -42,10 +42,12 @@ namespace EFToolkit
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            MainWindow.Activate();
-            Toolkit.LoadLibaries();
+            await Toolkit.LoadAcronymLibaries();
+            await Toolkit.LoadSchemaLibaries();
+
+            MainWindow.Activate();           
         }
     }
 }
