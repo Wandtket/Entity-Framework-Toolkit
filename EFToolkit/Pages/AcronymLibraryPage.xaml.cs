@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.UI.Controls.TextToolbarSymbols;
 using EFToolkit.Controls.Dialogs;
 using EFToolkit.Extensions;
 using Microsoft.UI.Xaml;
@@ -39,7 +40,7 @@ namespace EFToolkit.Pages
         {
             this.InitializeComponent();
 
-            AcronymLibraryList.ItemsSource = Toolkit.AcronymLibraries;
+            AcronymLibraryList.ItemsSource = Toolkit.AcronymLibraries.Where(x => x.Title != "All");
         }
 
 
@@ -279,7 +280,40 @@ namespace EFToolkit.Pages
             Toolkit.SaveAcronymLibaries();
         }
 
+        private void MoveItem_Click(object sender, RoutedEventArgs e)
+        {
+            Button BT = (Button)sender;
+            ListView List = (ListView)BT.Tag;
 
+            AcronymLibrary CurrentLibrary = (AcronymLibrary)AcronymLibraryList.SelectedItem;
+            List.ItemsSource = Toolkit.AcronymLibraries.Where(x => x.Title != "All" && x.Title != CurrentLibrary.Title);
+        }
+
+        private async void MoveLibrary_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListView List = (ListView)sender;
+            AcronymLibrary MoveLibrary = (AcronymLibrary)List.SelectedItem;
+            AcronymLibrary CurrentLibrary = (AcronymLibrary)AcronymLibraryList.SelectedItem;
+
+            Flyout FO = (Flyout)List.Tag;
+
+            var s = (FrameworkElement)sender;
+            var d = s.DataContext;
+            AcronymItem Item = (AcronymItem)d;
+
+            string Body = "Moving item from " + CurrentLibrary.Title + " to " + MoveLibrary.Title + "?";
+            string Title = "Move " + Item.Acronym + "?";
+
+            FO.Hide();
+
+            var Result = await ConfirmBox.Show(Body, Title);
+            if (Result == ContentDialogResult.Primary)
+            {
+                CurrentLibrary.LibraryItems.Remove(Item);
+                MoveLibrary.LibraryItems.Add(Item);
+                Toolkit.SaveAcronymLibaries();
+            }
+        }
     }
 
 
