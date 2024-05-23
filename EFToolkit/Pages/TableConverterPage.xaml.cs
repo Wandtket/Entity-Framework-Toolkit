@@ -164,7 +164,7 @@ namespace EFToolkit.Pages
                         int NameColumnIndex = 2;
                         int DataTypeColumnIndex = 5;
                         int AllowNullsColumnIndex = 3;
-
+                        int PrimaryKeyColumnIndex = 27;
 
                         bool AllowNulls = false;
                         try
@@ -174,8 +174,17 @@ namespace EFToolkit.Pages
                         }
                         catch { await MessageBox.Show("There was an error copying the SQL Table, please copy the table and try again.", "Error"); return; }
 
+                        bool PrimaryKey = false;
+                        try
+                        {
+                            if (valuesInRow[PrimaryKeyColumnIndex].ToLower() == "1") { PrimaryKey = true; }
+                            else if (valuesInRow[PrimaryKeyColumnIndex].ToLower() == "0") { PrimaryKey = false; }
+                        } catch { }
+
+
                         DesignItems.Add(new DesignItem()
                         {
+                            IsPrimaryKey = PrimaryKey,
                             ColumnName = valuesInRow[NameColumnIndex],
                             ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
                             DataType = valuesInRow[DataTypeColumnIndex],
@@ -249,7 +258,7 @@ namespace EFToolkit.Pages
             }
             if (ConfigurationToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems, TableName.Text));
+                await Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems, TableName.Text, ClassName.Text));
             }
             if (DTOToggleButton.IsChecked == true) 
             {
@@ -306,6 +315,7 @@ namespace EFToolkit.Pages
             else if (string.IsNullOrEmpty(sender.Text) && SearchBox.SearchStrings.Count == 0)
             {
                 DesignerGrid.ItemsSource = DesignItems;
+                sender.Focus(FocusState.Keyboard);
             }
         }
 
@@ -330,7 +340,7 @@ namespace EFToolkit.Pages
                     && a.ObjectName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
 
                     var Combined = ColumnNames.Concat(ObjectNames);
-                    filteredList = new ObservableCollection<DesignItem>(filteredList.Concat(Combined));
+                    filteredList = new ObservableCollection<DesignItem>(filteredList.Concat(Combined).Distinct());
                 }
             }
             else

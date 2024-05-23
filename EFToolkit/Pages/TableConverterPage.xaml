@@ -9,7 +9,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls" 
     xmlns:EFToolkit="using:EFToolkit" 
-    xmlns:widgets="using:EFToolkit.Controls.Widgets"
+    xmlns:widgets="using:EFToolkit.Controls.Widgets" xmlns:converters="using:EFToolkit.Converters"
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 
@@ -115,8 +115,22 @@
                 <controls:DataGrid.DataContext>
                     <EFToolkit:DesignItem/>
                 </controls:DataGrid.DataContext>
+                <controls:DataGrid.Resources>
+                    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+                </controls:DataGrid.Resources>
 
                 <controls:DataGrid.Columns>
+                    <controls:DataGridTemplateColumn Header="" Width="50" >
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <FontIcon Glyph="&#xE192;" FontFamily="Segoe MDL2 Assets" 
+                                          Visibility="{Binding IsPrimaryKey, Mode=TwoWay, 
+                                                UpdateSourceTrigger=PropertyChanged, 
+                                                Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
+
                     <controls:DataGridTextColumn Header="SQL Column Name" MinWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
                     <controls:DataGridTextColumn Header="Object Name" MinWidth="160" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                  ToolTipService.ToolTip="Use the Acronym Library to convert object names."/>
