@@ -76,7 +76,7 @@ namespace EFToolkit
             }
 
             string Body = Header +
-                         "public class " + ClassName + "\n" + "{" + "\n" +
+                         "public class " + Settings.ModelPrefix + ClassName + Settings.ModelSuffix + "\n" + "{" + "\n" +
                           Objects +
                          "" + "}";
 
@@ -88,9 +88,25 @@ namespace EFToolkit
         /// </summary>
         /// <param name="DesignItems"></param>
         /// <returns></returns>
-        public static string ConvertTableToConfiguration(ObservableCollection<DesignItem> DesignItems, string TableName)
+        public static string ConvertTableToConfiguration(ObservableCollection<DesignItem> DesignItems, string TableName, string ClassName)
         {
-            string Body = "";
+
+            string ModelName = Settings.ModelPrefix + ClassName + Settings.ModelSuffix;
+
+            string HasNoKey = "";
+            if (!DesignItems.Where(x => x.IsPrimaryKey == true).Any())
+            {
+                HasNoKey =  $"\t \t {Settings.ConfigurationName}.HasNoKey(); \n \n";
+            }
+
+            string Body = $"internal class {ModelName}Configuration : IEntityTypeConfiguration<{ModelName}> \n" +
+                                "{ \n" +
+                                $"\t public void Configure(EntityTypeBuilder<{ModelName}> {Settings.ConfigurationName}) \n" +
+                                "\t { \n" +
+                                "\t \t" + $"{Settings.ConfigurationName}.ToTable(\"{ModelName}\");" + "\n \n" + 
+                                HasNoKey;
+
+
             foreach (DesignItem Item in DesignItems)
             {
                 if (Item.ColumnName.Trim() != "")
@@ -99,13 +115,22 @@ namespace EFToolkit
                     string ObjectName = Item.ObjectName.Trim();
 
                     Body = Body +
-                        $"\t builder.Property(s => s.{ObjectName}) \n" +
-                        $"\t \t .HasColumnName(\"{ColumnName}\"); \n \n";
+                        $"\t \t {Settings.ConfigurationName}.Property(s => s.{ObjectName}) \n" +
+                        $"\t \t \t .HasColumnName(\"{ColumnName}\"); \n \n";
                 }
             }
 
-            string Header = "\t" + @"builder.ToTable(\" + TableName + "\");" + "\n \n";
-            Body = Header + Body;
+            string Header = "";
+            if (Settings.ModelSummary == true)
+            {
+                Header = $"/// <summary> \n" +
+                                $"/// {TableName} \n" +
+                                "/// </summary> \n";                              
+            }
+
+            string Footer = "\t } \n }";
+
+            Body = Header + Body + Footer;
 
             return Body;
         }
@@ -133,7 +158,7 @@ namespace EFToolkit
                         string ColumnType = ConvertSQLType(Item.DataType.Trim(), true);
                         string ObjectName = Item.ObjectName.Trim();
 
-                        if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
+                        if (ObjectName.ToLower() == "override") { ObjectName = "_Override"; }
 
                         string Summary = "";
                         if (Settings.DtoSummary == true)
@@ -159,7 +184,7 @@ namespace EFToolkit
                 }
 
                 string Body = Header +
-                            "public class " + ClassName + "Dto" + "\n" + "{" + "\n \n" +
+                            "public class " + Settings.DTOPrefix + ClassName + Settings.DTOSuffix + "\n" + "{" + "\n \n" +
                             Objects +
                             "}";
 
@@ -176,11 +201,12 @@ namespace EFToolkit
 
                         string ColumnName = Item.ColumnName.Trim();
                         string ColumnType = ConvertSQLType(Item.DataType.Trim(), true);
+                        string ObjectName = Item.ObjectName.Trim();
 
                         string Trim = "";
-                        if (ColumnType == "string") { Trim = ".Trim()"; }
+                        if (Item.DataType.ToLower().StartsWith("char")) { Trim = ".Trim()"; }
 
-                        if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
+                        if (ObjectName.ToLower() == "override") { ObjectName = "_Override"; }
 
                         string Summary = "";
                         if (Settings.DtoSummary == true)
@@ -192,19 +218,19 @@ namespace EFToolkit
                         }
 
                         Objects = Objects + Summary + 
-                        "\t" + $"[JsonPropertyName(\"{ColumnName}\")]" + "\n" +
-                        "\t" + "public " + ColumnType + AllowNull + " " + ColumnName + "\n" +
+                        "\t" + $"[JsonPropertyName(\"{ObjectName}\")]" + "\n" +
+                        "\t" + "public " + ColumnType + AllowNull + " " + ObjectName + "\n" +
                         "\t" + "{" + "\n" +
-                        "\t" + "\t" + "get { return " + ColumnName.ToLower() + "; }" + "\n" +
+                        "\t" + "\t" + "get { return " + ObjectName.ToLower() + "; }" + "\n" +
                         "\t" + "\t" + "set { " + "\n" +
-                        "\t" + "\t" + "\t" + "if (" + ColumnName.ToLower() + " != value" + Trim + ")" + "\n" +
+                        "\t" + "\t" + "\t" + "if (" + ObjectName.ToLower() + " != value" + Trim + ")" + "\n" +
                         "\t" + "\t" + "\t" + "{" + "\n" +
-                        "\t" + "\t" + "\t" + "\t" + ColumnName.ToLower() + " = value" + Trim + ";" + "\n" +
-                        "\t" + "\t" + "\t" + "\t" + $"NotifyPropertyChanged(\"{ColumnName}\");" + "\n" +
+                        "\t" + "\t" + "\t" + "\t" + ObjectName.ToLower() + " = value" + Trim + ";" + "\n" +
+                        "\t" + "\t" + "\t" + "\t" + $"NotifyPropertyChanged(\"{ObjectName}\");" + "\n" +
                         "\t" + "\t" + "\t" + "}" + "\n" +
                         "\t" + "\t" + "}" + "\n" +
                         "\t" + "}" + "\n" +
-                        "\t private " + ColumnType + AllowNull + " " + ColumnName.ToLower() + "; " + "\n" + "\n" + "\n";
+                        "\t private " + ColumnType + AllowNull + " " + ObjectName.ToLower() + "; " + "\n" + "\n" + "\n";
                     }
                 }
 
@@ -217,7 +243,7 @@ namespace EFToolkit
                 }
 
                 string Body = Header +
-                            "public class " + TableName + "Dto" + " : INotifyPropertyChanged" + "\n" + "{" + "\n" +
+                            "public class " + Settings.DTOPrefix + ClassName + Settings.DTOSuffix + " : INotifyPropertyChanged" + "\n" + "{" + "\n" +
                             Objects +
 
                             "\t" + "public event PropertyChangedEventHandler PropertyChanged;" + "\n" +
@@ -232,7 +258,6 @@ namespace EFToolkit
             }
             else if (Options == DTO_Options.MVVM)
             {
-
                 foreach (DesignItem Item in DesignItems)
                 {
                     if (Item.ColumnName.Trim() != "")
@@ -241,22 +266,32 @@ namespace EFToolkit
                         if (Item.AllowNulls == true) { AllowNull = "?"; }
 
                         string ColumnName = Item.ColumnName.Trim();
-                        ColumnName = char.ToLowerInvariant(ColumnName[0]) + ColumnName.Substring(1);
-                        if (ColumnName.ToLower() == "override") { ColumnName = "_Override"; }
-
                         string ColumnType = ConvertSQLType(Item.DataType.Trim(), true);
+                        string ObjectName = Item.ObjectName.Trim();
 
-                        Objects = Objects +
-                        "\t" + $"[JsonPropertyName(\"{ColumnName}\")]" + "\n" +
+                        ObjectName = char.ToLowerInvariant(ObjectName[0]) + ObjectName.Substring(1);
+                        if (ObjectName.ToLower() == "override") { ObjectName = "_Override"; }
+
+                        string Summary = "";
+                        if (Settings.DtoSummary == true)
+                        {
+                            Summary =
+                            "\t" + @"/// <summary>" + "\n" +
+                            "\t" + @"/// " + ColumnName + " - " + Item.DataType.Trim() + "\n" +
+                            "\t" + @"/// </summary>" + "\n";
+                        }
+
+                        Objects = Objects + Summary +
+                        "\t" + $"[JsonPropertyName(\"{ObjectName}\")]" + "\n" +
                         "\t" + $"[ObservableProperty]" + "\n" +
-                        "\t" + "private " + ColumnType + AllowNull + " " + ColumnName + "; \n \n \n";
+                        "\t" + "private " + ColumnType + AllowNull + " " + ObjectName + "; \n \n \n";
                     }
                 }
 
                 string Body = @"/// <summary>" + "\n" +
                                     @"/// dbo." + TableName + "\n" +
                                     @"/// </summary>" + "\n" +
-                                    "public partial class " + TableName + "Dto" + " : ObservableObject" + "\n" + "{" + "\n" +
+                                    "public partial class " + Settings.DTOPrefix + ClassName + Settings.DTOSuffix + " : ObservableObject" + "\n" + "{" + "\n" +
                                     Objects +
                                     "}";
 
@@ -570,6 +605,8 @@ namespace EFToolkit
 
     public partial class DesignItem : ObservableObject
     {
+        [ObservableProperty]
+        private bool isPrimaryKey = false;
 
         [ObservableProperty]
         private string columnName = string.Empty;

@@ -47,7 +47,8 @@ namespace EFToolkit
             await Toolkit.LoadAcronymLibaries();
             await Toolkit.LoadSchemaLibaries();
 
-            MainWindow.Activate();           
+            MainWindow.Activate();
+            MainWindow.Maximize();
         }
     }
 }
