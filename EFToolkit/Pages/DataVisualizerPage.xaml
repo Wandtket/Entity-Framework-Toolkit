@@ -24,17 +24,19 @@
         </Grid.RowDefinitions>
 
 
-        <Grid Margin="15" ColumnSpacing="10">
+        <Grid Margin="15" ColumnSpacing="10" HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <widgets:SchemaBox x:Name="TableName"/>
+
+            <widgets:SearchBox x:Name="SearchBox" 
+                               TextChanged="SearchTable_TextChanged"
+                               TokenItemRemoved="SearchBox_TokenItemRemoved"
+                               Grid.Column="1"/>
             
-            <AutoSuggestBox x:Name="SearchTable" PlaceholderText="Search Table" QueryIcon="Find"
-                            TextChanged="SearchTable_TextChanged"
-                            VerticalAlignment="Bottom" Grid.Column="1"/>
         </Grid>
    
         
@@ -52,7 +54,6 @@
             </Grid.RowDefinitions>
 
             <controls:DataGrid x:Name="VisualizerGrid"
-                           ItemsSource="{x:Bind VisualizerItems}"
                            AutoGenerateColumns="False"
                            CanUserReorderColumns="False"
                            CanUserResizeColumns="True"

@@ -23,7 +23,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Margin="15" ColumnSpacing="10">
+        <Grid Margin="15" ColumnSpacing="10" HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -31,9 +31,11 @@
 
             <widgets:SchemaBox x:Name="TableName" LostFocus="TableName_LostFocus"/>
 
-            <AutoSuggestBox x:Name="SearchTable" PlaceholderText="Search Table" QueryIcon="Find"
-                            TextChanged="SearchTable_TextChanged"
-                            VerticalAlignment="Bottom" Grid.Column="1"/>
+            <widgets:SearchBox x:Name="SearchBox" 
+                               TextChanged="SearchTable_TextChanged"
+                               TokenItemRemoved="SearchBox_TokenItemRemoved"
+                               Grid.Column="1"/>
+            
         </Grid>
 
         <Grid Grid.Column="1">
@@ -108,7 +110,7 @@
                            BorderThickness="2"
                            KeyUp="DesignerGrid_KeyUp"
                            FrozenColumnCount="2"
-                           MaxWidth="600">
+                           MaxWidth="900">
 
                 <controls:DataGrid.DataContext>
                     <EFToolkit:DesignItem/>

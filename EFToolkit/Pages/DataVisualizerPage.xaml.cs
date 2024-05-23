@@ -16,6 +16,8 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using System.Diagnostics;
+using EFToolkit.Controls.Widgets;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -45,6 +47,8 @@ namespace EFToolkit.Pages
 
             AcronymLibrarySelector.SuggestedItemsSource = Toolkit.AcronymLibraries;
             AcronymLibrarySelector.ItemsSource = Toolkit.SelectedAcronymLibraries;
+
+            VisualizerGrid.ItemsSource = VisualizerItems;
         }
 
         private void VisualizerGrid_KeyUp(object sender, KeyRoutedEventArgs e)
@@ -170,7 +174,7 @@ namespace EFToolkit.Pages
         }
 
 
-
+        
         private async void ConvertTable()
         {
             OutputProgress.Visibility = Visibility.Visible;
@@ -191,50 +195,65 @@ namespace EFToolkit.Pages
 
         }
 
-        private void SearchTable_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+
+
+        private async void SearchTable_TextChanged(SearchBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput && sender.Text.Length > 0)
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput
+                && sender.SearchStrings.Count != 0 || !string.IsNullOrEmpty(sender.Text))
             {
-                VisualizerGrid.SelectedItems.Clear();
+                FilterVisualizerGrid(sender);
+            }
+            else if (string.IsNullOrEmpty(sender.Text) && SearchBox.SearchStrings.Count == 0)
+            {
+                VisualizerGrid.ItemsSource = VisualizerItems;
+            }
+        }
 
-                int FoundCount = 0;
-                VisualizerItem? FoundItem = null;
-                for (int i = 0; i < VisualizerItems.Count; i++)
+        private void SearchBox_TokenItemRemoved(SearchBox sender, object args)
+        {
+            FilterVisualizerGrid(sender);
+        }
+
+
+        private void FilterVisualizerGrid(SearchBox sender)
+        {
+            ObservableCollection<VisualizerItem> filteredList = new();
+
+            if (sender.SearchStrings.Count >= 1)
+            {
+                foreach (var Search in sender.SearchStrings)
                 {
-                    VisualizerItem Item = (VisualizerItem)VisualizerItems[i];
+                    var ColumnNames = VisualizerItems.Where(a => a.ColumnName.Contains(Search, StringComparison.CurrentCultureIgnoreCase)
+                    && a.ColumnName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
 
-                    if (Item.ColumnName.ToLower().Contains(sender.Text.ToLower()))
-                    {
-                        VisualizerGrid.SelectedItems.Add(Item);
-                        FoundCount = FoundCount + 1;
-                        FoundItem = Item;
-                    }
+                    var ObjectNames = VisualizerItems.Where(a => a.ObjectName.Contains(Search, StringComparison.CurrentCultureIgnoreCase)
+                    && a.ObjectName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
 
-                    if (Item.ObjectName.ToLower().Contains(sender.Text.ToLower()))
-                    {
-                        VisualizerGrid.SelectedItems.Add(Item);
-                        FoundCount = FoundCount + 1;
-                        FoundItem = Item;
-                    }
+                    var Values = VisualizerItems.Where(a => a.Value.Contains(Search, StringComparison.CurrentCultureIgnoreCase)
+                    && a.Value.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
 
-                    if (Item.Value.ToLower().Contains(sender.Text.ToLower()))
-                    {
-                        VisualizerGrid.SelectedItems.Add(Item);
-                        FoundCount = FoundCount + 1;
-                        FoundItem = Item;
-                    }
-                }
+                    var Combined1 = ColumnNames.Concat(ObjectNames);
+                    var Combined2 = Combined1.Concat(Values);
 
-                if (FoundCount == 1)
-                {
-                    VisualizerGrid.ScrollIntoView(FoundItem, VisualizerGrid.Columns[0]);
+                    filteredList = new ObservableCollection<VisualizerItem>(filteredList.Concat(Combined2));
                 }
             }
             else
             {
-                VisualizerGrid.SelectedItems.Clear();
+                var ColumnNames = VisualizerItems.Where(a => a.ColumnName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
+                var ObjectNames = VisualizerItems.Where(a => a.ObjectName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
+                var Values = VisualizerItems.Where(a => a.Value.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
+
+                var Combined1 = ColumnNames.Concat(ObjectNames);
+                var Combined2 = Combined1.Concat(Values);
+
+                filteredList = new ObservableCollection<VisualizerItem>(filteredList.Concat(Combined2));
             }
+
+            VisualizerGrid.ItemsSource = filteredList;
         }
+
 
         private void TableName_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -244,8 +263,13 @@ namespace EFToolkit.Pages
         private void Include_Click(object sender, RoutedEventArgs e)
         {
             ConvertTable();
-        }
 
+            var s = (FrameworkElement)sender;
+            var d = s.DataContext;
+            VisualizerItem item = (VisualizerItem)d;
+
+            VisualizerGrid.ScrollIntoView(item, VisualizerGrid.Columns[0]);
+        }
 
     }
 }

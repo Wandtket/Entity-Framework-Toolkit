@@ -22,6 +22,8 @@ using EFToolkit.Extensions;
 using static System.Net.Mime.MediaTypeNames;
 using CommunityToolkit.WinUI.Controls;
 using System.Threading.Tasks;
+using EFToolkit.Controls.Widgets;
+using System.Diagnostics;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -294,51 +296,55 @@ namespace EFToolkit.Pages
             ConvertTable();
         }
 
-        private void SearchTable_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private async void SearchTable_TextChanged(SearchBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput && sender.Text.Length > 0)
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput 
+                && sender.SearchStrings.Count != 0 || !string.IsNullOrEmpty(sender.Text))
             {
-                DesignerGrid.SelectedItems.Clear();
+                FilterDesignGrid(sender);
+            }
+            else if (string.IsNullOrEmpty(sender.Text) && SearchBox.SearchStrings.Count == 0)
+            {
+                DesignerGrid.ItemsSource = DesignItems;
+            }
+        }
 
-                int FoundCount = 0;
-                DesignItem? FoundItem = null;
-                for (int i = 0; i < DesignItems.Count; i++)
+        private void SearchBox_TokenItemRemoved(SearchBox sender, object args)
+        {
+            FilterDesignGrid(sender);
+        }
+
+
+        private void FilterDesignGrid(SearchBox sender)
+        {
+            ObservableCollection<DesignItem> filteredList = new();
+
+            if (sender.SearchStrings.Count >= 1)
+            {
+                foreach (var Search in sender.SearchStrings)
                 {
-                    DesignItem Item = (DesignItem)DesignItems[i];
+                    var ColumnNames = DesignItems.Where(a => a.ColumnName.Contains(Search, StringComparison.CurrentCultureIgnoreCase)
+                    && a.ColumnName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
 
-                    if (Item.ColumnName.ToLower().Contains(sender.Text.ToLower()))
-                    {
-                        DesignerGrid.SelectedItems.Add(Item);
-                        FoundCount = FoundCount + 1;
-                        FoundItem = Item;
-                    }
+                    var ObjectNames = DesignItems.Where(a => a.ObjectName.Contains(Search, StringComparison.CurrentCultureIgnoreCase)
+                    && a.ObjectName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
 
-                    if (Item.ObjectName.ToLower().Contains(sender.Text.ToLower()))
-                    {
-                        DesignerGrid.SelectedItems.Add(Item);
-                        FoundCount = FoundCount + 1;
-                        FoundItem = Item;
-                    }
-
-                    if (Item.DataType.ToLower().Contains(sender.Text.ToLower()))
-                    {
-                        DesignerGrid.SelectedItems.Add(Item);
-                        FoundCount = FoundCount + 1;
-                        FoundItem = Item;
-                    }
-                }
-
-                if (FoundCount == 1)
-                {
-                    DesignerGrid.ScrollIntoView(FoundItem, DesignerGrid.Columns[0]);
+                    var Combined = ColumnNames.Concat(ObjectNames);
+                    filteredList = new ObservableCollection<DesignItem>(filteredList.Concat(Combined));
                 }
             }
             else
             {
-                DesignerGrid.SelectedItems.Clear();
-            }
-        }
+                var ColumnNames = DesignItems.Where(a => a.ColumnName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
+                var ObjectNames = DesignItems.Where(a => a.ObjectName.Contains(sender.Text, StringComparison.CurrentCultureIgnoreCase));
 
+                var Combined = ColumnNames.Concat(ObjectNames);
+                filteredList = new ObservableCollection<DesignItem>(filteredList.Concat(Combined));
+            }
+
+            DesignerGrid.ItemsSource = filteredList;
+        }
+        
     }
 
 }
