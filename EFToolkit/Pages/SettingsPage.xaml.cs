@@ -36,10 +36,6 @@ namespace EFToolkit.Pages
         }
 
 
-        private async void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private async void AppFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -79,6 +75,14 @@ namespace EFToolkit.Pages
         }
         private static string modelsummary = "model_summary";
 
+        public static bool ModelNameSuggestion
+        {
+            get { return localSettings.Values[modelnamesuggestion] as bool? ?? true; }
+            set { localSettings.Values[modelnamesuggestion] = value; }
+        }
+        private static string modelnamesuggestion = "model_name_suggestion";
+
+
         public static string ModelPrefix
         {
 
@@ -115,7 +119,7 @@ namespace EFToolkit.Pages
         public static string DTOSuffix
         {
 
-            get { return localSettings.Values[dtosuffix] as string ?? ""; }
+            get { return localSettings.Values[dtosuffix] as string ?? "Dto"; }
             set { localSettings.Values[dtosuffix] = value; }
         }
         private static string dtosuffix = "dto_suffix";
@@ -143,13 +147,12 @@ namespace EFToolkit.Pages
 
 
 
-        public static string DatabaseSchema
+        public static bool DataVisualizerIncludeAll
         {
-            get { return localSettings.Values[databaseschema] as string ?? "dbo."; }
-            set { localSettings.Values[databaseschema] = value; }
+            get { return localSettings.Values[datavisualizerincludeall] as bool? ?? false; }
+            set { localSettings.Values[datavisualizerincludeall] = value; }
         }
-        private static string databaseschema = "database_schema";
-
+        private static string datavisualizerincludeall = "data_visualizer_include_all";
 
 
         /// <summary>
