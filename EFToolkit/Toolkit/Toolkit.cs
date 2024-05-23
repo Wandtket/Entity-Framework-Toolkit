@@ -18,6 +18,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -383,6 +384,12 @@ namespace EFToolkit
                         Library.LibraryItems = new ObservableCollection<AcronymItem>(Library.LibraryItems.OrderBy(x => x.Acronym).ToList());
                     }
 
+                    //Add an All Item.
+                    if (Libraries.Where(x => x.Title == "All").FirstOrDefault() == null)
+                    {
+                        Libraries.Add(new AcronymLibrary() { Title = "All" });
+                    }
+
                     AcronymLibraries = new ObservableCollection<AcronymLibrary>(Libraries.OrderBy(x => x.Title));
                 }
             }
@@ -423,7 +430,8 @@ namespace EFToolkit
         public static string ConvertSQLColumnName(string SQLColumnName)
         {
             ObservableCollection<AcronymLibrary> List = new();
-            if (SelectedAcronymLibraries.Count == 0) { List = AcronymLibraries; }
+ 
+            if (SelectedAcronymLibraries.Where(x => x.Title == "All").FirstOrDefault() != null) { List = AcronymLibraries; }
             else { List = SelectedAcronymLibraries; }
 
             foreach (AcronymLibrary library in List)
@@ -436,7 +444,20 @@ namespace EFToolkit
                         {
                             if (SQLColumnName.Contains(Item.Acronym))
                             {
-                                SQLColumnName = SQLColumnName.Replace(Item.Acronym, Item.Translation);
+                                //Check the next characters casing in case the acronym is only two or so digits long.
+                                var NextIndex = SQLColumnName.IndexOf(Item.Acronym) + Item.Acronym.Length;
+                                if (SQLColumnName.Length !> NextIndex + 1)
+                                {
+                                    var CheckCasing = SQLColumnName.Substring(NextIndex, 1);
+                                    if (Char.IsUpper(Convert.ToChar(CheckCasing)) || CheckCasing == "_")
+                                    {
+                                        SQLColumnName = SQLColumnName.ReplaceFirstOccurrence(Item.Acronym, Item.Translation);
+                                    }
+                                }      
+                                else if (SQLColumnName.EndsWith(Item.Acronym))
+                                {
+                                    SQLColumnName = SQLColumnName.ReplaceLastOccurrence(Item.Acronym, Item.Translation);
+                                }
                             }
                         }
                         else if (Item.Options == "Equals")
