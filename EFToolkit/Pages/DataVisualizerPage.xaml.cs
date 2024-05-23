@@ -42,8 +42,8 @@ namespace EFToolkit.Pages
         {
             base.OnNavigatedTo(e);
 
-            TableName.SuggestedItemsSource = Toolkit.SchemaLibraries;
-            TableName.ItemsSource = Toolkit.SelectedSchemaLibraries;
+            //TableName.SuggestedItemsSource = Toolkit.SchemaLibraries;
+            //TableName.ItemsSource = Toolkit.SelectedSchemaLibraries;
 
             AcronymLibrarySelector.SuggestedItemsSource = Toolkit.AcronymLibraries;
             AcronymLibrarySelector.ItemsSource = Toolkit.SelectedAcronymLibraries;
@@ -207,6 +207,7 @@ namespace EFToolkit.Pages
             else if (string.IsNullOrEmpty(sender.Text) && SearchBox.SearchStrings.Count == 0)
             {
                 VisualizerGrid.ItemsSource = VisualizerItems;
+                sender.Focus(FocusState.Keyboard);
             }
         }
 
@@ -222,6 +223,8 @@ namespace EFToolkit.Pages
 
             if (sender.SearchStrings.Count >= 1)
             {
+                List<VisualizerItem> SelectedItems = new();
+
                 foreach (var Search in sender.SearchStrings)
                 {
                     var ColumnNames = VisualizerItems.Where(a => a.ColumnName.Contains(Search, StringComparison.CurrentCultureIgnoreCase)
@@ -236,8 +239,10 @@ namespace EFToolkit.Pages
                     var Combined1 = ColumnNames.Concat(ObjectNames);
                     var Combined2 = Combined1.Concat(Values);
 
-                    filteredList = new ObservableCollection<VisualizerItem>(filteredList.Concat(Combined2));
+                    SelectedItems.AddRange(Combined2);
                 }
+
+                filteredList = new ObservableCollection<VisualizerItem>(SelectedItems.Distinct());
             }
             else
             {
@@ -248,16 +253,10 @@ namespace EFToolkit.Pages
                 var Combined1 = ColumnNames.Concat(ObjectNames);
                 var Combined2 = Combined1.Concat(Values);
 
-                filteredList = new ObservableCollection<VisualizerItem>(filteredList.Concat(Combined2));
+                filteredList = new ObservableCollection<VisualizerItem>(filteredList.Concat(Combined2).Distinct());
             }
 
             VisualizerGrid.ItemsSource = filteredList;
-        }
-
-
-        private void TableName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ConvertTable();
         }
 
         private void Include_Click(object sender, RoutedEventArgs e)
@@ -271,5 +270,10 @@ namespace EFToolkit.Pages
             VisualizerGrid.ScrollIntoView(item, VisualizerGrid.Columns[0]);
         }
 
+
+        private void TableName_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            ConvertTable();
+        }
     }
 }

@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:widgets="using:EFToolkit.Controls.Widgets" 
     xmlns:EFToolkit="using:EFToolkit"
+    xmlns:EF="using:EFToolkit.Pages"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls" 
     mc:Ignorable="d"
@@ -24,13 +25,15 @@
         </Grid.RowDefinitions>
 
 
-        <Grid Margin="15" ColumnSpacing="10" HorizontalAlignment="Left">
+        <Grid Margin="15" ColumnSpacing="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <widgets:SchemaBox x:Name="TableName"/>
+            <AutoSuggestBox x:Name="TableName" Header="Table Name / Alias" 
+                            PlaceholderText="example: dbo.vendors"
+                            TextChanged="TableName_TextChanged"/>
 
             <widgets:SearchBox x:Name="SearchBox" 
                                TextChanged="SearchTable_TextChanged"
@@ -89,8 +92,11 @@
 
             <CommandBar Grid.Row="1" HorizontalAlignment="Left" DefaultLabelPosition="Right">
                 <CommandBar.PrimaryCommands>
-                    <AppBarToggleButton x:Name="IncludeAll" Label="Include All" Icon="SelectAll" IsChecked="True" Click="IncludeAll_Click" />
                     <AppBarButton Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"/>
+                    
+                    <AppBarToggleButton x:Name="IncludeAll" Label="Include All" Icon="SelectAll" Click="IncludeAll_Click"
+                                        IsChecked="{x:Bind EF:Settings.AcronymCharacterReplacer, Mode=TwoWay}"/>
+
                     <AppBarButton Label="Clear Table" Icon="Delete" Click="ClearTable_Click"/>
                 </CommandBar.PrimaryCommands>
             </CommandBar>
