@@ -17,6 +17,7 @@
   <ItemGroup>
     <None Remove="Controls\Widgets\AcronymBox.xaml" />
     <None Remove="Controls\Widgets\SchemaBox.xaml" />
+    <None Remove="Controls\Widgets\SearchBox.xaml" />
     <None Remove="Pages\AcronymLibraryPage.xaml" />
     <None Remove="Pages\DataVisualizerPage.xaml" />
     <None Remove="Pages\ModelFixerPage.xaml" />
@@ -100,7 +101,7 @@
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Segmented" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.0.240109" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.0.240109" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.TokenizingTextBox" Version="8.1.240328-rc" />
     <PackageReference Include="CommunityToolkit.WinUI.Converters" Version="8.0.240109" />
     <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI" Version="7.1.2" />
@@ -148,6 +149,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\Dialogs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Widgets\SearchBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\Widgets\SchemaBox.xaml">
