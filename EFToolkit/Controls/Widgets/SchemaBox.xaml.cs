@@ -71,10 +71,13 @@ namespace EFToolkit.Controls.Widgets
         }
 
 
-        private async void SchemaLibraryTokenTextBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+
+        public delegate void TextChangedHandler(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args);
+        public event TextChangedHandler TextChanged;
+        private void SchemaTextBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-            {           
+            {
                 ObservableCollection<SchemaLibrary> filteredList = new();
                 foreach (var filter in Toolkit.SchemaLibraries)
                 {
@@ -86,9 +89,8 @@ namespace EFToolkit.Controls.Widgets
 
                 SchemaTextBox.SuggestedItemsSource = filteredList.Distinct();
             }
+
+            TextChanged?.Invoke(sender, args);
         }
-
-
-         
-}
+    }
 }

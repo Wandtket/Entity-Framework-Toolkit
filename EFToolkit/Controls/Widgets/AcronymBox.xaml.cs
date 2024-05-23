@@ -37,6 +37,8 @@ namespace EFToolkit.Controls.Widgets
             Toolkit.SaveAcronymLibaries();
         }
 
+        public delegate void TextChangedHandler(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args);
+        public event TextChangedHandler TextChanged;
         private void AcronymTextBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
@@ -52,6 +54,8 @@ namespace EFToolkit.Controls.Widgets
 
                 AcronymTextBox.SuggestedItemsSource = filteredList.Distinct();
             }
+
+            TextChanged?.Invoke(sender, args);
         }
     }
 }
