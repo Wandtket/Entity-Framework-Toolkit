@@ -1,4 +1,5 @@
-﻿using Microsoft.UI;
+﻿using EFToolkit.Pages;
+using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using System;
@@ -19,7 +20,11 @@ namespace EFToolkit.Extensions
         public static async Task SetText(this RichEditBox text, string Value)
         {
             text.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, Value);
-            await text.ColorCode();
+
+            if (Settings.CodeColoring == true)
+            {
+                await text.ColorCode();
+            }
         }
 
         public static string GetText(this RichEditBox text)
@@ -166,8 +171,6 @@ namespace EFToolkit.Extensions
             public string? EndText { get; set; } = null;
 
         }
-
-
 
 
     }
