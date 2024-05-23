@@ -17,8 +17,9 @@
                         KeyUp="SearchTextBox_KeyUp"
                         TextChanged="SearchTextBox_TextChanged"
                         TokenItemRemoved="SearchTextBox_TokenItemRemoved"
-                        Height="40" MaxWidth="400"
-                        VerticalAlignment="Bottom">
+                        Height="40" MaxWidth="450"
+                        VerticalAlignment="Bottom"
+                        MaximumTokens="1">
 
         <controls:TokenizingTextBox.TokenItemTemplate>
             <DataTemplate>
