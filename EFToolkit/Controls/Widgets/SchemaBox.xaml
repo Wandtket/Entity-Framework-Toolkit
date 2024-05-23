@@ -18,7 +18,7 @@
                                 TokenItemRemoved="SchemaTextBox_TokenItemRemoved"
                                 DisplayMemberPath="Schema"
                                 TextMemberPath="Schema"
-                                Height="59" MaxWidth="300"
+                                Height="59" MaxWidth="400"
                                 ToolTipService.ToolTip="A Schema library will help convert SQL Column Names to Object Names.">
 
         <controls:TokenizingTextBox.TokenItemTemplate>
