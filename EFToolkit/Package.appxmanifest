@@ -54,6 +54,20 @@
           <uap:Rotation Preference="landscapeFlipped"/>
           <uap:Rotation Preference="portraitFlipped"/></uap:InitialRotationPreference>
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="eftoolkit">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.efal</uap:FileType>
+              <uap:FileType>.efsl</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Resources\Images\logo.png</uap:Logo>
+            <uap:DisplayName>Entity Framework Toolkit File</uap:DisplayName>
+            <uap:InfoTip>For restoring Entity Framework Toolkit Libraries</uap:InfoTip>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
 
