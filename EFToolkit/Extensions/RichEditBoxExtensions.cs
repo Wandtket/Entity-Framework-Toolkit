@@ -21,7 +21,7 @@ namespace EFToolkit.Extensions
         {
             text.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, Value);
 
-            if (Settings.CodeColoring == true)
+            if (Settings.Current.CodeColoring == true)
             {
                 await text.ColorCode();
             }
