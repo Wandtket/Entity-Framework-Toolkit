@@ -108,7 +108,7 @@ namespace EFToolkit.Pages
 
                 // loop through the lines, split them into cells and place the values in the corresponding cell.
                 int iRow = 0;
-                while (iRow < rowsInClipboard.Length - 1)
+                while (iRow < rowsInClipboard.Length)
                 {
                     //split row into cell values
                     string[] valuesInRow = rowsInClipboard[iRow].Split(columnSplitter);
@@ -128,8 +128,8 @@ namespace EFToolkit.Pages
                         int DefaultColumnIndex = 4;
                         string DefaultColumn = "";
 
-                        //Visual Studio SQL Serber Objet Explorer has an empty column to account for
-                        if (valuesInRow[0] == string.Empty)
+                        //Visual Studio SQL Server Object Explorer has an empty column to account for
+                        if (valuesInRow[0] == string.Empty && valuesInRow.Count() > 3)
                         {
                             NameColumnIndex = 1;
                             DataTypeColumnIndex = 2;
@@ -149,14 +149,17 @@ namespace EFToolkit.Pages
                         }
                         catch { await MessageBox.Show("There was an error copying the SQL Table, please copy the table and try again.", "Error"); return; }
 
-                        DesignItems.Add(new DesignItem()
+                        if (!string.IsNullOrEmpty(valuesInRow[DataTypeColumnIndex]))
                         {
-                            ColumnName = valuesInRow[NameColumnIndex],
-                            ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
-                            DataType = valuesInRow[DataTypeColumnIndex],
-                            AllowNulls = AllowNulls,
-                            DefaultValue = DefaultColumn,
-                        });
+                            DesignItems.Add(new DesignItem()
+                            {
+                                ColumnName = valuesInRow[NameColumnIndex],
+                                ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
+                                DataType = valuesInRow[DataTypeColumnIndex],
+                                AllowNulls = AllowNulls,
+                                DefaultValue = DefaultColumn,
+                            });
+                        }
                     }
                     //Pasting from Select Statement Describer
                     else
@@ -181,15 +184,19 @@ namespace EFToolkit.Pages
                             else if (valuesInRow[PrimaryKeyColumnIndex].ToLower() == "0") { PrimaryKey = false; }
                         } catch { }
 
-
-                        DesignItems.Add(new DesignItem()
+                        //Skip row if copied with headers.
+                        if (valuesInRow[DataTypeColumnIndex].ToLower() != "system_type_name"
+                            && !string.IsNullOrEmpty(valuesInRow[DataTypeColumnIndex]))
                         {
-                            IsPrimaryKey = PrimaryKey,
-                            ColumnName = valuesInRow[NameColumnIndex],
-                            ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
-                            DataType = valuesInRow[DataTypeColumnIndex],
-                            AllowNulls = AllowNulls,
-                        });
+                            DesignItems.Add(new DesignItem()
+                            {
+                                IsPrimaryKey = PrimaryKey,
+                                ColumnName = valuesInRow[NameColumnIndex],
+                                ObjectName = Toolkit.ConvertSQLColumnName(valuesInRow[NameColumnIndex]),
+                                DataType = valuesInRow[DataTypeColumnIndex],
+                                AllowNulls = AllowNulls,
+                            });
+                        }
                     }
 
 
@@ -258,11 +265,11 @@ namespace EFToolkit.Pages
             }
             if (ConfigurationToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems, TableName.Text, ClassName.Text));
+                await Output.SetText(Toolkit.ConvertTableToConfiguration(DesignItems, TableName.Text, TableName.Value, ClassName.Text));
             }
             if (DTOToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Value, ClassName.Text, Settings.DTO_Options));
+                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Value, ClassName.Text, Settings.Current.DTO_Options));
             }
 
             OutputProgress.Visibility = Visibility.Collapsed;
@@ -354,7 +361,78 @@ namespace EFToolkit.Pages
 
             DesignerGrid.ItemsSource = filteredList;
         }
-        
+
+
+
+        private async void DesignerGrid_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var s = (FrameworkElement)e.OriginalSource;
+            var d = s.DataContext;
+
+            DesignItem Item = (DesignItem)d;
+            DesignerGrid.SelectedItem = Item;           
+
+            MenuFlyout menuFlyout = new MenuFlyout();
+            MenuFlyoutSeparator separator = new();
+
+            MenuFlyoutItem CopyColumnItem = new MenuFlyoutItem { Text = "Copy SQL Column Name", Icon = new SymbolIcon(Symbol.Copy), Tag = Item };
+            MenuFlyoutItem CopyObjectItem = new MenuFlyoutItem { Text = "Copy Object Name", Icon = new SymbolIcon(Symbol.Copy), Tag = Item };
+
+            FontIcon KeyIcon = new FontIcon() { Glyph = "\uE192", FontFamily = new FontFamily("Segoe MDL2 Assets") };
+            MenuFlyoutItem KeyItem = new MenuFlyoutItem { Text = "Set as Primary Key", Icon = KeyIcon, Tag = Item };
+
+            KeyItem.Click += KeyItem_Click;
+            CopyColumnItem.Click += CopyColumnItem_Click;
+            CopyObjectItem.Click += CopyObjectItem_Click;
+
+            menuFlyout.Items.Add(KeyItem);
+            menuFlyout.Items.Add(separator);
+            menuFlyout.Items.Add(CopyColumnItem);
+            menuFlyout.Items.Add(CopyObjectItem);
+
+            FrameworkElement? senderElement = sender as FrameworkElement;
+            menuFlyout.Placement = FlyoutPlacementMode.Bottom;
+
+            var tappedItem = (UIElement)e.OriginalSource;
+            menuFlyout.ShowAt(tappedItem, e.GetPosition(tappedItem));
+        }
+
+        private void CopyObjectItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem flyoutItem = (MenuFlyoutItem)sender;
+            DesignItem Item = (DesignItem)flyoutItem.Tag;
+
+            DataPackage package = new();
+            package.SetText(Item.ObjectName);
+            Clipboard.SetContent(package);
+        }
+
+        private void CopyColumnItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem flyoutItem = (MenuFlyoutItem)sender;
+            DesignItem Item = (DesignItem)flyoutItem.Tag;
+
+            DataPackage package = new();
+            package.SetText(Item.ColumnName);
+            Clipboard.SetContent(package);
+        }
+
+        private void KeyItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem flyoutItem = (MenuFlyoutItem)sender;
+            DesignItem Item = (DesignItem)flyoutItem.Tag;
+
+            var OldKey = DesignItems.Where(x => x.IsPrimaryKey == true).FirstOrDefault();
+            if (OldKey != null) { OldKey.IsPrimaryKey = false; }
+
+            Item.IsPrimaryKey = true;
+        }
+
+        private void DesignerGrid_CellEditEnded(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridCellEditEndedEventArgs e)
+        {
+            ConvertTable();
+        }
+
     }
 
 }
