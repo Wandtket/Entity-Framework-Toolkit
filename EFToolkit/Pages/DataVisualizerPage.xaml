@@ -83,19 +83,28 @@
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
                     
-                    <controls:DataGridTextColumn Header="SQL Column Name" MinWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
-                    <controls:DataGridTextColumn Header="Object Name" MinWidth="160" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
-                    <controls:DataGridTextColumn Header="Value" Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+                    <controls:DataGridTextColumn Header="SQL Column Name"
+                                                 Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Foreground="DarkGray" MinWidth="145" IsReadOnly="True" />
+                    
+                    <controls:DataGridTextColumn Header="Object Name" 
+                                                 Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 MinWidth="160"/>
+                    
+                    <controls:DataGridTextColumn Header="Value" 
+                                                 Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Foreground="DarkGray" IsReadOnly="True"/>
                 </controls:DataGrid.Columns>
 
             </controls:DataGrid>
 
             <CommandBar Grid.Row="1" HorizontalAlignment="Left" DefaultLabelPosition="Right">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"/>
+                    <AppBarButton Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"
+                                  ToolTipService.ToolTip="note: include with headers"/>
                     
                     <AppBarToggleButton x:Name="IncludeAll" Label="Include All" Icon="SelectAll" Click="IncludeAll_Click"
-                                        IsChecked="{x:Bind EF:Settings.AcronymCharacterReplacer, Mode=TwoWay}"/>
+                                        IsChecked="{x:Bind EF:Settings.Current.AcronymCharacterReplacer, Mode=TwoWay}"/>
 
                     <AppBarButton Label="Clear Table" Icon="Delete" Click="ClearTable_Click"/>
                 </CommandBar.PrimaryCommands>

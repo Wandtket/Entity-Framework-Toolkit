@@ -9,10 +9,15 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls" 
     xmlns:EFToolkit="using:EFToolkit" 
-    xmlns:widgets="using:EFToolkit.Controls.Widgets" xmlns:converters="using:EFToolkit.Converters"
+    xmlns:widgets="using:EFToolkit.Controls.Widgets" 
+    xmlns:converters="using:EFToolkit.Converters"
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Page.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -32,9 +37,9 @@
             <widgets:SchemaBox x:Name="TableName" LostFocus="TableName_LostFocus"/>
 
             <widgets:SearchBox x:Name="SearchBox" 
-                               TextChanged="SearchTable_TextChanged"
-                               TokenItemRemoved="SearchBox_TokenItemRemoved"
-                               Grid.Column="1"/>
+                                TextChanged="SearchTable_TextChanged"
+                                TokenItemRemoved="SearchBox_TokenItemRemoved"
+                                Grid.Column="1"/>
             
         </Grid>
 
@@ -91,7 +96,7 @@
 
         </Grid>
         
-
+        
 
         <Grid Grid.Column="0" Grid.Row="1" Margin="15,0,15,10">
             <Grid.RowDefinitions>
@@ -100,54 +105,63 @@
             </Grid.RowDefinitions>
 
             <controls:DataGrid x:Name="DesignerGrid"
-                           ItemsSource="{x:Bind DesignItems}"
-                           AutoGenerateColumns="False"
-                           CanUserReorderColumns="False"
-                           CanUserResizeColumns="True"
-                           GridLinesVisibility="Horizontal"
-                           Grid.Column="0" Grid.Row="0"                           
-                           BorderBrush="{ThemeResource BoxColor}"
-                           BorderThickness="2"
-                           KeyUp="DesignerGrid_KeyUp"
-                           FrozenColumnCount="2"
-                           MaxWidth="900">
+                            ItemsSource="{x:Bind DesignItems}"
+                            AutoGenerateColumns="False"
+                            CanUserReorderColumns="False"
+                            CanUserResizeColumns="True"
+                            GridLinesVisibility="Horizontal"
+                            Grid.Column="0" Grid.Row="0"                           
+                            BorderBrush="{ThemeResource BoxColor}"
+                            BorderThickness="2"
+                            KeyUp="DesignerGrid_KeyUp"
+                            CellEditEnded="DesignerGrid_CellEditEnded"
+                            RightTapped="DesignerGrid_RightTapped"
+                            FrozenColumnCount="2"
+                            MaxWidth="900">
 
                 <controls:DataGrid.DataContext>
                     <EFToolkit:DesignItem/>
                 </controls:DataGrid.DataContext>
-                <controls:DataGrid.Resources>
-                    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-                </controls:DataGrid.Resources>
 
                 <controls:DataGrid.Columns>
                     <controls:DataGridTemplateColumn Header="" Width="50" >
                         <controls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <FontIcon Glyph="&#xE192;" FontFamily="Segoe MDL2 Assets" 
-                                          Visibility="{Binding IsPrimaryKey, Mode=TwoWay, 
-                                                UpdateSourceTrigger=PropertyChanged, 
-                                                Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                            Visibility="{Binding IsPrimaryKey, Mode=TwoWay, 
+                                            UpdateSourceTrigger=PropertyChanged, 
+                                            Converter={StaticResource BoolToVisibilityConverter}}"/>
                             </DataTemplate>
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
 
-                    <controls:DataGridTextColumn Header="SQL Column Name" MinWidth="145" Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
-                    <controls:DataGridTextColumn Header="Object Name" MinWidth="160" Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                 ToolTipService.ToolTip="Use the Acronym Library to convert object names."/>
+                    <controls:DataGridTextColumn Header="SQL Column Name"
+                                                 Binding="{Binding ColumnName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Foreground="DarkGray" MinWidth="145" IsReadOnly="True"/>
+                    
+                    <controls:DataGridTextColumn Header="Object Name"
+                                                 Binding="{Binding ObjectName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 MinWidth="160" />
 
-                    <controls:DataGridTextColumn Header="Data Type" Binding="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+                    <controls:DataGridTextColumn Header="Data Type" 
+                                                 Binding="{Binding DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 Foreground="DarkGray" IsReadOnly="True"/>
 
-                    <controls:DataGridTemplateColumn Header="Allow Nulls" Width="105" >
+                    <controls:DataGridTemplateColumn Header="Allow Nulls" 
+                                                     Width="105" IsReadOnly="True" >
                         <controls:DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox x:Name="AllowNulls" IsChecked="{Binding AllowNulls, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                        Click="AllowNulls_Click" Margin="35,0,0,0"/>
+                                <CheckBox x:Name="AllowNulls" 
+                                          IsChecked="{Binding AllowNulls, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                          IsEnabled="False" Margin="35,0,0,0"
+                                          Click="AllowNulls_Click"/>
                             </DataTemplate>
                         </controls:DataGridTemplateColumn.CellTemplate>
                     </controls:DataGridTemplateColumn>
                                         
-                    <controls:DataGridTextColumn Header="Default Value" MaxWidth="125" Binding="{Binding DefaultValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                 Visibility="Collapsed"/>
+                    <controls:DataGridTextColumn Header="Default Value" 
+                                                 Binding="{Binding DefaultValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                 MaxWidth="125" Visibility="Collapsed"/>
                     
                 </controls:DataGrid.Columns>
 
@@ -155,7 +169,9 @@
 
             <CommandBar Grid.Row="1" HorizontalAlignment="Left" DefaultLabelPosition="Right">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"/>
+                    <AppBarButton Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"
+                                  ToolTipService.ToolTip="Copy from SQL Table Designer or use the Select Describer Tool to output a result table and copy without headers."/>
+                    
                     <AppBarButton Label="Clear Table" Icon="Delete" Click="ClearTable_Click"/>
 
                 </CommandBar.PrimaryCommands>
@@ -180,10 +196,10 @@
             <ProgressRing x:Name="OutputProgress" IsIndeterminate="True" Visibility="Collapsed" Height="50" Width="50" Grid.Row="0"/>
 
             <RichEditBox x:Name="Output" 
-                 AcceptsReturn="True"   
-                 IsTextPredictionEnabled="False"
-                 IsSpellCheckEnabled="False"                    
-                 Grid.Row="0"/>
+                    AcceptsReturn="True"   
+                    IsTextPredictionEnabled="False"
+                    IsSpellCheckEnabled="False"                    
+                    Grid.Row="0"/>
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -204,5 +220,6 @@
 
         </Grid>
        
-    </Grid>
+        </Grid>
+
 </Page>
