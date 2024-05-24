@@ -5,129 +5,16 @@
     xmlns:local="using:EFToolkit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:EFToolkit.Converters"
+    xmlns:EF="using:EFToolkit.Pages"
     mc:Ignorable="d"
     Activated="Window_Activated"
     SizeChanged="Window_SizeChanged"
     Title="Entity Framework Toolkit">
-    
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <NavigationView x:Name="MainView" 
-                    PaneDisplayMode="Left" 
-                    IsSettingsVisible="True"
-                    IsBackButtonVisible="Collapsed"
-                    SelectionChanged="MainView_SelectionChanged"
-                    Grid.Row="0" Grid.RowSpan="2"
-                    PaneTitle="Entity Framework Toolkit"
-                    IsPaneOpen="False"
-                    AlwaysShowHeader="True"
-                    SelectedItem="{Binding ElementName=TableConverterViewItem}">
 
-            <NavigationView.Header>
-                <StackPanel Orientation="Horizontal" Margin="-50,-35,0,0">
-                    <Image Source="\Resources\Images\logo.png" Height="30" VerticalAlignment="Top" 
-                           Margin="5,0,5,5"/>
-                    <TextBlock FontSize="22" Text="{Binding ElementName=MainView, Path=SelectedItem.Content}" 
-                               Margin="10,-1,0,0"   />
-                </StackPanel>
-            </NavigationView.Header>
-            
-            <NavigationView.MenuItems>
-                <NavigationViewItemHeader Content="Tools"/>
 
-                <NavigationViewItem x:Name="TableConverterViewItem" Content="Table Converter"
-                    ToolTipService.ToolTip="Convert SQL Columns to C# Models">
-                    
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF156;" FontFamily="Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Name="SelectDescriberViewItem" Content="Select Describer"
-                    ToolTipService.ToolTip="Get SQL Column information from a custom select statement">
-                    
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE762;" FontFamily="Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Name="DataVisualizerViewItem" Content="Data Visualizer"
-                    ToolTipService.ToolTip="Create a custom SQL Select Statement from a Query">
-                    
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE773;" FontFamily="Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Name="ModelFixerViewItem" Content="Model Fixer"
-                    ToolTipService.ToolTip="Convert a model to and from Standard, INotifyPropertyChanged, and MVVM">
-                    
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE90F;" FontFamily="Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-
-                <NavigationViewItemHeader Content="Library"/>
-
-                <NavigationViewItem x:Name="AcronymLibraryItem" Content="Acronyms"
-                    ToolTipService.ToolTip="A library to translate Acronyms throughout the Toolkit">
-                    
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE82D;" FontFamily="Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-
-                <NavigationViewItem x:Name="SchemaLibraryItem" Content="Schemas"
-                        ToolTipService.ToolTip="A library to translate Acronyms throughout the Toolkit">
-
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE62F;" FontFamily="Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-
-            </NavigationView.MenuItems>
-
-            <NavigationView.Content>
-                <Frame x:Name="PageFrame" x:FieldModifier="public" Margin="0,-40,0,0"  />
-            </NavigationView.Content>
-
-            <NavigationView.FooterMenuItems>
-                <NavigationViewItem x:Name="Coffee" Content="Buy me a coffee" Visibility="Visible" SelectsOnInvoked="False">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEC32;" FontFamily="Segoe MDL2 Assets"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-
-            </NavigationView.FooterMenuItems>
-        </NavigationView>
-
-        <Grid x:Name="AppTitleBar" Grid.Row="0" Margin="0,1,0,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftPaddingColumn" Width="75"/>
-                <ColumnDefinition x:Name="IconColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="TitleColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="LeftDragColumn" Width="75"/>
-                <ColumnDefinition x:Name="TabColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="RightDragColumn" Width="*" MinWidth="50"/>
-                <ColumnDefinition x:Name="ButtonColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Orientation="Horizontal" Grid.Column="6" Height="31" VerticalAlignment="Top">
-                <Button x:Name="Help" Click="Help_Click" Background="Transparent" BorderThickness="0" CornerRadius="0"
-                    Width="45" ToolTipService.ToolTip="Show Teaching Tips." Visibility="Visible">
-                    <Button.Content>
-                        <Viewbox Margin="5,5,5,2">
-                            <SymbolIcon Symbol="Help" Opacity="1"/>
-                        </Viewbox>
-                    </Button.Content>
-                </Button>
-            </StackPanel>
-        </Grid>
-
-    </Grid>
-
-    
+    <Window.Content>
+        <local:MainPage x:Name="Main" x:FieldModifier="public"/>
+    </Window.Content>
+ 
 </Window>

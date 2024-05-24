@@ -57,64 +57,7 @@ namespace EFToolkit
             while (UI.RootWindow == null) { await Task.Delay(50); }
             while (UI.RootWindow.Content.XamlRoot == null) { await Task.Delay(50); }
 
-            SetDragRegionForCustomTitleBar(this.GetAppWindow());
-        }
-
-        public void SetDragRegionForCustomTitleBar(AppWindow appWindow)
-        {
-            // Check to see if customization is supported.
-            // The method returns true on Windows 10 since Windows App SDK 1.2, and on all versions of
-            // Windows App SDK on Windows 11.
-            if (AppWindowTitleBar.IsCustomizationSupported()
-                && appWindow.TitleBar.ExtendsContentIntoTitleBar)
-            {
-                double rightPaddingWidth = 0, leftPaddingWidth = 0;
-
-                double scaleAdjustment = DisplayExtensions.GetScaleAdjustment();
-                if (scaleAdjustment != 0)
-                {
-                    rightPaddingWidth = appWindow.TitleBar.RightInset / scaleAdjustment;
-                    if (rightPaddingWidth < 0)
-                    {
-                        rightPaddingWidth = 0;
-                    }
-
-                    leftPaddingWidth = appWindow.TitleBar.LeftInset / scaleAdjustment;
-                    if (leftPaddingWidth < 0)
-                    {
-                        leftPaddingWidth = 0;
-                    }
-                }
-
-                RightPaddingColumn.Width = new GridLength(rightPaddingWidth);
-                LeftPaddingColumn.Width = new GridLength(leftPaddingWidth);
-
-                List<Windows.Graphics.RectInt32> dragRectsList = new();
-
-                Windows.Graphics.RectInt32 dragRectL;
-                dragRectL.X = (int)((LeftPaddingColumn.ActualWidth) * scaleAdjustment);
-                dragRectL.Y = 0;
-                dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                dragRectL.Width = (int)((IconColumn.ActualWidth
-                                        + TitleColumn.ActualWidth
-                                        + LeftDragColumn.ActualWidth) * scaleAdjustment);
-                //dragRectsList.Add(dragRectL);
-
-                Windows.Graphics.RectInt32 dragRectR;
-                dragRectR.X = (int)((LeftPaddingColumn.ActualWidth
-                                    + IconColumn.ActualWidth
-                                    //+ TitleTextBlock.ActualWidth
-                                    + LeftDragColumn.ActualWidth
-                                    + TabColumn.ActualWidth) * scaleAdjustment);
-                dragRectR.Y = 0;
-                dragRectR.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                dragRectR.Width = (int)(RightDragColumn.ActualWidth * scaleAdjustment);
-                dragRectsList.Add(dragRectR);
-
-                Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
-
-                appWindow.TitleBar.SetDragRectangles(dragRects);
-            }
+            Main.SetDragRegionForCustomTitleBar(this.GetAppWindow());
         }
 
         public void LoadIcon()
@@ -130,7 +73,7 @@ namespace EFToolkit
             if (args.WindowActivationState == WindowActivationState.CodeActivated)
             {
                 UI.RootWindow = this;
-                UI.RootFrame = this.PageFrame;
+                UI.RootFrame = this.Main.PageFrame;
             }
             else if (args.WindowActivationState == WindowActivationState.Deactivated)
             {
@@ -141,45 +84,8 @@ namespace EFToolkit
         private async void Window_SizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs args)
         {
             await Task.Delay(10);
-            SetDragRegionForCustomTitleBar(this.GetAppWindow());
+            Main.SetDragRegionForCustomTitleBar(this.GetAppWindow());
         }
 
-
-        private void MainView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            if (args.SelectedItem == TableConverterViewItem)
-            {
-                PageFrame.Navigate(typeof(TableConverterPage));
-            }
-            else if (args.SelectedItem == SelectDescriberViewItem)
-            {
-                PageFrame.Navigate(typeof(SelectDescriberPage));
-            }
-            else if (args.SelectedItem == DataVisualizerViewItem)
-            {
-                PageFrame.Navigate(typeof(DataVisualizerPage));
-            }           
-            else if (args.SelectedItem == ModelFixerViewItem)
-            {
-                PageFrame.Navigate(typeof(ModelFixerPage));
-            }
-            else if (args.SelectedItem == AcronymLibraryItem)
-            {
-                PageFrame.Navigate(typeof(AcronymLibraryPage));
-            }
-            else if (args.SelectedItem == SchemaLibraryItem)
-            {
-                PageFrame.Navigate(typeof(SchemaLibraryPage));
-            }
-            else if (args.IsSettingsSelected == true)
-            {
-                PageFrame.Navigate(typeof(SettingsPage));
-            }
-        }
-
-        private void Help_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
