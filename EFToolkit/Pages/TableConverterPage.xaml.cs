@@ -426,6 +426,7 @@ namespace EFToolkit.Pages
             if (OldKey != null) { OldKey.IsPrimaryKey = false; }
 
             Item.IsPrimaryKey = true;
+            ConvertTable();
         }
 
         private void DesignerGrid_CellEditEnded(object sender, CommunityToolkit.WinUI.UI.Controls.DataGridCellEditEndedEventArgs e)
