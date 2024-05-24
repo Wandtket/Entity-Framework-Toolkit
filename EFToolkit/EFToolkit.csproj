@@ -19,6 +19,7 @@
     <None Remove="Controls\Widgets\SchemaBox.xaml" />
     <None Remove="Controls\Widgets\SearchBox.xaml" />
     <None Remove="logo.ico" />
+    <None Remove="MainPage.xaml" />
     <None Remove="Pages\AcronymLibraryPage.xaml" />
     <None Remove="Pages\DataVisualizerPage.xaml" />
     <None Remove="Pages\ModelFixerPage.xaml" />
@@ -153,6 +154,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\Dialogs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\Widgets\SearchBox.xaml">
