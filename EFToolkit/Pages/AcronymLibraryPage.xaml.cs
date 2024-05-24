@@ -94,7 +94,7 @@ namespace EFToolkit.Pages
                     
                     try
                     {
-                        if (Settings.CodeFormatOptions == CodeFormatOptions.CamelCase)
+                        if (Settings.Current.CodeFormatOptions == CodeFormatOptions.PascalCase)
                         {
                             SelectedItem.LibraryItems.Add(new AcronymItem()
                             {
@@ -102,7 +102,7 @@ namespace EFToolkit.Pages
                                 Translation = valuesInRow[1].Trim().Replace(" ", ""),
                             });
                         }
-                        else if (Settings.CodeFormatOptions == CodeFormatOptions.Snake_Case)
+                        else if (Settings.Current.CodeFormatOptions == CodeFormatOptions.snake_case)
                         {
                             SelectedItem.LibraryItems.Add(new AcronymItem()
                             {
@@ -264,11 +264,11 @@ namespace EFToolkit.Pages
         private void Translation_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = (TextBox)sender;
-            if (Settings.CodeFormatOptions == CodeFormatOptions.CamelCase)
+            if (Settings.Current.CodeFormatOptions == CodeFormatOptions.PascalCase)
             {
                 box.Text = box.Text.Trim().Replace(" ", "");
             }
-            else if (Settings.CodeFormatOptions == CodeFormatOptions.Snake_Case)
+            else if (Settings.Current.CodeFormatOptions == CodeFormatOptions.snake_case)
             {
                 box.Text = box.Text.Trim().Replace(" ", "_");
             }
