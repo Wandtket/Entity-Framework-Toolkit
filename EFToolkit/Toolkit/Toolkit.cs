@@ -27,7 +27,6 @@ using Windows.Storage;
 namespace EFToolkit
 {
 
-
     public static class Toolkit
     {
 
@@ -53,22 +52,31 @@ namespace EFToolkit
                     string ObjectName = Item.ObjectName.Trim();
 
                     string Summary = "";
-                    if (Settings.ModelSummary == true)
+                    if (Settings.Current.ModelSummary == true)
                     {
+                        string Key = "";
+                        if (Item.IsPrimaryKey == true) { Key = "🗝 "; }
+
                         Summary =
                         "\t" + @"/// <summary>" + "\n" +
-                        "\t" + @"/// " + ColumnName + " - " + ColumnType + "\n" +
+                        "\t" + @"/// " + Key + ColumnName + " - " + ColumnType + "\n" +
                         "\t" + @"/// </summary>" + "\n";
                     }
 
+                    string ColumnAttribute = "";
+                    if (Settings.Current.ColumnAttribute == true)
+                    {
+                        ColumnAttribute = "\t" + $"[Column(\"{ColumnName}\")]" + "\n";
+                    }
+
                     Objects = Objects +
-                        Summary +
+                        Summary + ColumnAttribute +
                         "\t" + "public " + ConvertSQLType(ColumnType) + AllowNull + " " + ObjectName + " { get; set; }" + "\n" + "\n";
                 }
             }
 
             string Header = "";
-            if (Settings.ModelSummary == true)
+            if (Settings.Current.ModelSummary == true)
             {
                 Header = @"/// <summary>" + "\n" +
                                 @"/// " + TableName + "\n" +
@@ -76,7 +84,7 @@ namespace EFToolkit
             }
 
             string Body = Header +
-                         "public class " + Settings.ModelPrefix + ClassName + Settings.ModelSuffix + "\n" + "{" + "\n" +
+                         "public class " + Settings.Current.ModelPrefix + ClassName + Settings.Current.ModelSuffix + "\n" + "{" + "\n" +
                           Objects +
                          "" + "}";
 
@@ -88,22 +96,22 @@ namespace EFToolkit
         /// </summary>
         /// <param name="DesignItems"></param>
         /// <returns></returns>
-        public static string ConvertTableToConfiguration(ObservableCollection<DesignItem> DesignItems, string TableName, string ClassName)
+        public static string ConvertTableToConfiguration(ObservableCollection<DesignItem> DesignItems, string TableName, string FullTableName, string ClassName)
         {
 
-            string ModelName = Settings.ModelPrefix + ClassName + Settings.ModelSuffix;
+            string ModelName = Settings.Current.ModelPrefix + ClassName + Settings.Current.ModelSuffix;
 
             string HasNoKey = "";
             if (!DesignItems.Where(x => x.IsPrimaryKey == true).Any())
             {
-                HasNoKey =  $"\t \t {Settings.ConfigurationName}.HasNoKey(); \n \n";
+                HasNoKey =  $"\t \t {Settings.Current.ConfigurationName}.HasNoKey(); \n \n";
             }
 
             string Body = $"internal class {ModelName}Configuration : IEntityTypeConfiguration<{ModelName}> \n" +
                                 "{ \n" +
-                                $"\t public void Configure(EntityTypeBuilder<{ModelName}> {Settings.ConfigurationName}) \n" +
+                                $"\t public void Configure(EntityTypeBuilder<{ModelName}> {Settings.Current.ConfigurationName}) \n" +
                                 "\t { \n" +
-                                "\t \t" + $"{Settings.ConfigurationName}.ToTable(\"{ModelName}\");" + "\n \n" + 
+                                "\t \t" + $"{Settings.Current.ConfigurationName}.ToTable(\"{TableName}\");" + "\n \n" + 
                                 HasNoKey;
 
 
@@ -114,17 +122,28 @@ namespace EFToolkit
                     string ColumnName = Item.ColumnName.Trim();
                     string ObjectName = Item.ObjectName.Trim();
 
-                    Body = Body +
-                        $"\t \t {Settings.ConfigurationName}.Property(s => s.{ObjectName}) \n" +
+                    string Key = "";
+                    if (Item.IsPrimaryKey)
+                    {
+                        if (!string.IsNullOrEmpty(Settings.Current.PrimaryKeyStandard)) 
+                        { 
+                            ObjectName = Settings.Current.PrimaryKeyStandard; 
+                        }
+
+                        Key = $"\t \t {Settings.Current.ConfigurationName}.HasKey(s => s.{ObjectName}) \n";
+                    }
+
+                    Body = Body + Key +
+                        $"\t \t {Settings.Current.ConfigurationName}.Property(s => s.{ObjectName}) \n" +
                         $"\t \t \t .HasColumnName(\"{ColumnName}\"); \n \n";
                 }
             }
 
             string Header = "";
-            if (Settings.ModelSummary == true)
+            if (Settings.Current.ModelSummary == true)
             {
                 Header = $"/// <summary> \n" +
-                                $"/// {TableName} \n" +
+                                $"/// {FullTableName} \n" +
                                 "/// </summary> \n";                              
             }
 
@@ -161,11 +180,14 @@ namespace EFToolkit
                         if (ObjectName.ToLower() == "override") { ObjectName = "_Override"; }
 
                         string Summary = "";
-                        if (Settings.DtoSummary == true)
+                        if (Settings.Current.DtoSummary == true)
                         {
+                            string Key = "";
+                            if (Item.IsPrimaryKey == true) { Key = "🗝 "; }
+
                             Summary =
                             "\t" + @"/// <summary>" + "\n" +
-                            "\t" + @"/// " + ColumnName + " - " + Item.DataType.Trim() + "\n" +
+                            "\t" + @"/// " + Key + ColumnName + " - " + Item.DataType.Trim() + "\n" +
                             "\t" + @"/// </summary>" + "\n";
                         }
 
@@ -176,7 +198,7 @@ namespace EFToolkit
                 }
 
                 string Header = "";
-                if (Settings.DtoSummary == true)
+                if (Settings.Current.DtoSummary == true)
                 {
                     Header = @"/// <summary>" + "\n" +
                                     @"/// " + TableName + "\n" +
@@ -184,7 +206,7 @@ namespace EFToolkit
                 }
 
                 string Body = Header +
-                            "public class " + Settings.DTOPrefix + ClassName + Settings.DTOSuffix + "\n" + "{" + "\n \n" +
+                            "public class " + Settings.Current.DTOPrefix + ClassName + Settings.Current.DTOSuffix + "\n" + "{" + "\n \n" +
                             Objects +
                             "}";
 
@@ -209,11 +231,14 @@ namespace EFToolkit
                         if (ObjectName.ToLower() == "override") { ObjectName = "_Override"; }
 
                         string Summary = "";
-                        if (Settings.DtoSummary == true)
+                        if (Settings.Current.DtoSummary == true)
                         {
+                            string Key = "";
+                            if (Item.IsPrimaryKey == true) { Key = "🗝 "; }
+
                             Summary =
                             "\t" + @"/// <summary>" + "\n" +
-                            "\t" + @"/// " + ColumnName + " - " + Item.DataType.Trim() + "\n" +
+                            "\t" + @"/// " + Key + ColumnName + " - " + Item.DataType.Trim() + "\n" +
                             "\t" + @"/// </summary>" + "\n";
                         }
 
@@ -235,7 +260,7 @@ namespace EFToolkit
                 }
 
                 string Header = "";
-                if (Settings.DtoSummary == true)
+                if (Settings.Current.DtoSummary == true)
                 {
                     Header = @"/// <summary>" + "\n" +
                                     @"/// " + TableName + "\n" +
@@ -243,7 +268,7 @@ namespace EFToolkit
                 }
 
                 string Body = Header +
-                            "public class " + Settings.DTOPrefix + ClassName + Settings.DTOSuffix + " : INotifyPropertyChanged" + "\n" + "{" + "\n" +
+                            "public class " + Settings.Current.DTOPrefix + ClassName + Settings.Current.DTOSuffix + " : INotifyPropertyChanged" + "\n" + "{" + "\n" +
                             Objects +
 
                             "\t" + "public event PropertyChangedEventHandler PropertyChanged;" + "\n" +
@@ -273,11 +298,14 @@ namespace EFToolkit
                         if (ObjectName.ToLower() == "override") { ObjectName = "_Override"; }
 
                         string Summary = "";
-                        if (Settings.DtoSummary == true)
+                        if (Settings.Current.DtoSummary == true)
                         {
+                            string Key = "";
+                            if (Item.IsPrimaryKey == true) { Key = "🗝 "; }
+
                             Summary =
                             "\t" + @"/// <summary>" + "\n" +
-                            "\t" + @"/// " + ColumnName + " - " + Item.DataType.Trim() + "\n" +
+                            "\t" + @"/// " + Key + ColumnName + " - " + Item.DataType.Trim() + "\n" +
                             "\t" + @"/// </summary>" + "\n";
                         }
 
@@ -291,7 +319,7 @@ namespace EFToolkit
                 string Body = @"/// <summary>" + "\n" +
                                     @"/// dbo." + TableName + "\n" +
                                     @"/// </summary>" + "\n" +
-                                    "public partial class " + Settings.DTOPrefix + ClassName + Settings.DTOSuffix + " : ObservableObject" + "\n" + "{" + "\n" +
+                                    "public partial class " + Settings.Current.DTOPrefix + ClassName + Settings.Current.DTOSuffix + " : ObservableObject" + "\n" + "{" + "\n" +
                                     Objects +
                                     "}";
 
@@ -353,7 +381,8 @@ namespace EFToolkit
 
             string Body = SelectStatement.Replace("'", "") + "' \n";
 
-            string Suffix = ", @params = NULL, @browse_information_mode = 0;";
+            string Suffix = ", @params = NULL, @browse_information_mode = 0; \n \n" +
+                "/*Once executed, copy the results table into the\r\nTable Converter tool in Entity Framework Toolkit..*/";
 
             string DescribeCommand = Prefix + Body + Suffix;
             return DescribeCommand;
@@ -679,8 +708,8 @@ namespace EFToolkit
 
     public enum CodeFormatOptions
     {
-        CamelCase,
-        Snake_Case,
+        PascalCase,
+        snake_case,
     }
 
 
