@@ -13,6 +13,12 @@
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 
+    <Page.Resources>
+        <Style TargetType="controls:SettingsCard">
+            <Setter Target="Padding" Value="60,0,20,0"/>
+            <!--<Setter Target="Background" Value="{ThemeResource SubColor}"/>-->
+        </Style>
+    </Page.Resources>
 
     <ScrollViewer>
         <StackPanel>
@@ -39,7 +45,17 @@
                                         <FontIcon Glyph="&#xEF16;" FontFamily="Segoe MDL2 Assets"/>
                                     </controls:SettingsCard.HeaderIcon>
 
-                                    <ToggleSwitch IsOn="{x:Bind EF:Settings.ModelSummary, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
+                                    <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.ModelSummary, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
+                                </controls:SettingsCard>
+
+                                <controls:SettingsCard Header="Column Attribute" 
+                                                       Description="Will include column attribute in model"
+                                                       IsEnabled="True">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xE1CB;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
+
+                                    <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.ColumnAttribute, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
                                 </controls:SettingsCard>
 
                                 <controls:SettingsCard Header="Prefix / Suffix" 
@@ -51,11 +67,27 @@
                                     </controls:SettingsCard.HeaderIcon>
 
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <TextBox Text="{x:Bind EF:Settings.ModelPrefix, Mode=TwoWay}" PlaceholderText="Prefix"/>
+                                        <TextBox Text="{x:Bind EF:Settings.Current.ModelPrefix, Mode=TwoWay}" PlaceholderText="Prefix"/>
                                         <TextBlock Text="ModelName" VerticalAlignment="Center"/>
-                                        <TextBox Text="{x:Bind EF:Settings.ModelSuffix, Mode=TwoWay}" PlaceholderText="Suffix"/>
+                                        <TextBox Text="{x:Bind EF:Settings.Current.ModelSuffix, Mode=TwoWay}" PlaceholderText="Suffix"/>
                                     </StackPanel>
                                 </controls:SettingsCard>
+
+                                <controls:SettingsCard Header="Inheritance" 
+                                                       Description="Define Default Inheritance."
+                                                       IsEnabled="True">
+
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xE13E;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBox Text="{x:Bind EF:Settings.Current.ModelPrefix, Mode=TwoWay}" PlaceholderText="Prefix"/>
+                                        <TextBlock Text="ModelName" VerticalAlignment="Center"/>
+                                        <TextBox Text="{x:Bind EF:Settings.Current.ModelSuffix, Mode=TwoWay}" PlaceholderText="Suffix"/>
+                                    </StackPanel>
+                                </controls:SettingsCard>
+
 
                             </StackPanel>
 
@@ -75,13 +107,24 @@
                                                        Description="The name given to the Entity Framework Type Builder"
                                                        IsEnabled="True">
                                     <controls:SettingsCard.HeaderIcon>
-                                        <FontIcon Glyph="&#xE13E;" FontFamily="Segoe MDL2 Assets"/>
+                                        <FontIcon Glyph="&#xF158;" FontFamily="Segoe MDL2 Assets"/>
                                     </controls:SettingsCard.HeaderIcon>
 
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <TextBox Text="{x:Bind EF:Settings.ConfigurationName, Mode=TwoWay}" 
+                                        <TextBox Text="{x:Bind EF:Settings.Current.ConfigurationName, Mode=TwoWay}" 
                                                  PlaceholderText="ex: builder" Width="200"/>
                                     </StackPanel>
+                                </controls:SettingsCard>
+
+                                <controls:SettingsCard Header="Primary Key Standard Name" 
+                                        Description="Providing a standard Primary Key object name will be used when building a configuration, by not providing one the original object name will be used"
+                                        IsEnabled="True">
+                                    <controls:SettingsCard.HeaderIcon>
+                                        <FontIcon Glyph="&#xE192;" FontFamily="Segoe MDL2 Assets"/>
+                                    </controls:SettingsCard.HeaderIcon>
+
+                                    <TextBox Text="{x:Bind EF:Settings.Current.PrimaryKeyStandard, Mode=TwoWay}" 
+                                             PlaceholderText="ex: Id" Width="200"/>
                                 </controls:SettingsCard>
 
                             </StackPanel>
@@ -106,7 +149,7 @@
                                         <FontIcon Glyph="&#xEF16;" FontFamily="Segoe MDL2 Assets"/>
                                     </controls:SettingsCard.HeaderIcon>
 
-                                    <ToggleSwitch IsOn="{x:Bind EF:Settings.DtoSummary, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
+                                    <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.DtoSummary, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
                                 </controls:SettingsCard>
 
                                 <controls:SettingsCard Header="Prefix / Suffix"
@@ -117,9 +160,9 @@
                                     </controls:SettingsCard.HeaderIcon>
 
                                     <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <TextBox Text="{x:Bind EF:Settings.DTOPrefix, Mode=TwoWay}" PlaceholderText="Prefix"/>
+                                        <TextBox Text="{x:Bind EF:Settings.Current.DTOPrefix, Mode=TwoWay}" PlaceholderText="Prefix"/>
                                         <TextBlock Text="DTOName" VerticalAlignment="Center"/>
-                                        <TextBox Text="{x:Bind EF:Settings.DTOSuffix, Mode=TwoWay}" PlaceholderText="Suffix"/>
+                                        <TextBox Text="{x:Bind EF:Settings.Current.DTOSuffix, Mode=TwoWay}" PlaceholderText="Suffix"/>
                                     </StackPanel>
                                 </controls:SettingsCard>
 
@@ -132,8 +175,8 @@
                                     </controls:SettingsCard.HeaderIcon>
 
                                     <ComboBox x:Name="DTOPreference"
-                                              ItemsSource="{x:Bind EF:Settings.DTO_OptionList}" 
-                                              SelectedItem="{x:Bind EF:Settings.DTO_Options, Mode=TwoWay}"
+                                              ItemsSource="{x:Bind EF:Settings.Current.DTO_OptionList}" 
+                                              SelectedItem="{x:Bind EF:Settings.Current.DTO_Options, Mode=TwoWay}"
                                               Width="200">
                                     </ComboBox>
                                 </controls:SettingsCard>
@@ -144,13 +187,13 @@
                     </controls:SettingsExpander>
 
                     <controls:SettingsCard Header="Name Suggestion" 
-                                           Description="When the Table name is populated and the class name is empty auto suggest a name."                                                                     
-                                           IsEnabled="True">
+                                           Description="When the Table name is populated and the class name is empty, auto suggest a name."                                                                     
+                                           IsEnabled="True" Padding="20,0,20,0">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xE19F;" FontFamily="Segoe MDL2 Assets"/>
                         </controls:SettingsCard.HeaderIcon>
 
-                        <ToggleSwitch IsOn="{x:Bind EF:Settings.ModelNameSuggestion, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
+                        <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.ModelNameSuggestion, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
                     </controls:SettingsCard>
 
                 </StackPanel>
@@ -164,13 +207,13 @@
                 <StackPanel Spacing="3">
                     <controls:SettingsCard Header="Replace Spaces" 
                                            Description="Should the "
-                                           IsEnabled="True">
+                                           IsEnabled="True" Padding="20,0,20,0">
 
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xF180;" FontFamily="Segoe MDL2 Assets"/>
                         </controls:SettingsCard.HeaderIcon>
 
-                        <ToggleSwitch IsOn="{x:Bind EF:Settings.AcronymCharacterReplacer, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
+                        <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.AcronymCharacterReplacer, Mode=TwoWay}" OnContent="On" OffContent="Off"/>
 
                     </controls:SettingsCard>
                 </StackPanel>
@@ -186,33 +229,45 @@
 
                     <controls:SettingsCard Header="Code Formatting" 
                                            Description="Any spaces that are detected will be converted to either CamelCase or Snake_Case."
-                                           IsEnabled="True">
+                                           IsEnabled="True" Padding="20,0,20,0">
 
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xE943;" FontFamily="Segoe MDL2 Assets"/>
                         </controls:SettingsCard.HeaderIcon>
 
                         <ComboBox x:Name="SpacesPreference"
-                           ItemsSource="{x:Bind EF:Settings.CodeFormatOptionsList}" 
-                           SelectedItem="{x:Bind EF:Settings.CodeFormatOptions, Mode=TwoWay}"
+                           ItemsSource="{x:Bind EF:Settings.Current.CodeFormatOptionsList}" 
+                           SelectedItem="{x:Bind EF:Settings.Current.CodeFormatOptions, Mode=TwoWay}"
                            Width="200">
                         </ComboBox>
                     </controls:SettingsCard>
 
                     <controls:SettingsCard Header="Source Code Beautifier" 
                                            Description="Toggle the coloring for code on or off to improve performance on large models."
-                                           IsEnabled="True">
+                                           IsEnabled="True" Padding="20,0,20,0">
 
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xE2B1;" FontFamily="Segoe MDL2 Assets"/>
                         </controls:SettingsCard.HeaderIcon>
 
-                        <ToggleSwitch IsOn="{x:Bind EF:Settings.CodeColoring, Mode=TwoWay}" OnContent="On" OffContent="Off" />
+                        <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.CodeColoring, Mode=TwoWay}" OnContent="On" OffContent="Off" />
                     </controls:SettingsCard>
+
+                    <controls:SettingsCard Header="Promotion"    
+                                           Description="Toggle the promotion items in the navigation pane."
+                                           IsEnabled="True" Padding="20,0,20,0">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xEC32;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+                        <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.Promotion, Mode=TwoWay}" OnContent="On" OffContent="Off" />
+
+                    </controls:SettingsCard>
+
 
                     <controls:SettingsCard Header="Application Resources"    
                                            Description="Open Application Resources for advanced troubleshooting."
-                                           IsEnabled="True">
+                                           IsEnabled="True" Padding="20,0,20,0">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="&#xF180;" FontFamily="Segoe MDL2 Assets"/>
                         </controls:SettingsCard.HeaderIcon>

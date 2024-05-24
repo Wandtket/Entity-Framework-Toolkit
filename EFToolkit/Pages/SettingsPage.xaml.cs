@@ -18,6 +18,8 @@ using EFToolkit.Controls.Dialogs;
 using System.Text.Json;
 using System.Reflection;
 using Windows.System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,12 +32,11 @@ namespace EFToolkit.Pages
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+
         public SettingsPage()
         {
             this.InitializeComponent();
         }
-
-
 
         private async void AppFolder_Click(object sender, RoutedEventArgs e)
         {
@@ -51,144 +52,174 @@ namespace EFToolkit.Pages
             await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
         }
 
-
     }
 
-    public static class Settings
+
+    public class Settings : INotifyPropertyChanged
     {
+        private static Settings _instance = new Settings();
+        public static Settings Current { get { return _instance; } }
 
-        private static ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-        public static string ProjectDirectory 
+        private ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+        public string ProjectDirectory 
         { 
             
             get { return localSettings.Values[projectdirectory] as string ?? ""; } 
             set { localSettings.Values[projectdirectory] = value; } 
         }
-        private static string projectdirectory = "project_directory";
+        private string projectdirectory = "project_directory";
 
 
-        public static bool ModelSummary
+        public bool ModelSummary
         {
             get { return localSettings.Values[modelsummary] as bool? ?? true; }
             set { localSettings.Values[modelsummary] = value; }
         }
-        private static string modelsummary = "model_summary";
+        private string modelsummary = "model_summary";
 
-        public static bool ModelNameSuggestion
+        public bool ColumnAttribute
+        {
+            get { return localSettings.Values[columnattribute] as bool? ?? true; }
+            set { localSettings.Values[columnattribute] = value; }
+        }
+        private string columnattribute = "column_attribute";
+
+
+        public bool ModelNameSuggestion
         {
             get { return localSettings.Values[modelnamesuggestion] as bool? ?? true; }
             set { localSettings.Values[modelnamesuggestion] = value; }
         }
-        private static string modelnamesuggestion = "model_name_suggestion";
+        private string modelnamesuggestion = "model_name_suggestion";
 
 
-        public static string ModelPrefix
+        public string ModelPrefix
         {
 
             get { return localSettings.Values[modelprefix] as string ?? ""; }
             set { localSettings.Values[modelprefix] = value; }
         }
-        private static string modelprefix = "model_prefix";
+        private string modelprefix = "model_prefix";
 
-        public static string ModelSuffix
+        public string ModelSuffix
         {
 
             get { return localSettings.Values[modelsuffix] as string ?? ""; }
             set { localSettings.Values[modelsuffix] = value; }
         }
-        private static string modelsuffix = "model_suffix";
+        private string modelsuffix = "model_suffix";
 
 
 
-        public static bool DtoSummary
+        public bool DtoSummary
         {
             get { return localSettings.Values[dtosummary] as bool? ?? true; }
             set { localSettings.Values[dtosummary] = value; }
         }
-        private static string dtosummary = "dto_summary";
+        private string dtosummary = "dto_summary";
 
-        public static string DTOPrefix
+        public string DTOPrefix
         {
 
             get { return localSettings.Values[dtoprefix] as string ?? ""; }
             set { localSettings.Values[dtoprefix] = value; }
         }
-        private static string dtoprefix = "dto_prefix";
+        private string dtoprefix = "dto_prefix";
 
-        public static string DTOSuffix
+        public string DTOSuffix
         {
 
             get { return localSettings.Values[dtosuffix] as string ?? "Dto"; }
             set { localSettings.Values[dtosuffix] = value; }
         }
-        private static string dtosuffix = "dto_suffix";
+        private string dtosuffix = "dto_suffix";
 
 
-        public static string ConfigurationName
+
+        public string ConfigurationName
         {
 
             get { return localSettings.Values[configurationname] as string ?? "builder"; }
             set { localSettings.Values[configurationname] = value; }
         }
-        private static string configurationname = "configuration_name";
+        private string configurationname = "configuration_name";
 
+        public string PrimaryKeyStandard
+        {
+
+            get { return localSettings.Values[primarykeystandard] as string ?? ""; }
+            set { localSettings.Values[primarykeystandard] = value; }
+        }
+        private string primarykeystandard = "primary_key_standard";
 
 
         /// <summary>
         /// Determines if the RichEditBoxes should color code.
         /// </summary>
-        public static bool CodeColoring
+        public bool CodeColoring
         {
             get { return localSettings.Values[codecoloring] as bool? ?? true; }
             set { localSettings.Values[codecoloring] = value; }
         }
-        private static string codecoloring = "code_coloring";
+        private string codecoloring = "code_coloring";
+
+
+        public bool Promotion
+        {
+            get { return localSettings.Values[promotion] as bool? ?? true; }
+            set { localSettings.Values[promotion] = value; OnPropertyChanged("Promotion"); }
+        }
+        private string promotion = "promotion";
 
 
 
-        public static bool DataVisualizerIncludeAll
+        public bool DataVisualizerIncludeAll
         {
             get { return localSettings.Values[datavisualizerincludeall] as bool? ?? false; }
             set { localSettings.Values[datavisualizerincludeall] = value; }
         }
-        private static string datavisualizerincludeall = "data_visualizer_include_all";
+        private string datavisualizerincludeall = "data_visualizer_include_all";
 
 
         /// <summary>
         /// Determines how DTO's should be built.
         /// </summary>
-        public static DTO_Options DTO_Options
+        public DTO_Options DTO_Options
         {
             get { try { return JsonSerializer.Deserialize<DTO_Options>(localSettings.Values[dto_options] as string); } catch { return DTO_Options.Standard; } }
             set { localSettings.Values[dto_options] = JsonSerializer.Serialize(value); }
         }
-        private static string dto_options = "dto_options";
-        public static IList<DTO_Options> DTO_OptionList = Enum.GetValues(typeof(DTO_Options)).Cast<DTO_Options>().ToList();
+        private string dto_options = "dto_options";
+        public IList<DTO_Options> DTO_OptionList = Enum.GetValues(typeof(DTO_Options)).Cast<DTO_Options>().ToList();
 
 
         /// <summary>
         /// How object names should formatted throughout the application
         /// </summary>
-        public static CodeFormatOptions CodeFormatOptions
+        public CodeFormatOptions CodeFormatOptions
         {
-            get { try { return JsonSerializer.Deserialize<CodeFormatOptions>(localSettings.Values[codeformatoptions] as string); } catch { return CodeFormatOptions.CamelCase; } }
+            get { try { return JsonSerializer.Deserialize<CodeFormatOptions>(localSettings.Values[codeformatoptions] as string); } catch { return CodeFormatOptions.PascalCase; } }
             set { localSettings.Values[codeformatoptions] = JsonSerializer.Serialize(value); }
         }
-        private static string codeformatoptions = "code_format_options";
-        public static IList<CodeFormatOptions> CodeFormatOptionsList = Enum.GetValues(typeof(CodeFormatOptions)).Cast<CodeFormatOptions>().ToList();
+        private string codeformatoptions = "code_format_options";
+        public IList<CodeFormatOptions> CodeFormatOptionsList = Enum.GetValues(typeof(CodeFormatOptions)).Cast<CodeFormatOptions>().ToList();
 
 
-
-
-        public static bool AcronymCharacterReplacer
+        public bool AcronymCharacterReplacer
         {
             get { return localSettings.Values[acronymcharacterreplacer] as bool? ?? true; }
             set { localSettings.Values[acronymcharacterreplacer] = value; }
         }
-        private static string acronymcharacterreplacer = "acronym_character_replacer";
+        private string acronymcharacterreplacer = "acronym_character_replacer";
 
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string Name)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(Name));
+        }
 
     }
 
