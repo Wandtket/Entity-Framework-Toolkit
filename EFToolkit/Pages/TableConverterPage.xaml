@@ -116,7 +116,7 @@
                             KeyUp="DesignerGrid_KeyUp"
                             CellEditEnded="DesignerGrid_CellEditEnded"
                             RightTapped="DesignerGrid_RightTapped"
-                            FrozenColumnCount="2"
+                            FrozenColumnCount="3"
                             MaxWidth="900">
 
                 <controls:DataGrid.DataContext>

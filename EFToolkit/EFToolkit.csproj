@@ -12,7 +12,8 @@
     <EnableMsixTooling>true</EnableMsixTooling>
 	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>	  
 	<Nullable>enable</Nullable>
-	<SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>	  
+	<SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
+	<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>	  
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\Widgets\AcronymBox.xaml" />

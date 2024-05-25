@@ -9,6 +9,7 @@
     <AppIconSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</AppIconSource>
     <SplashScreenSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</SplashScreenSource>
     <PackageLogoSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</PackageLogoSource>
+    <AppxShowAllApps>False</AppxShowAllApps>
   </PropertyGroup>
   <ItemGroup>
     <None Update="App.xaml">
