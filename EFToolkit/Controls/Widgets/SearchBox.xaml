@@ -17,7 +17,7 @@
                         KeyUp="SearchTextBox_KeyUp"
                         TextChanged="SearchTextBox_TextChanged"
                         TokenItemRemoved="SearchTextBox_TokenItemRemoved"
-                        Height="40" MaxWidth="450"
+                        Height="40" MaxWidth="300"
                         VerticalAlignment="Bottom"
                         MaximumTokens="1">
 
