@@ -72,6 +72,15 @@ namespace EFToolkit.Pages
         private string projectdirectory = "project_directory";
 
 
+        public bool TeachTipsOpen
+        {
+            get { return localSettings.Values[teachtipsopen] as bool? ?? false; }
+            set { localSettings.Values[teachtipsopen] = value; OnPropertyChanged("TeachTipsOpen"); }
+        }
+        private string teachtipsopen = "teach_tips_open";
+
+
+
         public bool ModelSummary
         {
             get { return localSettings.Values[modelsummary] as bool? ?? true; }

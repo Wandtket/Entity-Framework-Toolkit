@@ -9,6 +9,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls" 
     xmlns:EFToolkit="using:EFToolkit" 
+    xmlns:EF="using:EFToolkit.Pages" 
     xmlns:widgets="using:EFToolkit.Controls.Widgets" 
     xmlns:converters="using:EFToolkit.Converters"
     mc:Ignorable="d"
@@ -16,6 +17,96 @@
 
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <TeachingTip x:Name="TableNameTeachTip"
+                    Target="{Binding ElementName=TableName}"
+                    IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    PreferredPlacement="Auto"
+                    Title="Table Structure &amp; Name">
+
+            <TeachingTip.Subtitle>
+                <x:String>This name will be used to build a summary as well as offer 
+                    name suggestions for objects, use the Schema library to quickly switch
+                    between different schemas your organization may use.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="SearchTeachTip"
+            Target="{Binding ElementName=SearchBox}"
+            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            PreferredPlacement="Auto" Width="150"
+            Title="Searching">
+
+            <TeachingTip.Subtitle>
+                <x:String>When needing to quickly search for a column name to edit or rearrange 
+                    try filtering for it.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="ClassNameTeachTip"
+            Target="{Binding ElementName=ClassName}"
+            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            PreferredPlacement="Auto"
+            Title="Class Name Suggestion">
+
+            <TeachingTip.Subtitle>
+                <x:String>If Class Name is empty when populating a Table Name the 
+                    Table name will be used to populate a Class Name. Use the Settings to 
+                    define a prefix / suffix for Models &amp; DTOs</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="OutputTypeTeachTip"
+            Target="{Binding ElementName=DTOToggleButton}"
+            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            PreferredPlacement="Auto"
+            Title="Output Types">
+
+            <TeachingTip.Subtitle>
+                <x:String>Use the output type toggles to quickly switch between different output types,
+                use the Settings to customize your outputs to your liking.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="SQLTableTeachTip"
+            Target="{Binding ElementName=DesignerGrid}"
+            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            PreferredPlacement="Center"
+            Title="SQL Table Designer">
+
+            <TeachingTip.Subtitle>
+                <x:String>Entity Framework Toolkit supports pasting from SQL Server Management
+                Studio, Visual Studio SQL Server Object Explorer, and Visual Studio Code.
+                Paste the columns in their respective designers, if your organization
+                restricts access to designing SQL Tables, use the Select Describer Tool to
+                get information on the columns.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="OutputTeachTip"
+            Target="{Binding ElementName=Output}"
+            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            PreferredPlacement="Center"
+            Title="Code Output">
+
+            <TeachingTip.Subtitle>
+                <x:String>Copy &amp; Paste your code from the output window when it is generated.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="AcronymsTeachTip"
+            Target="{Binding ElementName=AcronymLibrarySelector}"
+            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            PreferredPlacement="Auto"
+            Title="Selected Acronym Libraries">
+
+            <TeachingTip.Subtitle>
+                <x:String>Acronym Libraries are used to convert Table Names, and SQL Columns 
+                to human readable class and object names. Use the Acronym Library if your 
+                organization uses acronyms throughout their SQL Databases</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+       
     </Page.Resources>
     
     <Grid>
@@ -35,7 +126,7 @@
             </Grid.ColumnDefinitions>
 
             <widgets:SchemaBox x:Name="TableName" LostFocus="TableName_LostFocus"/>
-
+            
             <widgets:SearchBox x:Name="SearchBox" 
                                 TextChanged="SearchTable_TextChanged"
                                 TokenItemRemoved="SearchBox_TokenItemRemoved"

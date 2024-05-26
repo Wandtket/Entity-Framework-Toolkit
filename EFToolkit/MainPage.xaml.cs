@@ -133,7 +133,7 @@ namespace EFToolkit
 
         private void Help_Click(object sender, RoutedEventArgs e)
         {
-
+            Settings.Current.TeachTipsOpen = !Settings.Current.TeachTipsOpen;
         }
 
         private async void Suggestion_Tapped(object sender, TappedRoutedEventArgs e)
