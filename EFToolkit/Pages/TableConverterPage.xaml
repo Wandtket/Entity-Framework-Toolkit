@@ -83,6 +83,18 @@
             </TeachingTip.Subtitle>
         </TeachingTip>
 
+        <TeachingTip x:Name="PastingTeachTip"
+            Target="{Binding ElementName=PasteButton}"
+            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            PreferredPlacement="Auto"
+            Title="Pasting">
+
+            <TeachingTip.Subtitle>
+                <x:String>Copy from SQL Table Designer or use the Select Describer Tool to 
+                    output a Results table and copy it WITHOUT headers.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
         <TeachingTip x:Name="OutputTeachTip"
             Target="{Binding ElementName=Output}"
             IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -260,7 +272,7 @@
 
             <CommandBar Grid.Row="1" HorizontalAlignment="Left" DefaultLabelPosition="Right">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"
+                    <AppBarButton x:Name="PasteButton" Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"
                                   ToolTipService.ToolTip="Copy from SQL Table Designer or use the Select Describer Tool to output a result table and copy without headers."/>
                     
                     <AppBarButton Label="Clear Table" Icon="Delete" Click="ClearTable_Click"/>
