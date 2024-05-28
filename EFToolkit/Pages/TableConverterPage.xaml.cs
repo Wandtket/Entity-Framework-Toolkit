@@ -84,6 +84,17 @@ namespace EFToolkit.Pages
             }
         }
 
+        public void ToggleTeachTips(bool Toggle)
+        {
+            TableNameTeachTip.IsOpen = Toggle;
+            SearchTeachTip.IsOpen = Toggle;
+            ClassNameTeachTip.IsOpen = Toggle;
+            OutputTypeTeachTip.IsOpen = Toggle;
+            SQLTableTeachTip.IsOpen = Toggle;
+            PastingTeachTip.IsOpen = Toggle;
+            OutputTeachTip.IsOpen = Toggle;
+            AcronymsTeachTip.IsOpen = Toggle;
+        }
 
         private async void PasteTable_Click(object sender, RoutedEventArgs e)
         {

@@ -1,4 +1,5 @@
 ﻿using EFToolkit.Extensions;
+using EFToolkit.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -46,6 +47,8 @@ namespace EFToolkit
         {
             await Toolkit.LoadAcronymLibaries();
             await Toolkit.LoadSchemaLibaries();
+
+            Settings.Current.ResetTeachTips();
 
             MainWindow.Activate();
             MainWindow.Maximize();

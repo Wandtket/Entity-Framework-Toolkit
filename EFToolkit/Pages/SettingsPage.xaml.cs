@@ -78,6 +78,10 @@ namespace EFToolkit.Pages
             set { localSettings.Values[teachtipsopen] = value; OnPropertyChanged("TeachTipsOpen"); }
         }
         private string teachtipsopen = "teach_tips_open";
+        public void ResetTeachTips()
+        {
+            localSettings.Values[teachtipsopen] = false;
+        }
 
 
 

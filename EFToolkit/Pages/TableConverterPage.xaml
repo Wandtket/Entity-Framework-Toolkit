@@ -12,7 +12,8 @@
     xmlns:EF="using:EFToolkit.Pages" 
     xmlns:widgets="using:EFToolkit.Controls.Widgets" 
     xmlns:converters="using:EFToolkit.Converters"
-    mc:Ignorable="d"
+    mc:Ignorable="d" 
+    x:Name="TableConverter"
     NavigationCacheMode="Required">
 
     <Page.Resources>
@@ -20,7 +21,6 @@
 
         <TeachingTip x:Name="TableNameTeachTip"
                     Target="{Binding ElementName=TableName}"
-                    IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     PreferredPlacement="Auto"
                     Title="Table Structure &amp; Name">
 
@@ -33,7 +33,6 @@
 
         <TeachingTip x:Name="SearchTeachTip"
             Target="{Binding ElementName=SearchBox}"
-            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             PreferredPlacement="Auto" Width="150"
             Title="Searching">
 
@@ -45,7 +44,6 @@
 
         <TeachingTip x:Name="ClassNameTeachTip"
             Target="{Binding ElementName=ClassName}"
-            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             PreferredPlacement="Auto"
             Title="Class Name Suggestion">
 
@@ -58,7 +56,6 @@
 
         <TeachingTip x:Name="OutputTypeTeachTip"
             Target="{Binding ElementName=DTOToggleButton}"
-            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             PreferredPlacement="Auto"
             Title="Output Types">
 
@@ -70,7 +67,6 @@
 
         <TeachingTip x:Name="SQLTableTeachTip"
             Target="{Binding ElementName=DesignerGrid}"
-            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             PreferredPlacement="Center"
             Title="SQL Table Designer">
 
@@ -85,7 +81,6 @@
 
         <TeachingTip x:Name="PastingTeachTip"
             Target="{Binding ElementName=PasteButton}"
-            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             PreferredPlacement="Auto"
             Title="Pasting">
 
@@ -97,7 +92,6 @@
 
         <TeachingTip x:Name="OutputTeachTip"
             Target="{Binding ElementName=Output}"
-            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             PreferredPlacement="Center"
             Title="Code Output">
 
@@ -108,7 +102,6 @@
 
         <TeachingTip x:Name="AcronymsTeachTip"
             Target="{Binding ElementName=AcronymLibrarySelector}"
-            IsOpen="{x:Bind EF:Settings.Current.TeachTipsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             PreferredPlacement="Auto"
             Title="Selected Acronym Libraries">
 

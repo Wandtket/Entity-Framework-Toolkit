@@ -21,15 +21,16 @@
         </Grid.RowDefinitions>
 
         <NavigationView x:Name="MainView" 
-                    PaneDisplayMode="Left" 
-                    IsSettingsVisible="True"
-                    IsBackButtonVisible="Collapsed"
-                    SelectionChanged="MainView_SelectionChanged"
-                    Grid.Row="0" Grid.RowSpan="2"
-                    PaneTitle="Entity Framework Toolkit"
-                    IsPaneOpen="False"
-                    AlwaysShowHeader="True"
-                    SelectedItem="{Binding ElementName=TableConverterViewItem}">
+                        x:FieldModifier="public"
+                        PaneDisplayMode="Left" 
+                        IsSettingsVisible="True"
+                        IsBackButtonVisible="Collapsed"
+                        SelectionChanged="MainView_SelectionChanged"
+                        Grid.Row="0" Grid.RowSpan="2"
+                        PaneTitle="Entity Framework Toolkit"
+                        IsPaneOpen="False"
+                        AlwaysShowHeader="True"
+                        SelectedItem="{Binding ElementName=TableConverterViewItem}">
 
 
             <NavigationView.Header>

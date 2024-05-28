@@ -134,8 +134,14 @@ namespace EFToolkit
         private void Help_Click(object sender, RoutedEventArgs e)
         {
             Settings.Current.TeachTipsOpen = !Settings.Current.TeachTipsOpen;
-        }
+            if (MainView.SelectedItem == TableConverterViewItem)
+            {
+                TableConverterPage Page = PageFrame.Content as TableConverterPage;
+                Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
+            }
 
+        }
+        
         private async void Suggestion_Tapped(object sender, TappedRoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("https://github.com/Wandtket/Entity-Framework-Toolkit/issues/new"));
