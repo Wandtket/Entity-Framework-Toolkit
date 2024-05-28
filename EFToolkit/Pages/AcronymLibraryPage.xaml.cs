@@ -34,16 +34,32 @@ namespace EFToolkit.Pages
     public sealed partial class AcronymLibraryPage : Page
     {
 
-        
-
         public AcronymLibraryPage()
         {
-            this.InitializeComponent();
-
-            AcronymLibraryList.ItemsSource = Toolkit.AcronymLibraries.Where(x => x.Title != "All");
+            this.InitializeComponent();       
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
 
+            var AllItem = Toolkit.AcronymLibraries.Where(x => x.Title == "All").FirstOrDefault();
+            if (AllItem != null) { Toolkit.AcronymLibraries.Remove(AllItem); }
+
+            AcronymLibraryList.ItemsSource = Toolkit.AcronymLibraries;
+            if (AcronymLibraryList.Items.Count == 1) { AcronymLibraryList.SelectedIndex = 0; }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+
+            //Add an All Item.
+            if (Toolkit.AcronymLibraries.Where(x => x.Title == "All").FirstOrDefault() == null)
+            {
+                Toolkit.AcronymLibraries.Add(new AcronymLibrary() { Title = "All" });
+            }
+        }
 
         private void AddLibrary_Click(object sender, RoutedEventArgs e)
         {
