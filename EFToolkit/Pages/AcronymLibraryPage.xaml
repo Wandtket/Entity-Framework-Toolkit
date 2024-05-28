@@ -7,10 +7,38 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:widgets="using:EFToolkit.Controls.Widgets" 
+    xmlns:converters="using:EFToolkit.Converters"
     xmlns:EFToolkit="using:EFToolkit"
+    xmlns:EF="using:EFToolkit.Pages" 
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 
+    <Page.Resources>
+
+        <TeachingTip x:Name="LibraryTeachTip"
+                    Target="{Binding ElementName=AcronymLibraryList}"
+                    PreferredPlacement="Center"
+                    Title="Acronym Libraries">
+
+            <TeachingTip.Subtitle>
+                <x:String>Separating acronym libraries allow you to quickly swap between 
+                    them if working with multiple databases or different organizations / 
+                    preferences.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="TranslationTeachTip"
+                    Target="{Binding ElementName=AcronymItemList}"
+                    PreferredPlacement="Center"
+                    Title="Acronym Libraries">
+
+            <TeachingTip.Subtitle>
+                <x:String>When creating a translation</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+    </Page.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -50,6 +78,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid ColumnSpacing="10">
+                            
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
