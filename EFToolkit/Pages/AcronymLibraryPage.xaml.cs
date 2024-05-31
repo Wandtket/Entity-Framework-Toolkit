@@ -28,6 +28,7 @@ using Windows.Storage;
 
 namespace EFToolkit.Pages
 {
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -48,6 +49,8 @@ namespace EFToolkit.Pages
 
             AcronymLibraryList.ItemsSource = Toolkit.AcronymLibraries;
             if (AcronymLibraryList.Items.Count == 1) { AcronymLibraryList.SelectedIndex = 0; }
+
+            LibrariesTotal.Text = AcronymLibraryList.Items.Count.ToString();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -68,7 +71,26 @@ namespace EFToolkit.Pages
 
             Toolkit.AcronymLibraries.Add(Library);
             AcronymLibraryList.SelectedItem = Library;
+
+            LibrariesTotal.Text = AcronymLibraryList.Items.Count.ToString();
         }
+
+        private async void RemoveLibrary_Click(object sender, RoutedEventArgs e)
+        {
+            var Result = await ConfirmBox.Show("This action will clear all acronyms in this library and cannot be undone.", "Delete Library?");
+            if (Result == ContentDialogResult.Primary)
+            {
+                var s = (FrameworkElement)sender;
+                var d = s.DataContext;
+
+                AcronymLibrary Library = (AcronymLibrary)AcronymLibraryList.SelectedItem;
+                Toolkit.AcronymLibraries.Remove(Library);
+                Toolkit.SaveAcronymLibaries();
+
+                LibrariesTotal.Text = AcronymLibraryList.Items.Count.ToString();
+            }
+        }
+
 
         private void AddTranslation_Click(object sender, RoutedEventArgs e)
         {
@@ -154,20 +176,6 @@ namespace EFToolkit.Pages
         {
             Toolkit.SaveAcronymLibaries();
             await MessageBox.Show("Libraries should save automatically but this button feels good to press sometimes...", "Libraries Saved!");
-        }
-
-        private async void RemoveLibrary_Click(object sender, RoutedEventArgs e)
-        {
-            var Result = await ConfirmBox.Show("This action will clear all acronyms in this library and cannot be undone.", "Delete Library?");
-            if (Result == ContentDialogResult.Primary)
-            {
-                var s = (FrameworkElement)sender;
-                var d = s.DataContext;
-
-                AcronymLibrary Library = (AcronymLibrary)AcronymLibraryList.SelectedItem;
-                Toolkit.AcronymLibraries.Remove(Library);
-                Toolkit.SaveAcronymLibaries();
-            }
         }
 
 

@@ -12,6 +12,9 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using EFToolkit.Controls.Dialogs;
+using EFToolkit.Extensions;
+using Windows.ApplicationModel.DataTransfer;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -21,11 +24,34 @@ namespace EFToolkit.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ModelFixerPage : Page
+    public sealed partial class ModelEditorPage : Page
     {
-        public ModelFixerPage()
+        public ModelEditorPage()
         {
             this.InitializeComponent();
+        }
+
+
+        private async void CopyOutput_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private async void RearrangeButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+        private async void Input_Paste(object sender, TextControlPasteEventArgs e)
+        {
+  
+        }
+
+        private void Input_TextChanged(object sender, RoutedEventArgs e)
+        {
+            
+
         }
     }
 }

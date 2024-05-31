@@ -112,9 +112,9 @@ namespace EFToolkit
             {
                 PageFrame.Navigate(typeof(DataVisualizerPage));
             }
-            else if (args.SelectedItem == ModelFixerViewItem)
+            else if (args.SelectedItem == ModelEditorViewItem)
             {
-                PageFrame.Navigate(typeof(ModelFixerPage));
+                PageFrame.Navigate(typeof(ModelEditorPage));
             }
             else if (args.SelectedItem == AcronymLibraryItem)
             {
@@ -141,11 +141,17 @@ namespace EFToolkit
             }
 
         }
-        
+
+
+        private async void Coffee_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("https://www.buymeacoffee.com/wandtket"));
+
+        }
+
         private async void Suggestion_Tapped(object sender, TappedRoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("https://github.com/Wandtket/Entity-Framework-Toolkit/issues/new"));
         }
-
     }
 }

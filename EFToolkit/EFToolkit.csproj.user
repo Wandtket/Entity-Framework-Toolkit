@@ -15,6 +15,9 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="Controls\Widgets\RearrangeBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MainPage.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -48,7 +51,7 @@
     <Page Update="Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\ModelFixerPage.xaml">
+    <Page Update="Pages\ModelEditorPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pages\TableConverterPage.xaml">

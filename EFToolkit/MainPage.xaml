@@ -66,7 +66,7 @@
                         <FontIcon Glyph="&#xE773;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Name="ModelFixerViewItem" Content="Model Fixer"
+                <NavigationViewItem x:Name="ModelEditorViewItem" Content="Model Editor"
                     ToolTipService.ToolTip="Convert a model to and from Standard, INotifyPropertyChanged, and MVVM">
 
                     <NavigationViewItem.Icon>
@@ -103,7 +103,8 @@
                                     Visibility="{x:Bind EF:Settings.Current.Promotion, Mode=TwoWay,  
                                                 UpdateSourceTrigger=PropertyChanged,
                                                 Converter={StaticResource BoolToVisibilityConverter}}" 
-                                    SelectsOnInvoked="False">
+                                    SelectsOnInvoked="False"
+                                    Tapped="Coffee_Tapped">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEC32;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>

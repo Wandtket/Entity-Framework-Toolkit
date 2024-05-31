@@ -24,6 +24,8 @@ using CommunityToolkit.WinUI.Controls;
 using System.Threading.Tasks;
 using EFToolkit.Controls.Widgets;
 using System.Diagnostics;
+using System.ComponentModel.Design;
+using CommunityToolkit.WinUI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,6 +38,7 @@ namespace EFToolkit.Pages
     /// </summary>
     public sealed partial class TableConverterPage : Page
     {
+
 
         ObservableCollection<DesignItem> DesignItems = new();
 
@@ -53,9 +56,14 @@ namespace EFToolkit.Pages
 
             AcronymLibrarySelector.SuggestedItemsSource = Toolkit.AcronymLibraries;
             AcronymLibrarySelector.ItemsSource = Toolkit.SelectedAcronymLibraries;
+
+            OriginalDataGridStyle = DesignerGrid.RowStyle;
         }
 
-        private void DesignerGrid_KeyUp(object sender, KeyRoutedEventArgs e)
+        public Style OriginalDataGridStyle;
+
+
+        private async void DesignerGrid_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Delete)
             {
@@ -81,6 +89,22 @@ namespace EFToolkit.Pages
 
                 DesignItemCount.Text = DesignItems.Count().ToString();
                 ConvertTable();
+            }
+            else if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                DesignerGrid.SelectedIndex = DesignerGrid.SelectedIndex - 1;
+                if (DesignerGrid.RowStyle == (Style)App.Current.Resources["BasicDataGridRowStyle"])
+                {
+                    DesignerGrid.RowStyle = OriginalDataGridStyle;
+                }
+                else
+                {
+                    DesignerGrid.RowStyle = (Style)App.Current.Resources["BasicDataGridRowStyle"];
+                }
+            }
+            else if (e.Key == Windows.System.VirtualKey.Up || e.Key == Windows.System.VirtualKey.Down)
+            {
+
             }
         }
 
@@ -222,10 +246,14 @@ namespace EFToolkit.Pages
             ConvertTable();
         }
 
-        private void ClearTable_Click(object sender, RoutedEventArgs e)
+        private async void ClearTable_Click(object sender, RoutedEventArgs e)
         {
-            DesignItems.Clear();
-            DesignItemCount.Text = DesignItems.Count().ToString();
+            var result = await ConfirmBox.Show("This action cannot be undone", "Clear Table?");
+            if (result == ContentDialogResult.Primary)
+            {
+                DesignItems.Clear();
+                DesignItemCount.Text = DesignItems.Count().ToString();
+            }
         }
 
 
@@ -445,6 +473,86 @@ namespace EFToolkit.Pages
             ConvertTable();
         }
 
+        private async void RearrangeButton_Click(object sender, RoutedEventArgs e)
+        {
+            await RearrangeDialog.ShowAsync();
+            ConvertTable();
+        }
+
+        private void DesignerGrid_LayoutUpdated(object sender, object e)
+        {
+            if (DesignerGrid.ItemsSource != null)
+            {
+                var items = (ObservableCollection<DesignItem>)DesignerGrid.ItemsSource;
+                for (int i = 0; i < items.Count; i++)
+                {
+                    items[i].Index = (i + 1);
+                    items[i].RearrangeText = items[i].Index + ": " + 
+                        items[i].ObjectName + 
+                        " - " + 
+                        items[i].DataType;
+                }
+            }
+        }
+
+
+
+        List<DesignItem?> FoundItems = new();
+        int SearchFoundIndex = 0;
+
+        private void RearrangeSearch_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput && sender.Text.Length > 1)
+            {
+                RearrangeListView.DeselectAll();
+
+                FoundItems = new();
+                for (int i = 0; i < RearrangeListView.Items.Count; i++)
+                {
+                    DesignItem item = (DesignItem)RearrangeListView.Items[i];
+                    if (!string.IsNullOrEmpty(item.ObjectName) || !string.IsNullOrEmpty(item.ColumnName))
+                    {
+                        if (item.ObjectName.ToLower().Contains(sender.Text.ToLower()) ||
+                            item.ColumnName.ToLower().Contains(sender.Text.ToLower()))
+                        {
+                            RearrangeListView.SelectRange(new ItemIndexRange(i, 1));
+                            FoundItems.Add(item);
+                        }
+                    }
+                }
+
+                if (FoundItems.Count >= 1)
+                {
+                    RearrangeListView.ScrollIntoView(FoundItems[0]);
+                }
+
+                RearrangeSearch.FoundCount = FoundItems.Count;
+            }
+            else
+            {
+                RearrangeListView.DeselectAll();
+                RearrangeListView.SelectedIndex = -1;
+                RearrangeSearch.FoundCount = 0;
+            }
+        }
+
+        private void FindUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchFoundIndex <= FoundItems.Count)
+            {
+                if (SearchFoundIndex != 0) { SearchFoundIndex--; }
+                RearrangeListView.ScrollIntoView(FoundItems[SearchFoundIndex]);
+            }
+        }
+
+        private void FindDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchFoundIndex <= FoundItems.Count)
+            {
+                if (SearchFoundIndex != FoundItems.Count - 1) { SearchFoundIndex++; }
+                RearrangeListView.ScrollIntoView(FoundItems[SearchFoundIndex]);
+            }
+        }
     }
 
 }

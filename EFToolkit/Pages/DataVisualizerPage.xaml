@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
 
 
-        <Grid Margin="15" ColumnSpacing="10">
+        <Grid Margin="15" ColumnSpacing="10" HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -106,7 +106,7 @@
                     <AppBarToggleButton x:Name="IncludeAll" Label="Include All" Icon="SelectAll" Click="IncludeAll_Click"
                                         IsChecked="{x:Bind EF:Settings.Current.DataVisualizerIncludeAll, Mode=TwoWay}"/>
 
-                    <AppBarButton Label="Clear Table" Icon="Delete" Click="ClearTable_Click"/>
+                    <AppBarButton Label="Clear" Icon="Delete" Click="ClearTable_Click"/>
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
@@ -144,9 +144,9 @@
 
                 <CommandBar Grid.Column="1" DefaultLabelPosition="Right" Margin="0,0,0,-10" VerticalAlignment="Center">
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton Label="Clear" Icon="ClearSelection" Click="ClearOutput_Click"/>
+                        <AppBarButton Label="Clear" Icon="ClearSelection" Click="ClearOutput_Click" Visibility="Collapsed"/>
                         <AppBarButton Label="Copy" Icon="Copy" Click="CopyOutput_Click"/>
-                        <AppBarButton Label="Export to file" Icon="Save" Click="Export_Click"/>
+                        <AppBarButton Label="Export to file" Icon="Save" Click="Export_Click" Visibility="Collapsed"/>
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
             </Grid>

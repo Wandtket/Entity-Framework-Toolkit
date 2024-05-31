@@ -111,7 +111,8 @@
                 organization uses acronyms throughout their SQL Databases</x:String>
             </TeachingTip.Subtitle>
         </TeachingTip>
-       
+                 
+        
     </Page.Resources>
     
     <Grid>
@@ -139,6 +140,7 @@
             
         </Grid>
 
+        
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -192,8 +194,7 @@
 
         </Grid>
         
-        
-
+       
         <Grid Grid.Column="0" Grid.Row="1" Margin="15,0,15,10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -212,13 +213,18 @@
                             KeyUp="DesignerGrid_KeyUp"
                             CellEditEnded="DesignerGrid_CellEditEnded"
                             RightTapped="DesignerGrid_RightTapped"
+                            LayoutUpdated="DesignerGrid_LayoutUpdated"                                
                             FrozenColumnCount="3"
                             MaxWidth="900">
 
                 <controls:DataGrid.DataContext>
                     <EFToolkit:DesignItem/>
                 </controls:DataGrid.DataContext>
-
+                
+                <controls:DataGrid.Resources>
+                    <SolidColorBrush x:Key="SystemColors.HighlightBrushKey" Color="Green" />
+                </controls:DataGrid.Resources>
+                
                 <controls:DataGrid.Columns>
                     <controls:DataGridTemplateColumn Header="" Width="50" >
                         <controls:DataGridTemplateColumn.CellTemplate>
@@ -267,9 +273,15 @@
                 <CommandBar.PrimaryCommands>
                     <AppBarButton x:Name="PasteButton" Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"
                                   ToolTipService.ToolTip="Copy from SQL Table Designer or use the Select Describer Tool to output a result table and copy without headers."/>
-                    
-                    <AppBarButton Label="Clear Table" Icon="Delete" Click="ClearTable_Click"/>
 
+                    <AppBarButton Label="Rearrange" Click="RearrangeButton_Click">
+                        <AppBarButton.Icon>
+                            <FontIcon Glyph="&#xE7AC;" FontFamily="Segoe MDL2 Assets"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+
+                    <AppBarButton Label="Clear" Icon="Delete" Click="ClearTable_Click"/>
+                    
                 </CommandBar.PrimaryCommands>
             </CommandBar>
 
@@ -307,15 +319,68 @@
                
                 <CommandBar Grid.Column="1" DefaultLabelPosition="Right" Margin="0,0,0,-10" VerticalAlignment="Center">
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton Label="Clear" Icon="ClearSelection" Click="ClearOutput_Click"/>
+                        <AppBarButton Label="Clear" Icon="ClearSelection" Click="ClearOutput_Click" Visibility="Collapsed"/>
                         <AppBarButton Label="Copy" Icon="Copy" Click="CopyOutput_Click"/>
-                        <AppBarButton Label="Export to file" Icon="Save" Click="Export_Click"/>
+                        <AppBarButton Label="Export to file" Icon="Save" Click="Export_Click" Visibility="Collapsed"/>
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
             </Grid>
 
         </Grid>
-       
-        </Grid>
 
+
+        <ContentDialog x:Name="RearrangeDialog"
+                Title="Rearrange"
+                CloseButtonText="Dismiss"
+                DefaultButton="Primary">
+            
+            <ContentDialog.Content>
+                <Grid Width="400">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <widgets:RearrangeBox x:Name="RearrangeSearch"
+                                          TextChanged="RearrangeSearch_TextChanged" 
+                                          FindUp_Clicked="FindUpButton_Click"
+                                          FindDown_Clicked="FindDownButton_Click"/>
+
+                    <ListView x:Name="RearrangeListView"
+                          x:FieldModifier="public"
+                          ItemsSource="{x:Bind DesignItems}"
+                          CanDrag="True" 
+                          CanDragItems="True"
+                          CanReorderItems="True"
+                          AllowDrop="True"
+                          Grid.Row="1" Grid.ColumnSpan="4"
+                          SelectionMode="Extended">
+
+                        <ListView.DataContext>
+                            <EFToolkit:DesignItem/>
+                        </ListView.DataContext>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="{Binding Index}" Grid.Column="0"/>
+                                    <TextBlock Text="{Binding ObjectName}" Grid.Column="1"
+                                               ToolTipService.ToolTip="{Binding DataType}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    
+                </Grid>
+            </ContentDialog.Content>
+        </ContentDialog>
+        
+    </Grid>
+
+    
 </Page>

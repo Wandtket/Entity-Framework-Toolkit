@@ -29,8 +29,16 @@ namespace EFToolkit.Pages
         {
             this.InitializeComponent();
 
-            SchemaLibraryList.ItemsSource = Toolkit.SchemaLibraries;
         }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            SchemaLibraryList.ItemsSource = Toolkit.SchemaLibraries;
+            SchemasTotal.Text = SchemaLibraryList.Items.Count.ToString();
+        }
+
 
         private void AddSchema_Click(object sender, RoutedEventArgs e)
         {
@@ -38,6 +46,8 @@ namespace EFToolkit.Pages
 
             Toolkit.SchemaLibraries.Add(Library);
             SchemaLibraryList.SelectedItem = Library;
+
+            SchemasTotal.Text = SchemaLibraryList.Items.Count.ToString();
         }
 
         private async void SaveSchema_Click(object sender, RoutedEventArgs e)
@@ -46,14 +56,6 @@ namespace EFToolkit.Pages
             await MessageBox.Show("Libraries should save automatically but this button feels good to press sometimes...", "Libraries Saved!");
         }
 
-        private void SchemaLibraryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            SchemaLibrary SelectedItem = (SchemaLibrary)SchemaLibraryList.SelectedItem;
-            if (SelectedItem != null)
-            {
-                SchemasTotal.Text = SchemaLibraryList.Items.Count.ToString();
-            }
-        }
 
         private async void RemoveLibrary_Click(object sender, RoutedEventArgs e)
         {
@@ -63,7 +65,8 @@ namespace EFToolkit.Pages
             SchemaLibrary Library = (SchemaLibrary)SchemaLibraryList.SelectedItem;
             Toolkit.SchemaLibraries.Remove(Library);
             Toolkit.SaveSchemaLibaries();
-            
+
+            SchemasTotal.Text = SchemaLibraryList.Items.Count.ToString();
         }
 
         private async void ClearSchemas_Click(object sender, RoutedEventArgs e)
@@ -74,6 +77,8 @@ namespace EFToolkit.Pages
                 Toolkit.SchemaLibraries.Clear();
                 Toolkit.SelectedSchemaLibraries.Clear();
                 Toolkit.SaveSchemaLibaries();
+
+                SchemasTotal.Text = SchemaLibraryList.Items.Count.ToString();
             }
         }
 

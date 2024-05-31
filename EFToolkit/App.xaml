@@ -4,7 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:EFToolkit"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls">
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" xmlns:localprimitives="using:CommunityToolkit.WinUI.UI.Controls.Primitives">
     
     
     <Application.Resources>
@@ -103,6 +103,95 @@
                     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{ThemeResource SystemAltHighColor}" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+
+
+
+            <SolidColorBrush x:Key="MySelectedRowBackground" Color="Green" Opacity="0.7"/>
+
+            <Style x:Key="BasicDataGridRowStyle" TargetType="controls:DataGridRow">
+                <Setter Property="IsTabStop" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="controls:DataGridRow">
+                            <localprimitives:DataGridFrozenGrid x:Name="RowRoot">
+                                <localprimitives:DataGridFrozenGrid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </localprimitives:DataGridFrozenGrid.ColumnDefinitions>
+                                <localprimitives:DataGridFrozenGrid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </localprimitives:DataGridFrozenGrid.RowDefinitions>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="NormalAlternatingRow"/>
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MySelectedRowBackground}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <DoubleAnimation Duration="0:0:.2" Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Opacity" To="1"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="NormalSelected">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MySelectedRowBackground}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <DoubleAnimation Duration="0" Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Opacity" To="1"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="PointerOverSelected">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MySelectedRowBackground}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <DoubleAnimation Duration="0" Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Opacity" To="1"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="PointerOverUnfocusedSelected">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MySelectedRowBackground}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <DoubleAnimation Duration="0" Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Opacity" To="1"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                        <VisualState x:Name="UnfocusedSelected">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Fill">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource MySelectedRowBackground}"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <DoubleAnimation Duration="0" Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Opacity" To="1"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                    <VisualStateGroup x:Name="ValidationStates">
+                                        <VisualState x:Name="Valid"/>
+                                        <VisualState x:Name="Invalid">
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetName="BackgroundRectangle" Storyboard.TargetProperty="Visibility">
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <DoubleAnimation Duration="0" Storyboard.TargetName="InvalidVisualElement" Storyboard.TargetProperty="Opacity" To="0.4"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Rectangle x:Name="BackgroundRectangle" Grid.ColumnSpan="2" Fill="Transparent"/>
+                                <Rectangle x:Name="InvalidVisualElement" Grid.ColumnSpan="2" Fill="{ThemeResource SystemControlDisabledAccentBrush}" Opacity="0"/>
+                                <localprimitives:DataGridRowHeader x:Name="RowHeader" localprimitives:DataGridFrozenGrid.IsFrozen="True" Grid.RowSpan="3"/>
+                                <localprimitives:DataGridCellsPresenter x:Name="CellsPresenter" AutomationProperties.AccessibilityView="Raw" Grid.Column="1" localprimitives:DataGridFrozenGrid.IsFrozen="True" MinHeight="32"/>
+                                <localprimitives:DataGridDetailsPresenter x:Name="DetailsPresenter" AutomationProperties.AccessibilityView="Raw" Grid.Column="1" Grid.Row="1"/>
+                                <Rectangle x:Name="BottomGridLine" Grid.Column="1" HorizontalAlignment="Stretch" Height="1" Grid.Row="2"/>
+                            </localprimitives:DataGridFrozenGrid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
 
 
             <ResourceDictionary.MergedDictionaries>

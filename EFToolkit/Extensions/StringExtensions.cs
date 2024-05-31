@@ -10,6 +10,34 @@ namespace EFToolkit.Extensions
     public static class StringExtensions
     {
 
+        public static string Between(this string text, string start, string end, BetweenOptions options = BetweenOptions.KeepStartEnd)
+        {
+            var startIndex = text.IndexOf(start);
+            var endIndex = text.IndexOf(end);
+
+            //var endIndex = text.LastIndexOf(end);
+
+
+            if (options == BetweenOptions.KeepStartEnd)
+                return text.Substring(startIndex, (endIndex + end.Length) - startIndex);
+            else if (options == BetweenOptions.KeepStart)
+                return text.Substring(startIndex, (endIndex + end.Length) - startIndex).ReplaceFirstOccurrence(end, "");
+            else if (options == BetweenOptions.KeepEnd)
+                return text.Substring(startIndex, (endIndex + end.Length) - startIndex).ReplaceFirstOccurrence(start, "");
+            else
+                return text.Substring(startIndex + start.Length, endIndex - (startIndex + start.Length));        
+        }
+
+
+        public enum BetweenOptions
+        {
+            KeepStartEnd,
+            KeepStart,
+            KeepEnd,
+            KeepNone,
+        }
+
+
         public static string ReplaceFirstOccurrence(this string String, string find, string replace)
         {
             int pos = String.IndexOf(find);

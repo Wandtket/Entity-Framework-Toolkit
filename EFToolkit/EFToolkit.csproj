@@ -17,13 +17,14 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\Widgets\AcronymBox.xaml" />
+    <None Remove="Controls\Widgets\RearrangeBox.xaml" />
     <None Remove="Controls\Widgets\SchemaBox.xaml" />
     <None Remove="Controls\Widgets\SearchBox.xaml" />
     <None Remove="logo.ico" />
     <None Remove="MainPage.xaml" />
     <None Remove="Pages\AcronymLibraryPage.xaml" />
     <None Remove="Pages\DataVisualizerPage.xaml" />
-    <None Remove="Pages\ModelFixerPage.xaml" />
+    <None Remove="Pages\ModelEditorPage.xaml" />
     <None Remove="Pages\SchemaLibraryPage.xaml" />
     <None Remove="Pages\SelectDescriberPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
@@ -135,6 +136,11 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Controls\Widgets\RearrangeBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\SelectDescriberPage.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -144,7 +150,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\ModelFixerPage.xaml">
+    <Page Update="Pages\ModelEditorPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -152,9 +158,6 @@
     <Page Update="Pages\TableConverterPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\Dialogs\" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="MainPage.xaml">

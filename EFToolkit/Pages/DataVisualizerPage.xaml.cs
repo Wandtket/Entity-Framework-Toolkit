@@ -160,10 +160,14 @@ namespace EFToolkit.Pages
             ConvertTable();
         }
 
-        private void ClearTable_Click(object sender, RoutedEventArgs e)
+        private async void ClearTable_Click(object sender, RoutedEventArgs e)
         {
-            VisualizerItems.Clear();
-            VisualizerItemCount.Text = VisualizerItems.Count().ToString();
+            var result = await ConfirmBox.Show("This action cannot be undone", "Clear Table?");
+            if (result == ContentDialogResult.Primary)
+            {
+                VisualizerItems.Clear();
+                VisualizerItemCount.Text = VisualizerItems.Count().ToString();
+            }
         }
 
         private void CopyOutput_Click(object sender, RoutedEventArgs e)

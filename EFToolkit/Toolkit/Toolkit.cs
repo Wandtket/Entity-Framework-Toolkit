@@ -382,7 +382,7 @@ namespace EFToolkit
             string Body = SelectStatement.Replace("'", "") + "' \n";
 
             string Suffix = ", @params = NULL, @browse_information_mode = 0; \n \n" +
-                "/*Once executed, copy the results table into the\r\nTable Converter tool in Entity Framework Toolkit..*/";
+                "/*Once executed, copy the results table without headers into the\r\nTable Converter tool in Entity Framework Toolkit..*/";
 
             string DescribeCommand = Prefix + Body + Suffix;
             return DescribeCommand;
@@ -419,7 +419,12 @@ namespace EFToolkit
 
             return Body;
         }
-            
+
+
+        #endregion
+
+
+        #region ModelEditor 
 
         #endregion
 
@@ -556,6 +561,7 @@ namespace EFToolkit
 
         #endregion
 
+
         #region Schema Libraries
 
         public static ObservableCollection<SchemaLibrary> SchemaLibraries = new();
@@ -635,6 +641,12 @@ namespace EFToolkit
     public partial class DesignItem : ObservableObject
     {
         [ObservableProperty]
+        private int index = 0;
+
+        [ObservableProperty]
+        private string rearrangeText = string.Empty;
+
+        [ObservableProperty]
         private bool isPrimaryKey = false;
 
         [ObservableProperty]
@@ -654,6 +666,7 @@ namespace EFToolkit
 
     }
 
+
     public partial class VisualizerItem : ObservableObject
     {
         [ObservableProperty]
@@ -668,6 +681,44 @@ namespace EFToolkit
         [ObservableProperty]
         private string value = string.Empty;
     }
+
+
+    public partial class ModelItem : ObservableObject
+    {
+        [ObservableProperty]
+        private List<string> usings = new();
+
+        [ObservableProperty]
+        private string nameSpace = string.Empty;
+
+        [ObservableProperty]
+        private string summary = string.Empty;
+
+        [ObservableProperty]
+        private string name = string.Empty;
+
+        [ObservableProperty]
+        private List<ModelSubItem> items = new();
+    }
+
+    public partial class ModelSubItem : ObservableObject
+    {
+        [ObservableProperty]
+        private string summary = string.Empty;
+
+        [ObservableProperty]
+        private List<string> attributes = new();
+
+        [ObservableProperty]
+        private string access = string.Empty;
+
+        [ObservableProperty]
+        private string declaration = string.Empty;
+
+        [ObservableProperty]
+        private string name = string.Empty;
+    }
+
 
     public partial class AcronymLibrary : ObservableObject
     {
@@ -691,6 +742,7 @@ namespace EFToolkit
         private string translation;
 
     }
+
 
     public partial class SchemaLibrary : ObservableObject
     {

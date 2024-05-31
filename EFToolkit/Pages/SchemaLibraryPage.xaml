@@ -42,7 +42,6 @@
             </CommandBar>
 
             <ListView x:Name="SchemaLibraryList" 
-                      SelectionChanged="SchemaLibraryList_SelectionChanged"
                       Grid.Row="1" CanDragItems="True" AllowDrop="True" CanReorderItems="True">
 
                 <ListView.DataContext>

@@ -45,7 +45,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="400"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
@@ -53,6 +53,7 @@
         <Grid Margin="15,15,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
@@ -96,6 +97,15 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+            <CommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right" Grid.Row="2">
+                <CommandBar.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="Total:" FontSize="16" Margin="0,12,0,0"/>
+                        <TextBlock x:Name="LibrariesTotal" Text="0" FontSize="16" Margin="0,12,15,0"/>
+                    </StackPanel>
+                </CommandBar.Content>
+            </CommandBar>
         </Grid>
 
         <widgets:Separator Grid.Column="1" Orientation="Vertical" Margin="15,0,15,15" Opacity=".2"/>
