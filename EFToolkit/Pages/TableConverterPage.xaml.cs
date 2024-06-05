@@ -308,7 +308,7 @@ namespace EFToolkit.Pages
             }
             if (DTOToggleButton.IsChecked == true) 
             {
-                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Value, ClassName.Text, Settings.Current.DTO_Options));
+                await Output.SetText(Toolkit.ConvertTableToDto(DesignItems, TableName.Value, ClassName.Text, Settings.Current.DTOModelOptions));
             }
 
             OutputProgress.Visibility = Visibility.Collapsed;

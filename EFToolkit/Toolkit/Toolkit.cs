@@ -23,6 +23,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using System.Text.RegularExpressions;
 
 namespace EFToolkit
 {
@@ -160,11 +161,11 @@ namespace EFToolkit
         /// <param name="DesignItems"></param>
         /// <param name="TableName"></param>
         /// <returns></returns>
-        public static string ConvertTableToDto(ObservableCollection<DesignItem> DesignItems, string TableName, string ClassName, DTO_Options Options = DTO_Options.MVVM)
+        public static string ConvertTableToDto(ObservableCollection<DesignItem> DesignItems, string TableName, string ClassName, ModelOptions Options = ModelOptions.MVVM)
         {
             string Objects = "";
 
-            if (Options == DTO_Options.Standard)
+            if (Options == ModelOptions.Standard)
             {
                 foreach (DesignItem Item in DesignItems)
                 {
@@ -212,7 +213,7 @@ namespace EFToolkit
 
                 return Body;
             }
-            else if (Options == DTO_Options.INotifyPropertyChanged)
+            else if (Options == ModelOptions.INotifyPropertyChanged)
             {
                 foreach (DesignItem Item in DesignItems)
                 {
@@ -281,7 +282,7 @@ namespace EFToolkit
 
                 return Body;
             }
-            else if (Options == DTO_Options.MVVM)
+            else if (Options == ModelOptions.MVVM)
             {
                 foreach (DesignItem Item in DesignItems)
                 {
@@ -425,6 +426,96 @@ namespace EFToolkit
 
 
         #region ModelEditor 
+
+
+        public static string ConvertModel(string Input, ModelOptions Options)
+        {
+
+            if (Options == ModelOptions.Standard)
+            {
+                return "";
+            }
+            else if (Options == ModelOptions.MVVM)
+            {
+                return "";
+            }
+            else if (Options == ModelOptions.INotifyPropertyChanged)
+            {
+                if (Input.Contains(" { get; set; }"))
+                {
+                    return ConvertFromStandardModel(Input);
+                }
+                else if (Input.Contains("[ObservableProperty]"))
+                {
+                    return "";
+                }
+                else { return ""; }
+            }
+            else { return ""; }
+        }
+
+
+        private static string ConvertFromStandardModel(string Input)
+        {
+            int InputCount = Regex.Matches(Input, " { get; set; }").Count();
+
+            for (int i = 0; i < InputCount; i++)
+            {
+                try
+                {
+                    int StartIndex = Input.IndexOf(" { get; set; }");
+
+                    string Subject = Input.Substring(StartIndex - 50, 50);
+
+                    string Type = Input.Substring(StartIndex - 50, 50).TrimStart().TrimEnd();
+                    Type = Type.Replace(Type.Substring(0, Type.IndexOf(" ")), "");
+                    Type = Type.Replace("</summary>", "");
+                    Type = Type.Replace(">", "");
+                    Type = Type.Replace("<", "");
+                    Type = Type.Replace("/", "");
+                    Type = Type.Replace("private", "");
+                    Type = Type.Replace("public", "");
+                    Type = Type.Replace("readonly", "");
+                    Type = Type.TrimEnd().TrimStart();
+
+                    Subject = Subject.Replace(Subject.Substring(0, Subject.LastIndexOf(" ")), "").Trim();
+
+                    string INotifyPropertyString = "\n \t{ \n" +
+                        "\t \t get { return " + Subject.ToLower() + "; } \n" +
+                        "\t \t set { \n " +
+                        "\t \t \t if (" + Subject.ToLower() + " != value) \n" +
+                        "\t \t \t { \n" +
+                        "\t \t \t \t" + Subject.ToLower() + " = value; \n" +
+                        "\t \t \t \t NotifyPropertyChanged(\"" + Subject.Trim() + "\"); \n" +
+                        "\t \t \t } \n" +
+                        "\t \t } \n" +
+                        "\t} \n" +
+                        "\tprivate " + Type.ToLower() + "; \n \n";
+
+                    Input = Input.Replace(Subject + " { get; set; }", Subject + INotifyPropertyString);
+
+                    Input = Input.Replace("public " + Type, "\tpublic " + Type);
+
+                    //Input = Input.Replace("/// ", "\t///");
+
+                    
+                    //MessageBox.Show(Type);
+                }
+                catch { }
+            }
+
+            string Event = "\t" + "public event PropertyChangedEventHandler PropertyChanged;" + "\n" +
+                                "\t" + "public void NotifyPropertyChanged(string propertyName)" + "\n" +
+                                "\t" + "{" + "\n" +
+                                "\t" + "\t" + "PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));" + "\n" +
+                                "\t" + "}" +
+
+                                "\n" + "}";
+
+            Input = Input.Replace("    }\r\n}", "    }\r" + Event );
+
+            return Input;
+        }
 
         #endregion
 
@@ -623,7 +714,7 @@ namespace EFToolkit
         /// </summary>
         /// <param name="Options"></param>
         /// <returns></returns>
-        public static string ConvertModel(DTO_Options Options = DTO_Options.INotifyPropertyChanged)
+        public static string ConvertModel(ModelOptions Options = ModelOptions.INotifyPropertyChanged)
         {
 
 
@@ -751,7 +842,7 @@ namespace EFToolkit
     }
 
 
-    public enum DTO_Options
+    public enum ModelOptions
     {
         Standard,
         INotifyPropertyChanged,

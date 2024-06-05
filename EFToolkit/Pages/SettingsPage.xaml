@@ -176,7 +176,7 @@
 
                                     <ComboBox x:Name="DTOPreference"
                                               ItemsSource="{x:Bind EF:Settings.Current.DTO_OptionList}" 
-                                              SelectedItem="{x:Bind EF:Settings.Current.DTO_Options, Mode=TwoWay}"
+                                              SelectedItem="{x:Bind EF:Settings.Current.DTOModelOptions, Mode=TwoWay}"
                                               Width="200">
                                     </ComboBox>
                                 </controls:SettingsCard>
@@ -199,7 +199,7 @@
                 </StackPanel>
             </controls:HeaderedContentControl>
 
-            <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
+            <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10" Visibility="Collapsed">
                 <controls:HeaderedContentControl.Header>
                     <TextBlock Text="Acronym Library" FontSize="14" Opacity=".6" Margin="5"/>
                 </controls:HeaderedContentControl.Header>

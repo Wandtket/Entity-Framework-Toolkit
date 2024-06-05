@@ -67,7 +67,8 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem x:Name="ModelEditorViewItem" Content="Model Editor"
-                    ToolTipService.ToolTip="Convert a model to and from Standard, INotifyPropertyChanged, and MVVM">
+                    ToolTipService.ToolTip="Convert a model to and from Standard, INotifyPropertyChanged, and MVVM"
+                    Visibility="Collapsed">
 
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE90F;" FontFamily="Segoe MDL2 Assets"/>

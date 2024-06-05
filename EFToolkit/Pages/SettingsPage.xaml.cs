@@ -199,13 +199,13 @@ namespace EFToolkit.Pages
         /// <summary>
         /// Determines how DTO's should be built.
         /// </summary>
-        public DTO_Options DTO_Options
+        public ModelOptions DTOModelOptions
         {
-            get { try { return JsonSerializer.Deserialize<DTO_Options>(localSettings.Values[dto_options] as string); } catch { return DTO_Options.Standard; } }
-            set { localSettings.Values[dto_options] = JsonSerializer.Serialize(value); }
+            get { try { return JsonSerializer.Deserialize<ModelOptions>(localSettings.Values[dtomodeloptions] as string); } catch { return ModelOptions.Standard; } }
+            set { localSettings.Values[dtomodeloptions] = JsonSerializer.Serialize(value); }
         }
-        private string dto_options = "dto_options";
-        public IList<DTO_Options> DTO_OptionList = Enum.GetValues(typeof(DTO_Options)).Cast<DTO_Options>().ToList();
+        private string dtomodeloptions = "dtomodeloptions";
+        public IList<ModelOptions> DTO_OptionList = Enum.GetValues(typeof(ModelOptions)).Cast<ModelOptions>().ToList();
 
 
         /// <summary>

@@ -13,7 +13,15 @@
 	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>	  
 	<Nullable>enable</Nullable>
 	<SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
-	<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>	  
+	<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
+	<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+	<AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+	<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+	<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
+	<GenerateTestArtifacts>True</GenerateTestArtifacts>
+	<AppxBundle>Never</AppxBundle>
+	<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>	  
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\Widgets\AcronymBox.xaml" />

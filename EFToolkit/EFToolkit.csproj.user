@@ -10,6 +10,9 @@
     <SplashScreenSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</SplashScreenSource>
     <PackageLogoSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</PackageLogoSource>
     <AppxShowAllApps>False</AppxShowAllApps>
+    <UapAppxPackageBuildMode>StoreAndSideload</UapAppxPackageBuildMode>
+    <AppxBuildConfigurationSelection>x86|x64|arm64</AppxBuildConfigurationSelection>
+    <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
   </PropertyGroup>
   <ItemGroup>
     <None Update="App.xaml">

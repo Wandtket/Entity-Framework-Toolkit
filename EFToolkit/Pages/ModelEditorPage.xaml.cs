@@ -45,7 +45,18 @@ namespace EFToolkit.Pages
 
         private async void Input_Paste(object sender, TextControlPasteEventArgs e)
         {
-  
+            DataPackageView dataPackageView = Clipboard.GetContent();
+            if (dataPackageView.Contains(StandardDataFormats.Text))
+            {
+                string text = await dataPackageView.GetTextAsync();
+
+                ModelItem Item = new ModelItem();
+
+                if (!string.IsNullOrEmpty(text))
+                {                                       
+                    Output.SetText(Toolkit.ConvertModel(text, ModelOptions.INotifyPropertyChanged));
+                }
+            }
         }
 
         private void Input_TextChanged(object sender, RoutedEventArgs e)
