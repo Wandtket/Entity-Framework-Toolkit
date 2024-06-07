@@ -318,7 +318,7 @@ namespace EFToolkit
                 }
 
                 string Body = @"/// <summary>" + "\n" +
-                                    @"/// dbo." + TableName + "\n" +
+                                    @"/// " + TableName + "\n" +
                                     @"/// </summary>" + "\n" +
                                     "public partial class " + Settings.Current.DTOPrefix + ClassName + Settings.Current.DTOSuffix + " : ObservableObject" + "\n" + "{" + "\n" +
                                     Objects +
