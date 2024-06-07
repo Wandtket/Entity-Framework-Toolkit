@@ -1,17 +1,11 @@
 ﻿using EFToolkit.Pages;
 using Microsoft.UI;
-using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Graphics.Printing3D;
 using Windows.UI;
-using static EFToolkit.Extensions.RichEditBoxExtensions;
 
 namespace EFToolkit.Extensions
 {
@@ -89,6 +83,7 @@ namespace EFToolkit.Extensions
 
         private static Color CodeBlue = Color.FromArgb(1, 84, 156, 214);
         private static Color CodeGreen = Color.FromArgb(1, 78, 201, 145);
+        private static Color CodeLightGreen = Color.FromArgb(1, 78, 201, 176);
         private static Color CodeYellow = Color.FromArgb(1, 220, 220, 162);
         private static Color CodeLightYellow = Color.FromArgb(1, 134, 198, 145);
           
@@ -128,6 +123,9 @@ namespace EFToolkit.Extensions
             new CodeFormatting() { Text = "Int64 ", Color = CodeLightYellow },
             new CodeFormatting() { Text = "Int64? ", Color = CodeLightYellow },
 
+            new CodeFormatting() { Text = "internal ", Color = CodeBlue },
+            new CodeFormatting() { Text = "partial ", Color = CodeBlue },
+
             new CodeFormatting() { Text = "public ", Color = CodeBlue },
             new CodeFormatting() { Text = "private ", Color = CodeBlue },
             new CodeFormatting() { Text = "static ", Color = CodeBlue },
@@ -135,6 +133,9 @@ namespace EFToolkit.Extensions
 
             new CodeFormatting() { Text = "class ", Color = CodeBlue },
             new CodeFormatting() { Text = "new ", Color = CodeBlue },
+
+            new CodeFormatting() { Text = "void ", Color = CodeBlue },
+
 
             new CodeFormatting() { Text = "return ", Color = CodeBlue },
 
@@ -145,18 +146,24 @@ namespace EFToolkit.Extensions
             new CodeFormatting() { Text = "get ", Color = CodeBlue },
             new CodeFormatting() { Text = "set ", Color = CodeBlue },
 
-            new CodeFormatting() { Text = "if ", Color = CodeBlue },
             //new CodeFormatting() { Text = "{", Color = CodeBlue },        
             //new CodeFormatting() { Text = "}", Color = CodeBlue },
 
             new CodeFormatting() { Text = "if ", Color = CodeBlue },
 
+
+            new CodeFormatting() { Text = "ObservableObject", Color = CodeLightGreen },
+
+            new CodeFormatting() { Text = "[ObservableProperty]", Color = CodeLightGreen },
+
             new CodeFormatting() { Text = "NotifyPropertyChanged", Color = CodeYellow },
 
             new CodeFormatting() { BeginText = "/// <summary>", EndText = "/// </summary>", Color = CodeGreen },
 
-            new CodeFormatting() { BeginText = "[JsonPropertyName(\"", EndText = "\")]", Color = CodeGreen },
+            new CodeFormatting() { BeginText = "[JsonPropertyName(\"", EndText = "\")]", Color = CodeLightGreen },
 
+            new CodeFormatting() { BeginText = "[Column(\"", EndText = "\")]", Color = CodeLightGreen },
+        
         };
                
         public class CodeFormatting
