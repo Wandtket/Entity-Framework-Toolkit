@@ -25,13 +25,6 @@ using Windows.Win32.Foundation;
 namespace EFToolkit.Extensions
 {
 
-    public class UI
-    {
-        public static Window RootWindow;
-        public static Frame RootFrame;
-
-        public static string IconName = @"logo.ico";
-    }
 
     public static class WindowExtensions
     {       

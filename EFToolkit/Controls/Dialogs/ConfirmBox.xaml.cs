@@ -20,7 +20,7 @@ namespace EFToolkit.Controls.Dialogs
             try
             {
                 ConfirmBoxContent Dialog = new ConfirmBoxContent();
-                Dialog.XamlRoot = UI.RootWindow.Content.XamlRoot;
+                Dialog.XamlRoot = App.Current.ActiveWindow.Content.XamlRoot;
                 Dialog.Title = Title;
                 Dialog.PrimaryButtonText = primaryText;
                 Dialog.SecondaryButtonText = secondaryText;

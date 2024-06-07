@@ -28,8 +28,6 @@ namespace EFToolkit
     /// </summary>
     public partial class App : Application
     {
-        public static MainWindow MainWindow = new();
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -38,6 +36,12 @@ namespace EFToolkit
         {
             this.InitializeComponent();
         }
+
+        public new static App Current => (App)Application.Current;
+
+
+        public MainWindow ActiveWindow { get; set; }
+
 
         /// <summary>
         /// Invoked when the application is launched.
@@ -48,10 +52,12 @@ namespace EFToolkit
             await Toolkit.LoadAcronymLibaries();
             await Toolkit.LoadSchemaLibaries();
 
+            App.Current.ActiveWindow = new MainWindow();
+
             Settings.Current.ResetTeachTips();
 
-            MainWindow.Activate();
-            MainWindow.Maximize();
+            App.Current.ActiveWindow.Activate();
+            App.Current.ActiveWindow.Maximize();
         }
     }
 }

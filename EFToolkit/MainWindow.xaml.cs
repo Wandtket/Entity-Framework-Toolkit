@@ -54,8 +54,8 @@ namespace EFToolkit
             this.EnableMICABackdrop();
             this.ExtendContentIntoTitleBar();
 
-            while (UI.RootWindow == null) { await Task.Delay(50); }
-            while (UI.RootWindow.Content.XamlRoot == null) { await Task.Delay(50); }
+            while (App.Current.ActiveWindow == null) { await Task.Delay(50); }
+            while (App.Current.ActiveWindow.Content.XamlRoot == null) { await Task.Delay(50); }
 
             Main.SetDragRegionForCustomTitleBar(this.GetAppWindow());
         }
@@ -63,7 +63,7 @@ namespace EFToolkit
         public void LoadIcon()
         {
             var hwndd = new Windows.Win32.Foundation.HWND(WinRT.Interop.WindowNative.GetWindowHandle(this));
-            Icon = PInvoke.LoadImage(null, UI.IconName, GDI_IMAGE_TYPE.IMAGE_ICON, 16, 16, IMAGE_FLAGS.LR_LOADFROMFILE);
+            Icon = PInvoke.LoadImage(null, @"logo.ico", GDI_IMAGE_TYPE.IMAGE_ICON, 16, 16, IMAGE_FLAGS.LR_LOADFROMFILE);
             PInvoke.SendMessage(hwndd, 0x0080, new WPARAM(0), new LPARAM(Icon.DangerousGetHandle()));
         }
 
@@ -72,8 +72,7 @@ namespace EFToolkit
         {
             if (args.WindowActivationState == WindowActivationState.CodeActivated)
             {
-                UI.RootWindow = this;
-                UI.RootFrame = this.Main.PageFrame;
+                App.Current.ActiveWindow = this;
             }
             else if (args.WindowActivationState == WindowActivationState.Deactivated)
             {
