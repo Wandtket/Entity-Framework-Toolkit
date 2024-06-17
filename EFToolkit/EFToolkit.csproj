@@ -30,10 +30,10 @@
     <None Remove="Controls\Widgets\SearchBox.xaml" />
     <None Remove="logo.ico" />
     <None Remove="MainPage.xaml" />
-    <None Remove="Pages\AcronymLibraryPage.xaml" />
+    <None Remove="Pages\AcronymPage.xaml" />
     <None Remove="Pages\DataVisualizerPage.xaml" />
     <None Remove="Pages\ModelEditorPage.xaml" />
-    <None Remove="Pages\SchemaLibraryPage.xaml" />
+    <None Remove="Pages\DatabasePage.xaml" />
     <None Remove="Pages\SelectDescriberPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="Pages\TableConverterPage.xaml" />
@@ -129,9 +129,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -188,7 +192,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\SchemaLibraryPage.xaml">
+    <Page Update="Pages\DatabasePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -198,7 +202,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\AcronymLibraryPage.xaml">
+    <Page Update="Pages\AcronymPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

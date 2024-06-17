@@ -38,12 +38,17 @@ namespace EFToolkit.Pages
             this.InitializeComponent();
         }
 
+        public void ToggleTeachTips(bool Toggle)
+        {
+            //TeachTip.IsOpen = Toggle;
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            //TableName.SuggestedItemsSource = Toolkit.SchemaLibraries;
-            //TableName.ItemsSource = Toolkit.SelectedSchemaLibraries;
+            //TableName.SuggestedItemsSource = Toolkit.SchemaItems;
+            //TableName.ItemsSource = Toolkit.SelectedSchemaItems;
 
             AcronymLibrarySelector.SuggestedItemsSource = Toolkit.AcronymLibraries;
             AcronymLibrarySelector.ItemsSource = Toolkit.SelectedAcronymLibraries;

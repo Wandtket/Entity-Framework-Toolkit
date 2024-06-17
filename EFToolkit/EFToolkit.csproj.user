@@ -39,13 +39,13 @@
     <None Update="Package.appxmanifest">
       <SubType>Designer</SubType>
     </None>
-    <Page Update="Pages\SchemaLibraryPage.xaml">
+    <Page Update="Pages\DatabasePage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pages\DataVisualizerPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\AcronymLibraryPage.xaml">
+    <Page Update="Pages\AcronymPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pages\SelectDescriberPage.xaml">

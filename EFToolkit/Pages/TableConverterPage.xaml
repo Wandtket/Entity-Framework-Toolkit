@@ -85,7 +85,7 @@
             Title="Pasting">
 
             <TeachingTip.Subtitle>
-                <x:String>Copy from SQL Table Designer or use the Select Describer Tool to 
+                <x:String>Copy tables from SQL Table Designer or use the Select Describer Tool to 
                     output a Results table and copy it WITHOUT headers.</x:String>
             </TeachingTip.Subtitle>
         </TeachingTip>
@@ -271,6 +271,15 @@
 
             <CommandBar Grid.Row="1" HorizontalAlignment="Left" DefaultLabelPosition="Right">
                 <CommandBar.PrimaryCommands>
+                    <AppBarButton x:Name="SelectButton" Label="Select Table" Visibility="Collapsed">
+                        <AppBarButton.Icon>
+                            <FontIcon Glyph="&#xEE94;" FontFamily="Segoe MDL2 Assets"/>
+                        </AppBarButton.Icon>
+                        <AppBarButton.Flyout>
+                            <MenuFlyout x:Name="TableMenu"/>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+
                     <AppBarButton x:Name="PasteButton" Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"
                                   ToolTipService.ToolTip="Copy from SQL Table Designer or use the Select Describer Tool to output a result table and copy without headers."/>
 
@@ -328,7 +337,6 @@
 
         </Grid>
 
-
         <ContentDialog x:Name="RearrangeDialog"
                 Title="Rearrange"
                 CloseButtonText="Dismiss"
@@ -379,7 +387,36 @@
                 </Grid>
             </ContentDialog.Content>
         </ContentDialog>
-        
+
+        <ContentDialog x:Name="TableSelectDialog"
+                Title="Select a Table"
+                PrimaryButtonText="Load Table"
+                IsPrimaryButtonEnabled="False"
+                CloseButtonText="Cancel"
+                DefaultButton="Primary"
+                CloseButtonClick="TableSelectDialog_CloseButtonClick">
+
+            <ContentDialog.Content>
+                <Grid Height="500" Width="400" Padding="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <AutoSuggestBox x:Name="TableFilter" QueryIcon="Find" PlaceholderText="Search"
+                                    TextChanged="TableFilterSearch_TextChanged"/>
+
+                    <ListView x:Name="TableListView"
+                          x:FieldModifier="public"
+                          Grid.Row="1" Grid.ColumnSpan="4"
+                          SelectionMode="Single"
+                          SelectionChanged="TableListView_SelectionChanged">
+                    </ListView>
+
+                </Grid>
+            </ContentDialog.Content>
+        </ContentDialog>
+
     </Grid>
 
     

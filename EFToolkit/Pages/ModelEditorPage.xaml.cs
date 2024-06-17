@@ -31,6 +31,11 @@ namespace EFToolkit.Pages
             this.InitializeComponent();
         }
 
+        public void ToggleTeachTips(bool Toggle)
+        {
+            //TeachTip.IsOpen = Toggle;
+        }
+
 
         private async void CopyOutput_Click(object sender, RoutedEventArgs e)
         {

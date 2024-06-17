@@ -32,10 +32,10 @@ namespace EFToolkit.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AcronymLibraryPage : Page
+    public sealed partial class AcronymPage : Page
     {
 
-        public AcronymLibraryPage()
+        public AcronymPage()
         {
             this.InitializeComponent();       
         }
@@ -63,6 +63,14 @@ namespace EFToolkit.Pages
                 Toolkit.AcronymLibraries.Add(new AcronymLibrary() { Title = "All" });
             }
         }
+
+        public void ToggleTeachTips(bool Toggle)
+        {
+            LibraryTeachTip.IsOpen = Toggle;
+            TranslationTeachTip.IsOpen = Toggle;
+            PastingTeachTip.IsOpen = Toggle;
+        }
+
 
         private void AddLibrary_Click(object sender, RoutedEventArgs e)
         {
@@ -227,6 +235,15 @@ namespace EFToolkit.Pages
             if (SelectedItem != null)
             {
                 TranslationsTotal.Text = SelectedItem.LibraryItems.Count.ToString();
+                SearchTranslation.IsEnabled = true;
+                AddTranslationItem.IsEnabled = true;
+                PasteTranslationItem.IsEnabled = true;
+            }
+            else
+            {
+                SearchTranslation.IsEnabled = false;
+                AddTranslationItem.IsEnabled = false;
+                PasteTranslationItem.IsEnabled = false;
             }
         }
 

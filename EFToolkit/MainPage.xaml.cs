@@ -116,13 +116,13 @@ namespace EFToolkit
             {
                 PageFrame.Navigate(typeof(ModelEditorPage));
             }
-            else if (args.SelectedItem == AcronymLibraryItem)
+            else if (args.SelectedItem == AcronymViewItem)
             {
-                PageFrame.Navigate(typeof(AcronymLibraryPage));
+                PageFrame.Navigate(typeof(AcronymPage));
             }
-            else if (args.SelectedItem == SchemaLibraryItem)
+            else if (args.SelectedItem == DatabaseViewItem)
             {
-                PageFrame.Navigate(typeof(SchemaLibraryPage));
+                PageFrame.Navigate(typeof(DatabasePage));
             }
             else if (args.IsSettingsSelected == true)
             {
@@ -139,7 +139,31 @@ namespace EFToolkit
                 TableConverterPage Page = PageFrame.Content as TableConverterPage;
                 Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
             }
-
+            else if (MainView.SelectedItem == SelectDescriberViewItem)
+            {
+                SelectDescriberPage Page = PageFrame.Content as SelectDescriberPage;
+                Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
+            }
+            else if (MainView.SelectedItem == DataVisualizerViewItem)
+            {
+                DataVisualizerPage Page = PageFrame.Content as DataVisualizerPage;
+                Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
+            }
+            else if (MainView.SelectedItem == ModelEditorViewItem)
+            {
+                ModelEditorPage Page = PageFrame.Content as ModelEditorPage;
+                Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
+            }
+            else if (MainView.SelectedItem == AcronymViewItem)
+            {
+                AcronymPage Page = PageFrame.Content as AcronymPage;
+                Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
+            }
+            else if (MainView.SelectedItem == DatabaseViewItem)
+            {
+                DatabasePage Page = PageFrame.Content as DatabasePage;
+                Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
+            }
         }
 
 

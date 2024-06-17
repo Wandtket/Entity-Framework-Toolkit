@@ -30,12 +30,19 @@ namespace EFToolkit.Pages
             this.InitializeComponent();
         }
 
+        public void ToggleTeachTips(bool Toggle)
+        {
+            //TeachTip.IsOpen = Toggle;
+        }
+
         private async void Input_TextChanged(object sender, RoutedEventArgs e)
         {
             if (Input.GetText() == "") { Output.SetText(""); return; }
 
             Output.SetText(Toolkit.ConvertSelectToDescriber(Input.GetText()));
         }
+
+
 
     }
 }

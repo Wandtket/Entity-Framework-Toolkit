@@ -50,7 +50,8 @@ namespace EFToolkit
         protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             await Toolkit.LoadAcronymLibaries();
-            await Toolkit.LoadSchemaLibaries();
+            await Toolkit.LoadDatabaseItems();
+            await Toolkit.LoadSchemaItems();
 
             App.Current.ActiveWindow = new MainWindow();
 

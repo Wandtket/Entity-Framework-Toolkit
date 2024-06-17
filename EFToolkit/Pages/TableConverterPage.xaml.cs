@@ -26,6 +26,9 @@ using EFToolkit.Controls.Widgets;
 using System.Diagnostics;
 using System.ComponentModel.Design;
 using CommunityToolkit.WinUI;
+using System.Data.SqlClient;
+using System.Data;
+using System.Data.Common;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -38,9 +41,8 @@ namespace EFToolkit.Pages
     /// </summary>
     public sealed partial class TableConverterPage : Page
     {
-
-
         ObservableCollection<DesignItem> DesignItems = new();
+        List<string> TableList = new();
 
         public TableConverterPage()
         {
@@ -51,13 +53,15 @@ namespace EFToolkit.Pages
         {
             base.OnNavigatedTo(e);
 
-            TableName.SuggestedItemsSource = Toolkit.SchemaLibraries;
-            TableName.ItemsSource = Toolkit.SelectedSchemaLibraries;
+            TableName.SuggestedItemsSource = Toolkit.SchemaItems;
+            TableName.ItemsSource = Toolkit.SelectedSchemaItems;
 
             AcronymLibrarySelector.SuggestedItemsSource = Toolkit.AcronymLibraries;
             AcronymLibrarySelector.ItemsSource = Toolkit.SelectedAcronymLibraries;
 
             OriginalDataGridStyle = DesignerGrid.RowStyle;
+
+            InitializeDatabaseItems();
         }
 
         public Style OriginalDataGridStyle;
@@ -118,6 +122,27 @@ namespace EFToolkit.Pages
             PastingTeachTip.IsOpen = Toggle;
             OutputTeachTip.IsOpen = Toggle;
             AcronymsTeachTip.IsOpen = Toggle;
+        }
+
+        private async void SelectTable_Click(object sender, RoutedEventArgs e)
+        {
+            var Test = Toolkit.DatabaseItems.Where(x => x.Title == "Test").FirstOrDefault();
+
+            using (SqlConnection connection = new SqlConnection(Test.GetConnectionString()))
+            {
+                connection.Open();
+                DataTable schema = connection.GetSchema("Tables");
+                TableList = new List<string>();
+                foreach (DataRow row in schema.Rows)
+                {
+                    TableList.Add(row[2].ToString());
+                }
+
+                TableList.Sort();
+
+                TableListView.ItemsSource = TableList;
+                await TableSelectDialog.ShowAsync();
+            }
         }
 
         private async void PasteTable_Click(object sender, RoutedEventArgs e)
@@ -496,6 +521,154 @@ namespace EFToolkit.Pages
         }
 
 
+        private void InitializeDatabaseItems()
+        {
+            if (Toolkit.DatabaseItems.Count > 0)
+            {
+                TableMenu.Items.Clear();
+                SelectButton.Visibility = Visibility.Visible;
+
+                foreach (DatabaseItem item in Toolkit.DatabaseItems)
+                {
+                    var MenuItem = new MenuFlyoutItem()
+                    {
+                        Text = item.Title,
+                        Tag = item,
+                    };
+                    MenuItem.Click += MenuItem_Click;
+                    TableMenu.Items.Add(MenuItem);
+                }
+            }
+        }
+
+        private async void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem menu = (MenuFlyoutItem)sender;
+            DatabaseItem DatabaseItem = (DatabaseItem)menu.Tag;
+
+            var Database = Toolkit.DatabaseItems.Where(x => x.Title == DatabaseItem.Title).FirstOrDefault();
+
+            using (SqlConnection connection = new SqlConnection(Database.GetConnectionString()))
+            {
+                //Open the connection
+                connection.Open();
+
+                //Get list of tables and show to user for them to select
+                DataTable schema = connection.GetSchema("Tables");
+                TableList = new List<string>();
+                foreach (DataRow row in schema.Rows)
+                {
+                    TableList.Add(row[2].ToString());
+                }
+                TableList.Sort();
+
+                TableListView.ItemsSource = TableList;
+                await TableSelectDialog.ShowAsync();
+                if (TableListView.SelectedItem == null) { return; }
+                string tableName = TableListView.SelectedItem.ToString();
+
+
+                //Get column information data 
+                string script = $@"EXEC sp_describe_first_result_set @tsql = N' 
+                                    select Top 1 * From {tableName}
+                                    ' 
+                                    , @params = NULL, @browse_information_mode = 0;";
+                SqlCommand cmd = new SqlCommand(script, connection);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable Table = new DataTable();
+                da.Fill(Table);
+
+                //Clear any previous design items
+                DesignItems.Clear();
+                await Output.SetText("");
+
+                //Populate new Design Items
+                foreach (DataRow row in Table.Rows)
+                {
+                    var columnName = row.Field<string>("name");
+                    var dataType = row.Field<string>("system_type_name");
+
+                    var allowNulls = row.Field<bool>("is_nullable");
+                    var isIdentity = row.Field<bool>("is_identity_column");
+
+                    DesignItems.Add(new DesignItem()
+                    {
+                        ColumnName = columnName,
+                        ObjectName = Toolkit.ConvertSQLColumnName(columnName),                      
+                        DataType = dataType,
+                        AllowNulls = allowNulls,   
+                        IsPrimaryKey = isIdentity,
+                    });
+                }
+
+                //Get Table Schema 
+                String[] columnRestrictions = new String[4];
+                columnRestrictions[2] = tableName;
+                DataTable allColumnsSchemaTable = connection.GetSchema("Columns", columnRestrictions);
+                string Schema = allColumnsSchemaTable.Rows[0]["TABLE_SCHEMA"].ToString() + ".";
+
+                var SchemaItem = Toolkit.SchemaItems.Where(x => x.Schema == Schema).FirstOrDefault();
+                if (SchemaItem == null) 
+                {
+                    SchemaItem = new EFToolkit.SchemaItem() { Schema = Schema };
+                    Toolkit.SchemaItems.Add(SchemaItem); 
+                }
+                Toolkit.SelectedSchemaItems.Clear();
+                Toolkit.SelectedSchemaItems.Add(SchemaItem);
+                Toolkit.SaveSchemaItems();
+
+                TableName.Text = tableName;
+                ClassName.Text = Toolkit.ConvertSQLColumnName(TableName.Text);
+
+                DesignerGrid.ItemsSource = DesignItems;
+                DesignItemCount.Text = DesignItems.Count().ToString();
+
+                ConvertTable();
+
+                connection.Close();
+                connection.Dispose();
+            }
+            
+        }
+
+
+        private void TableFilterSearch_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                if (TableFilter.Text.Length > 1)
+                {
+                    List<string> filteredList = new List<string>();
+                    foreach (string filter in TableList)
+                    {
+                        if (filter.Contains(TableFilter.Text.Trim(), StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            filteredList.Add(filter);
+                        }
+                    }
+
+                    TableListView.ItemsSource = filteredList.Distinct();
+                }
+                else if (SearchBox.Text == "")
+                {
+                    TableListView.ItemsSource = TableList;
+                }
+            }
+        }
+
+        private void TableListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (TableListView.SelectedItems.Count > 0)
+            {
+                TableSelectDialog.IsPrimaryButtonEnabled = true;
+            }
+            else { TableSelectDialog.IsPrimaryButtonEnabled = false; }
+        }
+
+        private void TableSelectDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            TableListView.SelectedItem = null;
+        }
 
         List<DesignItem?> FoundItems = new();
         int SearchFoundIndex = 0;
@@ -553,6 +726,7 @@ namespace EFToolkit.Pages
                 RearrangeListView.ScrollIntoView(FoundItems[SearchFoundIndex]);
             }
         }
+
     }
 
 }

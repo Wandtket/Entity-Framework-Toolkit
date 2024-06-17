@@ -653,52 +653,86 @@ namespace EFToolkit
         #endregion
 
 
-        #region Schema Libraries
+        #region Database Items 
 
-        public static ObservableCollection<SchemaLibrary> SchemaLibraries = new();
-        public static ObservableCollection<SchemaLibrary> SelectedSchemaLibraries = new();
+        public static ObservableCollection<DatabaseItem> DatabaseItems = new();
+        private static string DatabaseItemFileName = "DatabaseItems.efdl";
 
-        private static string SchemaLibraryFileName = "SchemaLibraries.efsl";
-        private static string SelectedSchemaLibraryFileName = "SelectedSchemaLibraries.efsl";
-
-
-        public static async Task LoadSchemaLibaries()
+        public static async Task LoadDatabaseItems()
         {
             StorageFolder Folder = ApplicationData.Current.LocalFolder;
 
-            if (File.Exists(Folder.Path + "\\" + SchemaLibraryFileName))
+            if (File.Exists(Folder.Path + "\\" + DatabaseItemFileName))
             {
-                StorageFile file = await Folder.GetFileAsync(SchemaLibraryFileName);
-                var Libraries = JsonSerializer.Deserialize<ObservableCollection<SchemaLibrary>>(File.ReadAllText(file.Path));
+                StorageFile file = await Folder.GetFileAsync(DatabaseItemFileName);
+                var Libraries = JsonSerializer.Deserialize<ObservableCollection<DatabaseItem>>(File.ReadAllText(file.Path));
                 if (Libraries != null)
                 {
-                    SchemaLibraries = new ObservableCollection<SchemaLibrary>(Libraries.OrderBy(x => x.Schema));
-                }
-            }
-
-            if (File.Exists(Folder.Path + "\\" + SelectedSchemaLibraryFileName))
-            {
-                StorageFile file = await Folder.GetFileAsync(SelectedSchemaLibraryFileName);
-                var Libraries = JsonSerializer.Deserialize<ObservableCollection<SchemaLibrary>>(File.ReadAllText(file.Path));
-                if (Libraries != null)
-                {
-                    SelectedSchemaLibraries = new ObservableCollection<SchemaLibrary>(Libraries.OrderBy(x => x.Schema));
+                    DatabaseItems = new ObservableCollection<DatabaseItem>(Libraries.OrderBy(x => x.InitialCatalog));
                 }
             }
         }
 
-        public static async void SaveSchemaLibaries()
+        public static async void SaveDatabaseItems()
         {
             //await Task.Delay(500);
 
             StorageFolder Folder = ApplicationData.Current.LocalFolder;
 
-            StorageFile file = await Folder.CreateFileAsync(SchemaLibraryFileName, CreationCollisionOption.OpenIfExists);
-            var Json = JsonSerializer.Serialize(SchemaLibraries);
+            StorageFile file = await Folder.CreateFileAsync(DatabaseItemFileName, CreationCollisionOption.OpenIfExists);
+            var Json = JsonSerializer.Serialize(DatabaseItems);
+            await File.WriteAllTextAsync(file.Path, Json);
+        }
+
+        #endregion
+
+
+        #region Schema Items
+
+        public static ObservableCollection<SchemaItem> SchemaItems = new();
+        public static ObservableCollection<SchemaItem> SelectedSchemaItems = new();
+
+        private static string SchemaItemFileName = "SchemaItems.efsl";
+        private static string SelectedSchemaItemFileName = "SelectedSchemaItems.efsl";
+
+
+        public static async Task LoadSchemaItems()
+        {
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            if (File.Exists(Folder.Path + "\\" + SchemaItemFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync(SchemaItemFileName);
+                var Schemas = JsonSerializer.Deserialize<ObservableCollection<SchemaItem>>(File.ReadAllText(file.Path));
+                if (Schemas != null)
+                {
+                    SchemaItems = new ObservableCollection<SchemaItem>(Schemas.OrderBy(x => x.Schema));
+                }
+            }
+
+            if (File.Exists(Folder.Path + "\\" + SelectedSchemaItemFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync(SelectedSchemaItemFileName);
+                var Libraries = JsonSerializer.Deserialize<ObservableCollection<SchemaItem>>(File.ReadAllText(file.Path));
+                if (Libraries != null)
+                {
+                    SelectedSchemaItems = new ObservableCollection<SchemaItem>(Libraries.OrderBy(x => x.Schema));
+                }
+            }
+        }
+
+        public static async void SaveSchemaItems()
+        {
+            //await Task.Delay(500);
+
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            StorageFile file = await Folder.CreateFileAsync(SchemaItemFileName, CreationCollisionOption.OpenIfExists);
+            var Json = JsonSerializer.Serialize(SchemaItems);
             await File.WriteAllTextAsync(file.Path, Json);
 
-            StorageFile sfile = await Folder.CreateFileAsync(SelectedSchemaLibraryFileName, CreationCollisionOption.OpenIfExists);
-            var sJson = JsonSerializer.Serialize(SelectedSchemaLibraries);
+            StorageFile sfile = await Folder.CreateFileAsync(SelectedSchemaItemFileName, CreationCollisionOption.OpenIfExists);
+            var sJson = JsonSerializer.Serialize(SelectedSchemaItems);
             await File.WriteAllTextAsync(sfile.Path, sJson);
         }
 
@@ -835,11 +869,36 @@ namespace EFToolkit
     }
 
 
-    public partial class SchemaLibrary : ObservableObject
+    public partial class SchemaItem : ObservableObject
     {
         [ObservableProperty]
         private string schema;
     }
+
+
+    public partial class DatabaseItem : ObservableObject
+    {
+        [ObservableProperty]
+        private string title;
+
+        [ObservableProperty]
+        private string dataSource;
+
+        [ObservableProperty]
+        private string initialCatalog;
+
+        [ObservableProperty]
+        private string userId;
+
+        [ObservableProperty]
+        private string password;
+
+        public string GetConnectionString()
+        {
+            return $"Data Source ={DataSource};Initial Catalog={initialCatalog};User Id={userId};Password={password}";
+        }
+    }
+
 
 
     public enum ModelOptions

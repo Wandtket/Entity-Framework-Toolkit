@@ -77,7 +77,7 @@
 
                 <NavigationViewItemHeader Content="Library"/>
 
-                <NavigationViewItem x:Name="AcronymLibraryItem" Content="Acronyms"
+                <NavigationViewItem x:Name="AcronymViewItem" Content="Acronyms"
                     ToolTipService.ToolTip="A library to translate Acronyms throughout the Toolkit">
 
                     <NavigationViewItem.Icon>
@@ -85,8 +85,8 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItem x:Name="SchemaLibraryItem" Content="Schemas"
-                        ToolTipService.ToolTip="A library to translate Acronyms throughout the Toolkit">
+                <NavigationViewItem x:Name="DatabaseViewItem" Content="Databases"
+                        ToolTipService.ToolTip="Add Databases and or Schemas">
 
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE62F;" FontFamily="Segoe MDL2 Assets"/>
@@ -134,8 +134,9 @@
                 <ColumnDefinition x:Name="TabColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="RightDragColumn" Width="*" MinWidth="50"/>
                 <ColumnDefinition x:Name="ButtonColumn" Width="Auto"/>
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="200"/>
             </Grid.ColumnDefinitions>
+
 
             <StackPanel Orientation="Horizontal" Grid.Column="6" Height="31" VerticalAlignment="Top">
                 <Button x:Name="Help" Click="Help_Click" Background="Transparent" BorderThickness="0" CornerRadius="0"
