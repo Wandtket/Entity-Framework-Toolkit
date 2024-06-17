@@ -39,6 +39,7 @@
         <controls:TokenizingTextBox.QueryIcon>
             <FontIconSource Glyph="&#xE62F;" FontFamily="Segoe MDL2 Assets" FontSize="18"/>
         </controls:TokenizingTextBox.QueryIcon>
+        
     </controls:TokenizingTextBox>
 
 </UserControl>

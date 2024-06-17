@@ -34,7 +34,7 @@ namespace EFToolkit.Controls.Widgets
         /// <summary>
         /// Returns the user typed text from the box
         /// </summary>
-        public string Text { get { return SchemaTextBox.Text; } }
+        public string Text { get { return SchemaTextBox.Text; } set { SchemaTextBox.Text = value; } }
 
         /// <summary>
         /// Returns the selected items in order + the user typed text as string.
@@ -44,7 +44,7 @@ namespace EFToolkit.Controls.Widgets
             get 
             {
                 string SchemaPath = "";
-                foreach (SchemaLibrary library in Toolkit.SelectedSchemaLibraries)
+                foreach (SchemaItem library in Toolkit.SelectedSchemaItems)
                 {
                     SchemaPath = SchemaPath + library.Schema;
                 }
@@ -62,12 +62,12 @@ namespace EFToolkit.Controls.Widgets
 
         private async void SchemaTextBox_TokenItemAdded(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args)
         {
-            Toolkit.SaveSchemaLibaries();
+            Toolkit.SaveSchemaItems();
         }
 
         private void SchemaTextBox_TokenItemRemoved(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args)
         {
-            Toolkit.SaveSchemaLibaries();
+            Toolkit.SaveSchemaItems();
         }
 
 
@@ -78,8 +78,8 @@ namespace EFToolkit.Controls.Widgets
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                ObservableCollection<SchemaLibrary> filteredList = new();
-                foreach (var filter in Toolkit.SchemaLibraries)
+                ObservableCollection<SchemaItem> filteredList = new();
+                foreach (var filter in Toolkit.SchemaItems)
                 {
                     if (filter.Schema.Contains(SchemaTextBox.Text.Trim(), StringComparison.CurrentCultureIgnoreCase))
                     {
