@@ -10,8 +10,8 @@
 
   <Identity
     Name="6393TylerWandtke.560323B3E344E"
-    Publisher="CN=BF699C2D-4C38-4B22-8FCC-71DD2AD5FB36"
-    Version="1.0.1.0" />
+    Publisher="CN=Wandtket"
+    Version="1.0.7.0" />
 
   <mp:PhoneIdentity PhoneProductId="5786cc87-bccc-4cf5-84b5-1d13ba943bbd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -60,6 +60,7 @@
             <uap:SupportedFileTypes>
               <uap:FileType>.efal</uap:FileType>
               <uap:FileType>.efsl</uap:FileType>
+              <uap:FileType>.efdl</uap:FileType>
             </uap:SupportedFileTypes>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Resources\Images\logo.png</uap:Logo>

@@ -10,19 +10,24 @@
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>	  
+	<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 	<Nullable>enable</Nullable>
 	<SupportedOSPlatformVersion>10.0.20348.0</SupportedOSPlatformVersion>
 	<GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
 	<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-	<AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+	<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 	<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
 	<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
 	<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
 	<GenerateTestArtifacts>True</GenerateTestArtifacts>
-	<AppxBundle>Never</AppxBundle>
-	<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>	  
+	<AppxBundle>Always</AppxBundle>
+	<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+	<AppxPackageDir>C:\Users\wandt\source\packages\EFToolkit\</AppxPackageDir>
+	<AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+	<PackageCertificateKeyFile>EFToolkit_TemporaryKey.pfx</PackageCertificateKeyFile>	  
   </PropertyGroup>
+	
   <ItemGroup>
     <None Remove="Controls\Widgets\AcronymBox.xaml" />
     <None Remove="Controls\Widgets\RearrangeBox.xaml" />
@@ -129,7 +134,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240428000" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
