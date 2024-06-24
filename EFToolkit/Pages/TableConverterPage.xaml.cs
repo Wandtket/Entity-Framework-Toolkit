@@ -553,7 +553,7 @@ namespace EFToolkit.Pages
                 //Open the connection
                 try { await connection.OpenAsync(); } 
                 catch { await MessageBox.Show("Connection to the database could not be established " +
-                    "please check your connection string and try again.", "Connection Error"); }
+                    "please check your connection string and try again.", "Connection Error"); return; }
 
 
                 //Get list of tables and show to user for them to select
@@ -596,7 +596,7 @@ namespace EFToolkit.Pages
                 DataTable Table = new DataTable();
                 try { da.Fill(Table); } 
                 catch (Exception Ex) { await MessageBox.Show(Ex.Message.ToString(), 
-                    "An error occurred populating the table."); }
+                    "An error occurred populating the table."); return; }
 
                 //Clear any previous design items
                 DesignItems.Clear();
