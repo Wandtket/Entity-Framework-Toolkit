@@ -253,6 +253,22 @@
                         <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.CodeColoring, Mode=TwoWay}" OnContent="On" OffContent="Off" />
                     </controls:SettingsCard>
 
+                    <controls:SettingsCard Header="Share Libraries"    
+                                           Description="Toggle the promotion items in the navigation pane."
+                                           IsEnabled="True" Padding="20,0,20,0">
+                        
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xEC32;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+                        <Button x:Name="ShareButton" Click="ShareButton_Click">
+                            <Button.Content>
+                                <FontIcon Glyph=""/>
+                            </Button.Content>
+                        </Button>
+                    </controls:SettingsCard>
+
+
                     <controls:SettingsCard Header="Promotion"    
                                            Description="Toggle the promotion items in the navigation pane."
                                            IsEnabled="True" Padding="20,0,20,0">
@@ -263,7 +279,6 @@
                         <ToggleSwitch IsOn="{x:Bind EF:Settings.Current.Promotion, Mode=TwoWay}" OnContent="On" OffContent="Off" />
 
                     </controls:SettingsCard>
-
 
                     <controls:SettingsCard Header="Application Resources"    
                                            Description="Open Application Resources for advanced troubleshooting."

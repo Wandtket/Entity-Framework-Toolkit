@@ -20,6 +20,7 @@ using System.Reflection;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
+using EFToolkit.Extensions;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -50,6 +51,11 @@ namespace EFToolkit.Pages
         private async void LocalFolder_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
+        }
+
+        private void ShareButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataTransfer.Show("https://www.google.com");
         }
 
     }
