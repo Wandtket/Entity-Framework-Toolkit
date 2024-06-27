@@ -363,6 +363,7 @@ namespace EFToolkit
             else if (sqlType.StartsWith("real")) { CType = "Single"; }
             else if (sqlType.StartsWith("smalldatetime")) { CType = "DateTime"; }
             else if (sqlType.StartsWith("sql_variant")) { CType = "object"; }
+            else if (sqlType.StartsWith("uniqueidentifier")) { CType = "Guid"; }
 
             if (Dto == true) { if (sqlType.StartsWith("smallint")) { CType = "int"; } }
             if (Dto == true) { if (sqlType.StartsWith("bigint")) { CType = "int"; } }

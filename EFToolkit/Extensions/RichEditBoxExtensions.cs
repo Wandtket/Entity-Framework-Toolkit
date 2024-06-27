@@ -114,6 +114,10 @@ namespace EFToolkit.Extensions
             new CodeFormatting() { Text = "DateTime ", Color = CodeLightYellow },
             new CodeFormatting() { Text = "DateTime? ", Color = CodeLightYellow },
 
+            new CodeFormatting() { Text = "Guid ", Color = CodeLightYellow },
+            new CodeFormatting() { Text = "Guid? ", Color = CodeLightYellow },
+
+
             new CodeFormatting() { Text = "Single ", Color = CodeLightYellow },
             new CodeFormatting() { Text = "Single? ", Color = CodeLightYellow },
 

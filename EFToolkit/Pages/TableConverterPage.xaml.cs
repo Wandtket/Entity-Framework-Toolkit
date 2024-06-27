@@ -551,7 +551,10 @@ namespace EFToolkit.Pages
             using (SqlConnection connection = new SqlConnection(Database.GetConnectionString()))
             {
                 //Open the connection
-                connection.Open();
+                try { await connection.OpenAsync(); } 
+                catch { await MessageBox.Show("Connection to the database could not be established " +
+                    "please check your connection string and try again.", "Connection Error"); return; }
+
 
                 //Get list of tables and show to user for them to select
                 DataTable schema = connection.GetSchema("Tables");
@@ -567,16 +570,33 @@ namespace EFToolkit.Pages
                 if (TableListView.SelectedItem == null) { return; }
                 string tableName = TableListView.SelectedItem.ToString();
 
+                //Get Table Schema 
+                String[] columnRestrictions = new String[4];
+                columnRestrictions[2] = tableName;
+                DataTable allColumnsSchemaTable = connection.GetSchema("Columns", columnRestrictions);
+                string Schema = allColumnsSchemaTable.Rows[0]["TABLE_SCHEMA"].ToString() + ".";
+
+                var SchemaItem = Toolkit.SchemaItems.Where(x => x.Schema == Schema).FirstOrDefault();
+                if (SchemaItem == null)
+                {
+                    SchemaItem = new EFToolkit.SchemaItem() { Schema = Schema };
+                    Toolkit.SchemaItems.Add(SchemaItem);
+                }
+                Toolkit.SelectedSchemaItems.Clear();
+                Toolkit.SelectedSchemaItems.Add(SchemaItem);
+                Toolkit.SaveSchemaItems();
 
                 //Get column information data 
                 string script = $@"EXEC sp_describe_first_result_set @tsql = N' 
-                                    select Top 1 * From {tableName}
+                                    select Top 1 * From {Schema}{tableName}
                                     ' 
                                     , @params = NULL, @browse_information_mode = 0;";
                 SqlCommand cmd = new SqlCommand(script, connection);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable Table = new DataTable();
-                da.Fill(Table);
+                try { da.Fill(Table); } 
+                catch (Exception Ex) { await MessageBox.Show(Ex.Message.ToString(), 
+                    "An error occurred populating the table."); return; }
 
                 //Clear any previous design items
                 DesignItems.Clear();
@@ -601,21 +621,7 @@ namespace EFToolkit.Pages
                     });
                 }
 
-                //Get Table Schema 
-                String[] columnRestrictions = new String[4];
-                columnRestrictions[2] = tableName;
-                DataTable allColumnsSchemaTable = connection.GetSchema("Columns", columnRestrictions);
-                string Schema = allColumnsSchemaTable.Rows[0]["TABLE_SCHEMA"].ToString() + ".";
 
-                var SchemaItem = Toolkit.SchemaItems.Where(x => x.Schema == Schema).FirstOrDefault();
-                if (SchemaItem == null) 
-                {
-                    SchemaItem = new EFToolkit.SchemaItem() { Schema = Schema };
-                    Toolkit.SchemaItems.Add(SchemaItem); 
-                }
-                Toolkit.SelectedSchemaItems.Clear();
-                Toolkit.SelectedSchemaItems.Add(SchemaItem);
-                Toolkit.SaveSchemaItems();
 
                 TableName.Text = tableName;
                 ClassName.Text = Toolkit.ConvertSQLColumnName(TableName.Text);
