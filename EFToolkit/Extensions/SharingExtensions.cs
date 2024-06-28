@@ -1,9 +1,12 @@
-﻿using System;
+﻿using EFToolkit.Controls.Dialogs;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 
 namespace EFToolkit.Extensions
 {
@@ -11,8 +14,8 @@ namespace EFToolkit.Extensions
     public static class DataTransfer
     {
 
-        public static void Show(string uri)
-        {
+        public static async void Show(List<StorageFile> StorageFiles)
+        {     
             IntPtr windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(App.Current.ActiveWindow);
             IDataTransferManagerInterop interop = Windows.ApplicationModel.DataTransfer.DataTransferManager.As<IDataTransferManagerInterop>();
 
@@ -20,11 +23,11 @@ namespace EFToolkit.Extensions
             var iop = DataTransferManager.As<IDataTransferManagerInterop>();
             var transferManager = DataTransferManager.FromAbi(iop.GetForWindow(windowHandle, guid));
 
-            transferManager.DataRequested += (DataTransferManager dtm, DataRequestedEventArgs args) =>
-            {
+            transferManager.DataRequested += async (DataTransferManager dtm, DataRequestedEventArgs args) =>
+            {             
                 DataPackage dataPackage = new DataPackage();
-                dataPackage.SetWebLink(new Uri(uri));
-                dataPackage.Properties.Title = "Share uri \"" + uri + "\"";
+                dataPackage.SetStorageItems(StorageFiles);
+                dataPackage.Properties.Title = "Share Entity Framework Libraries";
                 args.Request.Data = dataPackage;
             };
 
