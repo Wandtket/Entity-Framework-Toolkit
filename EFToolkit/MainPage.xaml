@@ -125,7 +125,7 @@
             </NavigationView.MenuItems>
 
             <NavigationView.Content>
-                <Frame x:Name="PageFrame" x:FieldModifier="public" Grid.Row="1" />
+                <Frame x:Name="PageFrame" x:FieldModifier="public" Margin="0,-40,0,0" />
             </NavigationView.Content>
 
             <NavigationView.FooterMenuItems>
