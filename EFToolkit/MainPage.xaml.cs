@@ -39,63 +39,31 @@ namespace EFToolkit
         public MainPage()
         {
             this.InitializeComponent();
+
+            Loaded += Page_Loaded;
+            SizeChanged += MainPage_SizeChanged;
         }
 
-        public void SetDragRegionForCustomTitleBar(AppWindow appWindow)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            // Check to see if customization is supported.
-            // The method returns true on Windows 10 since Windows App SDK 1.2, and on all versions of
-            // Windows App SDK on Windows 11.
-            if (AppWindowTitleBar.IsCustomizationSupported()
-                && appWindow.TitleBar.ExtendsContentIntoTitleBar)
-            {
-                double rightPaddingWidth = 0, leftPaddingWidth = 0;
+            App.Current.ActiveWindow.ExtendsContentIntoTitleBar = true;
+            App.Current.ActiveWindow.SetTitleBar(CustomDragRegion);
+            CustomDragRegion.MinWidth = 188;
+        }
 
-                double scaleAdjustment = DisplayExtensions.GetScaleAdjustment();
-                if (scaleAdjustment != 0)
-                {
-                    rightPaddingWidth = appWindow.TitleBar.RightInset / scaleAdjustment;
-                    if (rightPaddingWidth < 0)
-                    {
-                        rightPaddingWidth = 0;
-                    }
+        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            App.Current.ActiveWindow.SetTitleBar(CustomDragRegion);
+        }
 
-                    leftPaddingWidth = appWindow.TitleBar.LeftInset / scaleAdjustment;
-                    if (leftPaddingWidth < 0)
-                    {
-                        leftPaddingWidth = 0;
-                    }
-                }
+        private void MainView_PaneOpened(NavigationView sender, object args)
+        {
+            App.Current.ActiveWindow.SetTitleBar(CustomDragRegion);
+        }
 
-                RightPaddingColumn.Width = new GridLength(rightPaddingWidth);
-                LeftPaddingColumn.Width = new GridLength(leftPaddingWidth);
-
-                List<Windows.Graphics.RectInt32> dragRectsList = new();
-
-                Windows.Graphics.RectInt32 dragRectL;
-                dragRectL.X = (int)((LeftPaddingColumn.ActualWidth) * scaleAdjustment);
-                dragRectL.Y = 0;
-                dragRectL.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                dragRectL.Width = (int)((IconColumn.ActualWidth
-                                        + TitleColumn.ActualWidth
-                                        + LeftDragColumn.ActualWidth) * scaleAdjustment);
-                //dragRectsList.Add(dragRectL);
-
-                Windows.Graphics.RectInt32 dragRectR;
-                dragRectR.X = (int)((LeftPaddingColumn.ActualWidth
-                                    + IconColumn.ActualWidth
-                                    //+ TitleTextBlock.ActualWidth
-                                    + LeftDragColumn.ActualWidth
-                                    + TabColumn.ActualWidth) * scaleAdjustment);
-                dragRectR.Y = 0;
-                dragRectR.Height = (int)(AppTitleBar.ActualHeight * scaleAdjustment);
-                dragRectR.Width = (int)(RightDragColumn.ActualWidth * scaleAdjustment);
-                dragRectsList.Add(dragRectR);
-
-                Windows.Graphics.RectInt32[] dragRects = dragRectsList.ToArray();
-
-                appWindow.TitleBar.SetDragRectangles(dragRects);
-            }
+        private void MainView_PaneClosed(NavigationView sender, object args)
+        {
+            App.Current.ActiveWindow.SetTitleBar(CustomDragRegion);
         }
 
         private async void MainView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -177,5 +145,7 @@ namespace EFToolkit
         {
             await Launcher.LaunchUriAsync(new Uri("https://github.com/Wandtket/Entity-Framework-Toolkit/issues/new"));
         }
+
+
     }
 }

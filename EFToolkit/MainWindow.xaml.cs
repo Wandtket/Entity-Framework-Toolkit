@@ -43,21 +43,17 @@ namespace EFToolkit
         {
             this.InitializeComponent();
             Initialize();
-
-            this.Resize(616, 1067);
         }
 
         private async void Initialize()
         {
-            LoadIcon();
-
             this.EnableMICABackdrop();
             this.ExtendContentIntoTitleBar();
 
+            LoadIcon();
+
             while (App.Current.ActiveWindow == null) { await Task.Delay(50); }
             while (App.Current.ActiveWindow.Content.XamlRoot == null) { await Task.Delay(50); }
-
-            Main.SetDragRegionForCustomTitleBar(this.GetAppWindow());
         }
 
         public void LoadIcon()
@@ -82,8 +78,7 @@ namespace EFToolkit
 
         private async void Window_SizeChanged(object sender, Microsoft.UI.Xaml.WindowSizeChangedEventArgs args)
         {
-            await Task.Delay(10);
-            Main.SetDragRegionForCustomTitleBar(this.GetAppWindow());
+
         }
 
     }
