@@ -18,6 +18,9 @@
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="Controls\Dialogs\CredentialBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Controls\Widgets\RearrangeBox.xaml">
       <SubType>Designer</SubType>
     </Page>

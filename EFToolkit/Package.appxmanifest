@@ -60,12 +60,12 @@
             <uap:SupportedFileTypes>
               <uap:FileType>.efal</uap:FileType>
               <uap:FileType>.efsl</uap:FileType>
-              <uap:FileType>.efdl</uap:FileType>
+              <uap:FileType>.eftk</uap:FileType>
             </uap:SupportedFileTypes>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Resources\Images\logo.png</uap:Logo>
-            <uap:DisplayName>Entity Framework Toolkit File</uap:DisplayName>
-            <uap:InfoTip>For restoring Entity Framework Toolkit Libraries</uap:InfoTip>
+            <uap:DisplayName>Entity Framework Toolkit Data File</uap:DisplayName>
+            <uap:InfoTip>For Restoring Entity Framework Toolkit Data</uap:InfoTip>
           </uap:FileTypeAssociation>
         </uap:Extension>
       </Extensions>
