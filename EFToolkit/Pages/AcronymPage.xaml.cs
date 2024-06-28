@@ -91,9 +91,9 @@ namespace EFToolkit.Pages
                 var s = (FrameworkElement)sender;
                 var d = s.DataContext;
 
-                AcronymLibrary Library = (AcronymLibrary)AcronymLibraryList.SelectedItem;
+                AcronymLibrary Library = (AcronymLibrary)d;
                 Toolkit.AcronymLibraries.Remove(Library);
-                Toolkit.SaveAcronymLibaries();
+                Toolkit.SaveData();
 
                 LibrariesTotal.Text = AcronymLibraryList.Items.Count.ToString();
             }
@@ -175,14 +175,14 @@ namespace EFToolkit.Pages
             {
                 SelectedItem.LibraryItems.Clear();
                 TranslationsTotal.Text = SelectedItem.LibraryItems.Count.ToString();
-                Toolkit.SaveAcronymLibaries();
+                Toolkit.SaveData();
             }
         }
 
 
         private async void SaveLibrary_Click(object sender, RoutedEventArgs e)
         {
-            Toolkit.SaveAcronymLibaries();
+            Toolkit.SaveData();
             await MessageBox.Show("Libraries should save automatically but this button feels good to press sometimes...", "Libraries Saved!");
         }
 
@@ -276,7 +276,7 @@ namespace EFToolkit.Pages
             SelectedItem.LibraryItems.Remove(Item);
             TranslationsTotal.Text = SelectedItem.LibraryItems.Count.ToString();
 
-            Toolkit.SaveAcronymLibaries();
+            Toolkit.SaveData();
         }
 
         private async void Acronym_LostFocus(object sender, RoutedEventArgs e)
@@ -298,7 +298,7 @@ namespace EFToolkit.Pages
                 }
             }
 
-            Toolkit.SaveAcronymLibaries();
+            Toolkit.SaveData();
         }
 
 
@@ -313,12 +313,12 @@ namespace EFToolkit.Pages
             {
                 box.Text = box.Text.Trim().Replace(" ", "_");
             }
-            Toolkit.SaveAcronymLibaries();
+            Toolkit.SaveData();
         }
 
         private void TranslationOptions_LostFocus(object sender, RoutedEventArgs e)
         {
-            Toolkit.SaveAcronymLibaries();
+            Toolkit.SaveData();
         }
 
         private void MoveItem_Click(object sender, RoutedEventArgs e)
@@ -352,7 +352,7 @@ namespace EFToolkit.Pages
             {
                 CurrentLibrary.LibraryItems.Remove(Item);
                 MoveLibrary.LibraryItems.Add(Item);
-                Toolkit.SaveAcronymLibaries();
+                Toolkit.SaveData();
             }
         }
     }

@@ -124,27 +124,6 @@ namespace EFToolkit.Pages
             AcronymsTeachTip.IsOpen = Toggle;
         }
 
-        private async void SelectTable_Click(object sender, RoutedEventArgs e)
-        {
-            var Test = Toolkit.DatabaseItems.Where(x => x.Title == "Test").FirstOrDefault();
-
-            using (SqlConnection connection = new SqlConnection(Test.GetConnectionString()))
-            {
-                connection.Open();
-                DataTable schema = connection.GetSchema("Tables");
-                TableList = new List<string>();
-                foreach (DataRow row in schema.Rows)
-                {
-                    TableList.Add(row[2].ToString());
-                }
-
-                TableList.Sort();
-
-                TableListView.ItemsSource = TableList;
-                await TableSelectDialog.ShowAsync();
-            }
-        }
-
         private async void PasteTable_Click(object sender, RoutedEventArgs e)
         {
             if (DesignItems.Count > 0) { DesignItems.Clear(); }
@@ -548,8 +527,28 @@ namespace EFToolkit.Pages
 
             var Database = Toolkit.DatabaseItems.Where(x => x.Title == DatabaseItem.Title).FirstOrDefault();
 
+            bool ManualCredentialInput = false;
+            bool UsernameProvided = false;
+            if (!string.IsNullOrEmpty(Database.UserId)) { UsernameProvided = true; }
+
+            if (string.IsNullOrEmpty(Database.Password)) 
+            {
+                var Credentials = await CredentialBox.Show($"{Database.Title} Credentials", Database.UserId);
+                if (Credentials != null) 
+                {
+                    Database.UserId = Credentials.Username;
+                    Database.Password = Credentials.Password;
+                    ManualCredentialInput = true;                  
+                }
+                else { return; }
+            }
+
             using (SqlConnection connection = new SqlConnection(Database.GetConnectionString()))
             {
+                //Clear the username and password if user manually input them so it doesn't save later;
+                if (ManualCredentialInput == true) { Database.Password = ""; }
+                if (UsernameProvided == false) { Database.UserId = ""; }
+
                 //Open the connection
                 try { await connection.OpenAsync(); } 
                 catch { await MessageBox.Show("Connection to the database could not be established " +
@@ -584,7 +583,7 @@ namespace EFToolkit.Pages
                 }
                 Toolkit.SelectedSchemaItems.Clear();
                 Toolkit.SelectedSchemaItems.Add(SchemaItem);
-                Toolkit.SaveSchemaItems();
+                Toolkit.SaveData();
 
                 //Get column information data 
                 string script = $@"EXEC sp_describe_first_result_set @tsql = N' 

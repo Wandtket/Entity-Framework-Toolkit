@@ -29,12 +29,12 @@ namespace EFToolkit.Controls.Widgets
 
         private void AcronymTextBox_TokenItemAdded(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args)
         {
-            Toolkit.SaveAcronymLibaries();
+            Toolkit.SaveData();
         }
 
         private void AcronymTextBox_TokenItemRemoved(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args)
         {
-            Toolkit.SaveAcronymLibaries();
+            Toolkit.SaveData();
         }
 
         public delegate void TextChangedHandler(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args);
