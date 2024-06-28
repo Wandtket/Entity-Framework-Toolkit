@@ -53,9 +53,37 @@ namespace EFToolkit.Pages
             await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
         }
 
-        private void ShareButton_Click(object sender, RoutedEventArgs e)
+
+        private async void ImportButton_Click(object sender, RoutedEventArgs e)
         {
-            DataTransfer.Show("https://www.google.com");
+            Toolkit.ImportData();
+        }
+
+
+        private async void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            Toolkit.ExportData();
+        }
+
+
+        private async void ShareButton_Click(object sender, RoutedEventArgs e)
+        {
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            List<StorageFile> storageFiles = new List<StorageFile>();
+
+            string DataFile = Folder.Path + $@"\{Toolkit.DataFileName}";
+            if (File.Exists(DataFile))
+            {
+                var File = await StorageFile.GetFileFromPathAsync(DataFile);
+                storageFiles.Add(File);
+            }
+
+
+            if (storageFiles.Count == 0) { await MessageBox.Show("No Libraries available to Share", "ERROR"); return; }
+
+            DataTransfer.Show(storageFiles);
         }
 
     }

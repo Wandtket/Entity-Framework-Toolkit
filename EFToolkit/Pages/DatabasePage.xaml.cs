@@ -51,7 +51,7 @@ namespace EFToolkit.Pages
 
         private async void SaveDatabase_Click(object sender, RoutedEventArgs e)
         {
-            Toolkit.SaveDatabaseItems();
+            Toolkit.SaveData();
             await MessageBox.Show("Databases should save automatically but this button feels good to press sometimes...", "Databases Saved!");
         }
 
@@ -68,7 +68,7 @@ namespace EFToolkit.Pages
 
         private async void SaveSchema_Click(object sender, RoutedEventArgs e)
         {
-            Toolkit.SaveSchemaItems();
+            Toolkit.SaveData();
             await MessageBox.Show("Libraries should save automatically but this button feels good to press sometimes...", "Libraries Saved!");
         }
 
@@ -78,9 +78,9 @@ namespace EFToolkit.Pages
             var s = (FrameworkElement)sender;
             var d = s.DataContext;
 
-            DatabaseItem Item = (DatabaseItem)DatabaseItemList.SelectedItem;
+            DatabaseItem Item = (DatabaseItem)d;
             Toolkit.DatabaseItems.Remove(Item);
-            Toolkit.SaveDatabaseItems();
+            Toolkit.SaveData();
 
             DatabaseTotal.Text = DatabaseItemList.Items.Count.ToString();
         }
@@ -90,9 +90,9 @@ namespace EFToolkit.Pages
             var s = (FrameworkElement)sender;
             var d = s.DataContext;
 
-            SchemaItem Item = (SchemaItem)SchemaItemList.SelectedItem;
+            SchemaItem Item = (SchemaItem)d;
             Toolkit.SchemaItems.Remove(Item);
-            Toolkit.SaveSchemaItems();
+            Toolkit.SaveData();
 
             SchemasTotal.Text = SchemaItemList.Items.Count.ToString();
         }
@@ -105,7 +105,7 @@ namespace EFToolkit.Pages
             {
                 Toolkit.SchemaItems.Clear();
                 Toolkit.SelectedSchemaItems.Clear();
-                Toolkit.SaveSchemaItems();
+                Toolkit.SaveData();
 
                 SchemasTotal.Text = SchemaItemList.Items.Count.ToString();
             }
@@ -114,7 +114,7 @@ namespace EFToolkit.Pages
 
         private async void Database_LostFocus(object sender, RoutedEventArgs e)
         {
-            Toolkit.SaveDatabaseItems();
+            Toolkit.SaveData();
         }
 
         private async void Schema_LostFocus(object sender, RoutedEventArgs e)
@@ -136,7 +136,7 @@ namespace EFToolkit.Pages
                 }
             }
 
-            Toolkit.SaveSchemaItems();
+            Toolkit.SaveData();
         }
 
     }
