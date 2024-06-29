@@ -20,6 +20,7 @@
         </Style>
     </Page.Resources>
 
+    
     <ScrollViewer>
         <StackPanel>
 
@@ -264,7 +265,6 @@
 
                     </controls:SettingsCard>
 
-
                     <controls:SettingsCard Header="Application Resources"    
                                            Description="Open Application Resources for advanced troubleshooting."
                                            IsEnabled="True" Padding="20,0,20,0">
@@ -273,11 +273,35 @@
                         </controls:SettingsCard.HeaderIcon>
 
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Button Content="Open App Folder" Click="AppFolder_Click"/>
-                            <Button Content="Open Local Folder" Click="LocalFolder_Click"/>
+                            <Button Content="Open App Folder" Click="AppFolder_Click" />
+                            <Button Content="Open Local Folder" Click="LocalFolder_Click" />
                         </StackPanel>
                     </controls:SettingsCard>
-                
+
+                    <controls:SettingsCard Header="Data"    
+                                           Description="Share Acronyms, Schemas, and Databases (Warning: will include password if one is provided)"
+                                           IsEnabled="True" Padding="20,0,20,0">
+
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xEC50;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Button x:Name="ImportButton" Content="Import" Width="85"  Click="ImportButton_Click"/>
+
+                            <Button x:Name="ExportButton" Content="Export" Width="85" Click="ExportButton_Click"/>
+
+                            <Button x:Name="ShareButton" Click="ShareButton_Click">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="Share"/>
+                                        <FontIcon Glyph="&#xE72D;" FontFamily="Segoe MDL2 Assets"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                    </controls:SettingsCard>
+
                 </StackPanel>
             
             </controls:HeaderedContentControl>

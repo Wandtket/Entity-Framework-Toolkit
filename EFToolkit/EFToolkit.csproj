@@ -152,6 +152,10 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Controls\Dialogs\CredentialBox.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\Widgets\RearrangeBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

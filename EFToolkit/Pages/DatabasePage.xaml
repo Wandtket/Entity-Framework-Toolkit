@@ -23,7 +23,11 @@
             <TeachingTip.Subtitle>
                 <x:String>By adding a database connection you can select 
                 databases in the Table Converter instead of copying them
-                from the corresponding designer.</x:String>
+                from the corresponding designer.
+                
+                Username and password are not mandatory but you will be asked
+                to provide them if they are not available. NOTICE: When sharing
+                a backup the username and password will be stored within the data file.</x:String>
             </TeachingTip.Subtitle>
         </TeachingTip>
 
@@ -96,19 +100,19 @@
                                     VerticalAlignment="Center"
                                     Grid.Column="0"/>
 
-                                <TextBox PlaceholderText="Title" Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                <TextBox PlaceholderText="Title *" Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                          Grid.Column="1"  LostFocus="Database_LostFocus"/>
                             
-                                <TextBox PlaceholderText="Datasource" Text="{Binding DataSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                <TextBox PlaceholderText="Datasource *" Text="{Binding DataSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                          Grid.Column="2" LostFocus="Database_LostFocus"/>
 
-                                <TextBox PlaceholderText="Initial Catalog" Text="{Binding InitialCatalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                <TextBox PlaceholderText="Initial Catalog *" Text="{Binding InitialCatalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                         Grid.Column="3" LostFocus="Database_LostFocus"/>
 
-                                <TextBox PlaceholderText="User Id" Text="{Binding UserId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                <TextBox PlaceholderText="User Id (Not Required)" Text="{Binding UserId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                         Grid.Column="4" LostFocus="Database_LostFocus"/>
 
-                                <PasswordBox PlaceholderText="Password" Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                <PasswordBox PlaceholderText="Password (Not Required)" Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                          Grid.Column="5" LostFocus="Database_LostFocus"/>
 
                                 <Button x:Name="RemoveDatabase" Content="X" Click="RemoveDatabase_Click" Grid.Column="6"/>

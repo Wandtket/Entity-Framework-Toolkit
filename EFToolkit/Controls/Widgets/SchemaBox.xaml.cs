@@ -62,12 +62,12 @@ namespace EFToolkit.Controls.Widgets
 
         private async void SchemaTextBox_TokenItemAdded(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args)
         {
-            Toolkit.SaveSchemaItems();
+            Toolkit.SaveData();
         }
 
         private void SchemaTextBox_TokenItemRemoved(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args)
         {
-            Toolkit.SaveSchemaItems();
+            Toolkit.SaveData();
         }
 
 

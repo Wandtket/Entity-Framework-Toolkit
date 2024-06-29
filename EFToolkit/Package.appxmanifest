@@ -30,47 +30,47 @@
 		<Resource Language="x-generate"/>
 	</Resources>
 
-	<Applications>
-		<Application Id="App"
-		  Executable="$targetnametoken$.exe"
-		  EntryPoint="$targetentrypoint$">
-			<uap:VisualElements
-			  DisplayName="Entity Framework Toolkit"
-			  Description="A simple tool for creating Entity Framework Models, Configurations, and DTOs from SQL Server Management Studio and Visual Studio SQL Server Object Explorer."
-			  BackgroundColor="transparent"
-			  Square150x150Logo="Resources\Assets\Square150x150Logo.png"
-			  Square44x44Logo="Resources\Assets\Square44x44Logo.png">
-				<uap:DefaultTile Wide310x150Logo="Resources\Assets\Wide310x150Logo.png"  ShortName="EFToolkit" Square71x71Logo="Resources\Assets\SmallTile.png" Square310x310Logo="Resources\Assets\LargeTile.png">
-					<uap:ShowNameOnTiles>
-						<uap:ShowOn Tile="square150x150Logo"/>
-						<uap:ShowOn Tile="wide310x150Logo"/>
-						<uap:ShowOn Tile="square310x310Logo"/>
-					</uap:ShowNameOnTiles>
-				</uap:DefaultTile >
-				<uap:SplashScreen Image="Resources\Assets\SplashScreen.png" />
-				<uap:InitialRotationPreference>
-					<uap:Rotation Preference="landscape"/>
-					<uap:Rotation Preference="portrait"/>
-					<uap:Rotation Preference="landscapeFlipped"/>
-					<uap:Rotation Preference="portraitFlipped"/>
-				</uap:InitialRotationPreference>
-			</uap:VisualElements>
-			<Extensions>
-				<uap:Extension Category="windows.fileTypeAssociation">
-					<uap:FileTypeAssociation Name="eftoolkit">
-						<uap:SupportedFileTypes>
-							<uap:FileType>.efal</uap:FileType>
-							<uap:FileType>.efsl</uap:FileType>
-						</uap:SupportedFileTypes>
-						<uap:EditFlags OpenIsSafe="true"/>
-						<uap:Logo>Resources\Images\logo.png</uap:Logo>
-						<uap:DisplayName>Entity Framework Toolkit File</uap:DisplayName>
-						<uap:InfoTip>For restoring Entity Framework Toolkit Libraries</uap:InfoTip>
-					</uap:FileTypeAssociation>
-				</uap:Extension>
-			</Extensions>
-		</Application>
-	</Applications>
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="Entity Framework Toolkit"
+        Description="A simple tool for creating Entity Framework Models, Configurations, and DTOs from SQL Server Management Studio and Visual Studio SQL Server Object Explorer."
+        BackgroundColor="transparent"
+        Square150x150Logo="Resources\Assets\Square150x150Logo.png"
+        Square44x44Logo="Resources\Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Resources\Assets\Wide310x150Logo.png"  ShortName="EFToolkit" Square71x71Logo="Resources\Assets\SmallTile.png" Square310x310Logo="Resources\Assets\LargeTile.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
+        <uap:SplashScreen Image="Resources\Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="portrait"/>
+          <uap:Rotation Preference="landscapeFlipped"/>
+          <uap:Rotation Preference="portraitFlipped"/></uap:InitialRotationPreference>
+      </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="eftoolkit">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.efal</uap:FileType>
+              <uap:FileType>.efsl</uap:FileType>
+              <uap:FileType>.eftk</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Resources\Images\logo.png</uap:Logo>
+            <uap:DisplayName>Entity Framework Toolkit Data File</uap:DisplayName>
+            <uap:InfoTip>For Restoring Entity Framework Toolkit Data</uap:InfoTip>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
 
 	<Capabilities>
 		<rescap:Capability Name="runFullTrust" />

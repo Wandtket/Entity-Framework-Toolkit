@@ -20,6 +20,7 @@ using System.Reflection;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
+using EFToolkit.Extensions;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -50,6 +51,39 @@ namespace EFToolkit.Pages
         private async void LocalFolder_Click(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchFolderAsync(ApplicationData.Current.LocalFolder);
+        }
+
+
+        private async void ImportButton_Click(object sender, RoutedEventArgs e)
+        {
+            Toolkit.ImportData();
+        }
+
+
+        private async void ExportButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            Toolkit.ExportData();
+        }
+
+
+        private async void ShareButton_Click(object sender, RoutedEventArgs e)
+        {
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            List<StorageFile> storageFiles = new List<StorageFile>();
+
+            string DataFile = Folder.Path + $@"\{Toolkit.DataFileName}";
+            if (File.Exists(DataFile))
+            {
+                var File = await StorageFile.GetFileFromPathAsync(DataFile);
+                storageFiles.Add(File);
+            }
+
+
+            if (storageFiles.Count == 0) { await MessageBox.Show("No Libraries available to Share", "ERROR"); return; }
+
+            DataTransfer.Show(storageFiles);
         }
 
     }

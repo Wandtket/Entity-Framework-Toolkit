@@ -24,6 +24,8 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using System.Text.RegularExpressions;
+using Windows.Storage.Pickers;
+using Windows.Storage.Provider;
 
 namespace EFToolkit
 {
@@ -523,70 +525,6 @@ namespace EFToolkit
 
         #region Acronym Libraries
 
-        public static ObservableCollection<AcronymLibrary> AcronymLibraries = new();
-        public static ObservableCollection<AcronymLibrary> SelectedAcronymLibraries = new();
-
-        private static string AcronymLibraryFileName = "AcronymLibraries.efal";
-        private static string SelectedAcronymLibraryFileName = "SelectedAcronymLibraries.efal";
-
-
-        public static async Task LoadAcronymLibaries()
-        {
-            StorageFolder Folder = ApplicationData.Current.LocalFolder;
-
-            if (File.Exists(Folder.Path + "\\" + AcronymLibraryFileName))
-            {
-                StorageFile file = await Folder.GetFileAsync(AcronymLibraryFileName);
-                var Libraries = JsonSerializer.Deserialize<ObservableCollection<AcronymLibrary>>(File.ReadAllText(file.Path));
-                if (Libraries != null)
-                {
-                    foreach (var Library in Libraries)
-                    {
-                        Library.LibraryItems = new ObservableCollection<AcronymItem>(Library.LibraryItems.OrderBy(x => x.Acronym).ToList());
-                    }
-
-                    //Add an All Item.
-                    if (Libraries.Where(x => x.Title == "All").FirstOrDefault() == null)
-                    {
-                        Libraries.Add(new AcronymLibrary() { Title = "All" });
-                    }
-
-                    AcronymLibraries = new ObservableCollection<AcronymLibrary>(Libraries.OrderBy(x => x.Title));
-                }
-            }
-
-            if (File.Exists(Folder.Path + "\\" + SelectedAcronymLibraryFileName))
-            {
-                StorageFile file = await Folder.GetFileAsync(SelectedAcronymLibraryFileName);
-                var Libraries = JsonSerializer.Deserialize<ObservableCollection<AcronymLibrary>>(File.ReadAllText(file.Path));
-                if (Libraries != null)
-                {
-                    foreach (var Library in Libraries)
-                    {
-                        Library.LibraryItems = new ObservableCollection<AcronymItem>(Library.LibraryItems.OrderBy(x => x.Acronym).ToList());
-                    }
-
-                    SelectedAcronymLibraries = new ObservableCollection<AcronymLibrary>(Libraries.OrderBy(x => x.Title));
-                }
-            }
-        }
-
-        public static async void SaveAcronymLibaries()
-        {
-            //await Task.Delay(500);
-
-            StorageFolder Folder = ApplicationData.Current.LocalFolder;
-
-            //All Libaries
-            StorageFile file = await Folder.CreateFileAsync(AcronymLibraryFileName, CreationCollisionOption.OpenIfExists);
-            var Json = JsonSerializer.Serialize(AcronymLibraries);
-            await File.WriteAllTextAsync(file.Path, Json);
-
-            //Selected Libaries
-            StorageFile sfile = await Folder.CreateFileAsync(SelectedAcronymLibraryFileName, CreationCollisionOption.OpenIfExists);
-            var sJson = JsonSerializer.Serialize(SelectedAcronymLibraries);
-            await File.WriteAllTextAsync(sfile.Path, sJson);
-        }
 
         public static string ConvertSQLColumnName(string SQLColumnName)
         {
@@ -650,95 +588,6 @@ namespace EFToolkit
         }
 
 
-
-        #endregion
-
-
-        #region Database Items 
-
-        public static ObservableCollection<DatabaseItem> DatabaseItems = new();
-        private static string DatabaseItemFileName = "DatabaseItems.efdl";
-
-        public static async Task LoadDatabaseItems()
-        {
-            StorageFolder Folder = ApplicationData.Current.LocalFolder;
-
-            if (File.Exists(Folder.Path + "\\" + DatabaseItemFileName))
-            {
-                StorageFile file = await Folder.GetFileAsync(DatabaseItemFileName);
-                var Libraries = JsonSerializer.Deserialize<ObservableCollection<DatabaseItem>>(File.ReadAllText(file.Path));
-                if (Libraries != null)
-                {
-                    DatabaseItems = new ObservableCollection<DatabaseItem>(Libraries.OrderBy(x => x.InitialCatalog));
-                }
-            }
-        }
-
-        public static async void SaveDatabaseItems()
-        {
-            //await Task.Delay(500);
-
-            StorageFolder Folder = ApplicationData.Current.LocalFolder;
-
-            StorageFile file = await Folder.CreateFileAsync(DatabaseItemFileName, CreationCollisionOption.OpenIfExists);
-            var Json = JsonSerializer.Serialize(DatabaseItems);
-            await File.WriteAllTextAsync(file.Path, Json);
-        }
-
-        #endregion
-
-
-        #region Schema Items
-
-        public static ObservableCollection<SchemaItem> SchemaItems = new();
-        public static ObservableCollection<SchemaItem> SelectedSchemaItems = new();
-
-        private static string SchemaItemFileName = "SchemaItems.efsl";
-        private static string SelectedSchemaItemFileName = "SelectedSchemaItems.efsl";
-
-
-        public static async Task LoadSchemaItems()
-        {
-            StorageFolder Folder = ApplicationData.Current.LocalFolder;
-
-            if (File.Exists(Folder.Path + "\\" + SchemaItemFileName))
-            {
-                StorageFile file = await Folder.GetFileAsync(SchemaItemFileName);
-                var Schemas = JsonSerializer.Deserialize<ObservableCollection<SchemaItem>>(File.ReadAllText(file.Path));
-                if (Schemas != null)
-                {
-                    SchemaItems = new ObservableCollection<SchemaItem>(Schemas.OrderBy(x => x.Schema));
-                }
-            }
-
-            if (File.Exists(Folder.Path + "\\" + SelectedSchemaItemFileName))
-            {
-                StorageFile file = await Folder.GetFileAsync(SelectedSchemaItemFileName);
-                var Libraries = JsonSerializer.Deserialize<ObservableCollection<SchemaItem>>(File.ReadAllText(file.Path));
-                if (Libraries != null)
-                {
-                    SelectedSchemaItems = new ObservableCollection<SchemaItem>(Libraries.OrderBy(x => x.Schema));
-                }
-            }
-        }
-
-        public static async void SaveSchemaItems()
-        {
-            //await Task.Delay(500);
-
-            StorageFolder Folder = ApplicationData.Current.LocalFolder;
-
-            StorageFile file = await Folder.CreateFileAsync(SchemaItemFileName, CreationCollisionOption.OpenIfExists);
-            var Json = JsonSerializer.Serialize(SchemaItems);
-            await File.WriteAllTextAsync(file.Path, Json);
-
-            StorageFile sfile = await Folder.CreateFileAsync(SelectedSchemaItemFileName, CreationCollisionOption.OpenIfExists);
-            var sJson = JsonSerializer.Serialize(SelectedSchemaItems);
-            await File.WriteAllTextAsync(sfile.Path, sJson);
-        }
-
-
-
         #endregion
 
 
@@ -759,9 +608,230 @@ namespace EFToolkit
 
         #endregion
 
+
+        #region Data
+
+
+        public static ObservableCollection<AcronymLibrary> AcronymLibraries = new();
+        public static ObservableCollection<AcronymLibrary> SelectedAcronymLibraries = new();
+
+        public static ObservableCollection<DatabaseItem> DatabaseItems = new();
+
+        public static ObservableCollection<SchemaItem> SchemaItems = new();
+        public static ObservableCollection<SchemaItem> SelectedSchemaItems = new();
+
+        public static string DataFileName = "Entity Framework Toolkit Data.eftk";
+        private static string SelectedSchemaItemFileName = "SelectedSchemas.efsl";
+        private static string SelectedAcronymLibraryFileName = "SelectedAcronyms.efal";
+
+
+        public static async Task LoadData()
+        {
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            //Load Main Shareable Data
+            if (File.Exists(Folder.Path + "\\" + DataFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync(DataFileName);
+                var Data = JsonSerializer.Deserialize<DataItem>(File.ReadAllText(file.Path));
+                if (Data != null)
+                {
+                    #region Acronym Libraries
+
+                    foreach (var Library in Data.AcronymLibraries)
+                    {
+                        Library.LibraryItems = new ObservableCollection<AcronymItem>(Library.LibraryItems.OrderBy(x => x.Acronym).ToList());
+                    }
+
+                    //Add an All Item.
+                    if (Data.AcronymLibraries.Where(x => x.Title == "All").FirstOrDefault() == null)
+                    {
+                        Data.AcronymLibraries.Add(new AcronymLibrary() { Title = "All" });
+                    }
+
+                    AcronymLibraries = new ObservableCollection<AcronymLibrary>(Data.AcronymLibraries.OrderBy(x => x.Title));
+
+                    #endregion
+
+                    #region Database Items 
+
+                    DatabaseItems = new ObservableCollection<DatabaseItem>(Data.DatabaseItems.OrderBy(x => x.InitialCatalog));
+
+                    #endregion
+
+                    #region Schema Items 
+
+                    SchemaItems = new ObservableCollection<SchemaItem>(Data.SchemaItems.OrderBy(x => x.Schema));
+
+                    #endregion
+                }
+            }
+
+            //Load Previous User Selection
+            //Selected Libraries
+            if (File.Exists(Folder.Path + "\\" + SelectedAcronymLibraryFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync(SelectedAcronymLibraryFileName);
+                var Libraries = JsonSerializer.Deserialize<ObservableCollection<AcronymLibrary>>(File.ReadAllText(file.Path));
+                if (Libraries != null)
+                {
+                    foreach (var Library in Libraries)
+                    {
+                        Library.LibraryItems = new ObservableCollection<AcronymItem>(Library.LibraryItems.OrderBy(x => x.Acronym).ToList());
+                    }
+
+                    SelectedAcronymLibraries = new ObservableCollection<AcronymLibrary>(Libraries.OrderBy(x => x.Title));
+                }
+            }
+
+            //Selected Schemas
+            if (File.Exists(Folder.Path + "\\" + SelectedSchemaItemFileName))
+            {
+                StorageFile file = await Folder.GetFileAsync(SelectedSchemaItemFileName);
+                var Libraries = JsonSerializer.Deserialize<ObservableCollection<SchemaItem>>(File.ReadAllText(file.Path));
+                if (Libraries != null)
+                {
+                    SelectedSchemaItems = new ObservableCollection<SchemaItem>(Libraries.OrderBy(x => x.Schema));
+                }
+            }
+
+        }
+
+        public static async void SaveData()
+        {
+            StorageFolder Folder = ApplicationData.Current.LocalFolder;
+
+            DataItem Data = new DataItem()
+            {
+                AcronymLibraries = AcronymLibraries,
+                DatabaseItems = DatabaseItems,
+                SchemaItems = SchemaItems,
+            };
+
+            //All Libaries
+            StorageFile file = await Folder.CreateFileAsync(DataFileName, CreationCollisionOption.OpenIfExists);
+            var Json = JsonSerializer.Serialize(Data);
+            await File.WriteAllTextAsync(file.Path, Json);
+
+            //Selected Libaries
+            StorageFile SelectedAcronymsfile = await Folder.CreateFileAsync(SelectedAcronymLibraryFileName, CreationCollisionOption.OpenIfExists);
+            var SelectedAcronymsJson = JsonSerializer.Serialize(SelectedAcronymLibraries);
+            await File.WriteAllTextAsync(SelectedAcronymsfile.Path, SelectedAcronymsJson);
+
+            StorageFile SelectedSchemasfile = await Folder.CreateFileAsync(SelectedSchemaItemFileName, CreationCollisionOption.OpenIfExists);
+            var SelectedSchemasJson = JsonSerializer.Serialize(SelectedSchemaItems);
+            await File.WriteAllTextAsync(SelectedSchemasfile.Path, SelectedSchemasJson);
+        }
+
+
+        public static async void ImportData()
+        {
+            // Create a file picker
+            var openPicker = new Windows.Storage.Pickers.FileOpenPicker();
+
+            // Retrieve the window handle (HWND) of the current WinUI 3 window.
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.Current.ActiveWindow);
+
+            // Initialize the file picker with the window handle (HWND).
+            WinRT.Interop.InitializeWithWindow.Initialize(openPicker, hWnd);
+
+            // Set options for your file picker
+            openPicker.ViewMode = PickerViewMode.Thumbnail;
+            openPicker.FileTypeFilter.Add(".eftk");
+
+            // Open the picker for the user to pick a file
+            var file = await openPicker.PickSingleFileAsync();
+            if (file != null)
+            {
+                var Data = JsonSerializer.Deserialize<DataItem>(File.ReadAllText(file.Path));
+
+                var result = await ConfirmBox.Show("This action will import the data from the selected file, nothing will be removed or modified.", "Import Data?"); 
+                if (result == ContentDialogResult.Primary)
+                {
+                    foreach (var Library in Data.AcronymLibraries) { AcronymLibraries.Add(Library); }
+
+                    foreach (var Database in Data.DatabaseItems) { DatabaseItems.Add(Database); }
+
+                    foreach (var Schema in Data.SchemaItems) { SchemaItems.Add(Schema); }
+                }
+            }
+        }
+
+        public static async void ExportData()
+        {
+            // Create a file picker
+            FileSavePicker savePicker = new Windows.Storage.Pickers.FileSavePicker();
+
+            // Retrieve the window handle (HWND) of the current WinUI 3 window.
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.Current.ActiveWindow);
+
+            // Initialize the file picker with the window handle (HWND).
+            WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
+
+            // Set options for your file picker
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            // Dropdown of file types the user can save the file as
+            savePicker.FileTypeChoices.Add("EFToolkit Data File", new List<string>() { ".eftk" });
+            // Default file name if the user does not type one in or select a file to replace
+            savePicker.SuggestedFileName = "Entity Framework Toolkit Data";
+
+            // Open the picker for the user to pick a file
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
+                CachedFileManager.DeferUpdates(file);
+
+                DataItem Data = new DataItem()
+                {
+                    AcronymLibraries = AcronymLibraries,
+                    DatabaseItems = DatabaseItems,
+                    SchemaItems = SchemaItems,
+                };
+
+                var Json = JsonSerializer.Serialize(Data);
+
+                // write to file
+                await File.WriteAllTextAsync(file.Path, Json);
+
+                // Another way to write a string to the file is to use this instead:
+                // await FileIO.WriteTextAsync(file, "Example file contents.");
+
+                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
+                // Completing updates may require Windows to ask for user input.
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                if (status == FileUpdateStatus.Complete)
+                {
+
+                }
+            }
+            else
+            {
+
+            }
+
+        }
+
+        #endregion
+
     }
 
 
+
+    /// <summary>
+    /// Stores the entirety of Shareable data in a single file.
+    /// </summary>
+    public partial class DataItem : ObservableObject
+    {
+        [ObservableProperty]
+        private ObservableCollection<AcronymLibrary> acronymLibraries = new();
+
+        [ObservableProperty]
+        private ObservableCollection<DatabaseItem> databaseItems = new();
+
+        [ObservableProperty]
+        private ObservableCollection<SchemaItem> schemaItems = new();
+    }
 
 
     public partial class DesignItem : ObservableObject
@@ -900,6 +970,15 @@ namespace EFToolkit
         }
     }
 
+
+    public partial class CredentialItem : ObservableObject
+    {
+        [ObservableProperty]
+        private string username;
+
+        [ObservableProperty]
+        private string password;
+    }
 
 
     public enum ModelOptions

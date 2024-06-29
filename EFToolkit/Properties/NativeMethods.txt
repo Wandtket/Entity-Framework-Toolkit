@@ -17,4 +17,5 @@ FindWindowExA
 FindWindowExW
 FindWindowW
 GetDesktopWindow
+GetActiveWindow
 
