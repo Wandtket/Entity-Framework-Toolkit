@@ -8,76 +8,76 @@
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
   IgnorableNamespaces="uap rescap uap3">
 
-  <Identity
-    Name="6393TylerWandtke.560323B3E344E"
-    Publisher="CN=Wandtket"
-    Version="1.0.7.0" />
+	<Identity
+	  Name="6393TylerWandtke.560323B3E344E"
+	  Publisher="CN=BF699C2D-4C38-4B22-8FCC-71DD2AD5FB36"
+	  Version="1.0.7.0" />
 
-  <mp:PhoneIdentity PhoneProductId="5786cc87-bccc-4cf5-84b5-1d13ba943bbd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+	<mp:PhoneIdentity PhoneProductId="5786cc87-bccc-4cf5-84b5-1d13ba943bbd" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
-  <Properties>
-    <DisplayName>Entity Framework Toolkit</DisplayName>
-    <PublisherDisplayName>Tyler Wandtke</PublisherDisplayName>
-    <Logo>Resources\Assets\StoreLogo.png</Logo>
-  </Properties>
+	<Properties>
+		<DisplayName>Entity Framework Toolkit</DisplayName>
+		<PublisherDisplayName>Tyler Wandtke</PublisherDisplayName>
+		<Logo>Resources\Assets\StoreLogo.png</Logo>
+	</Properties>
 
-  <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
-  </Dependencies>
+	<Dependencies>
+		<TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+		<TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+	</Dependencies>
 
-  <Resources>
-    <Resource Language="x-generate"/>
-  </Resources>
+	<Resources>
+		<Resource Language="x-generate"/>
+	</Resources>
 
-  <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="$targetentrypoint$">
-      <uap:VisualElements
-        DisplayName="Entity Framework Toolkit"
-        Description="A simple tool for creating Entity Framework Models, Configurations, and DTOs from SQL Server Management Studio and Visual Studio SQL Server Object Explorer."
-        BackgroundColor="transparent"
-        Square150x150Logo="Resources\Assets\Square150x150Logo.png"
-        Square44x44Logo="Resources\Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Resources\Assets\Wide310x150Logo.png"  ShortName="EFToolkit" Square71x71Logo="Resources\Assets\SmallTile.png" Square310x310Logo="Resources\Assets\LargeTile.png">
-          <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo"/>
-            <uap:ShowOn Tile="wide310x150Logo"/>
-            <uap:ShowOn Tile="square310x310Logo"/>
-          </uap:ShowNameOnTiles>
-        </uap:DefaultTile >
-        <uap:SplashScreen Image="Resources\Assets\SplashScreen.png" />
-        <uap:InitialRotationPreference>
-          <uap:Rotation Preference="landscape"/>
-          <uap:Rotation Preference="portrait"/>
-          <uap:Rotation Preference="landscapeFlipped"/>
-          <uap:Rotation Preference="portraitFlipped"/></uap:InitialRotationPreference>
-      </uap:VisualElements>
-      <Extensions>
-        <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="eftoolkit">
-            <uap:SupportedFileTypes>
-              <uap:FileType>.efal</uap:FileType>
-              <uap:FileType>.efsl</uap:FileType>
-              <uap:FileType>.efdl</uap:FileType>
-            </uap:SupportedFileTypes>
-            <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Resources\Images\logo.png</uap:Logo>
-            <uap:DisplayName>Entity Framework Toolkit File</uap:DisplayName>
-            <uap:InfoTip>For restoring Entity Framework Toolkit Libraries</uap:InfoTip>
-          </uap:FileTypeAssociation>
-        </uap:Extension>
-      </Extensions>
-    </Application>
-  </Applications>
+	<Applications>
+		<Application Id="App"
+		  Executable="$targetnametoken$.exe"
+		  EntryPoint="$targetentrypoint$">
+			<uap:VisualElements
+			  DisplayName="Entity Framework Toolkit"
+			  Description="A simple tool for creating Entity Framework Models, Configurations, and DTOs from SQL Server Management Studio and Visual Studio SQL Server Object Explorer."
+			  BackgroundColor="transparent"
+			  Square150x150Logo="Resources\Assets\Square150x150Logo.png"
+			  Square44x44Logo="Resources\Assets\Square44x44Logo.png">
+				<uap:DefaultTile Wide310x150Logo="Resources\Assets\Wide310x150Logo.png"  ShortName="EFToolkit" Square71x71Logo="Resources\Assets\SmallTile.png" Square310x310Logo="Resources\Assets\LargeTile.png">
+					<uap:ShowNameOnTiles>
+						<uap:ShowOn Tile="square150x150Logo"/>
+						<uap:ShowOn Tile="wide310x150Logo"/>
+						<uap:ShowOn Tile="square310x310Logo"/>
+					</uap:ShowNameOnTiles>
+				</uap:DefaultTile >
+				<uap:SplashScreen Image="Resources\Assets\SplashScreen.png" />
+				<uap:InitialRotationPreference>
+					<uap:Rotation Preference="landscape"/>
+					<uap:Rotation Preference="portrait"/>
+					<uap:Rotation Preference="landscapeFlipped"/>
+					<uap:Rotation Preference="portraitFlipped"/>
+				</uap:InitialRotationPreference>
+			</uap:VisualElements>
+			<Extensions>
+				<uap:Extension Category="windows.fileTypeAssociation">
+					<uap:FileTypeAssociation Name="eftoolkit">
+						<uap:SupportedFileTypes>
+							<uap:FileType>.efal</uap:FileType>
+							<uap:FileType>.efsl</uap:FileType>
+						</uap:SupportedFileTypes>
+						<uap:EditFlags OpenIsSafe="true"/>
+						<uap:Logo>Resources\Images\logo.png</uap:Logo>
+						<uap:DisplayName>Entity Framework Toolkit File</uap:DisplayName>
+						<uap:InfoTip>For restoring Entity Framework Toolkit Libraries</uap:InfoTip>
+					</uap:FileTypeAssociation>
+				</uap:Extension>
+			</Extensions>
+		</Application>
+	</Applications>
 
-  <Capabilities>
-    <rescap:Capability Name="runFullTrust" />
-    <Capability Name="internetClientServer"/>
-    <Capability Name="internetClient"/>
-    <uap:Capability Name="removableStorage"/>
-    <Capability Name="privateNetworkClientServer"/>
-    <uap3:Capability Name="remoteSystem"/>
-  </Capabilities>
+	<Capabilities>
+		<rescap:Capability Name="runFullTrust" />
+		<Capability Name="internetClientServer"/>
+		<Capability Name="internetClient"/>
+		<uap:Capability Name="removableStorage"/>
+		<Capability Name="privateNetworkClientServer"/>
+		<uap3:Capability Name="remoteSystem"/>
+	</Capabilities>
 </Package>
