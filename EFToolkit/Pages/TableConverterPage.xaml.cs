@@ -569,6 +569,8 @@ namespace EFToolkit.Pages
                 if (TableListView.SelectedItem == null) { return; }
                 string tableName = TableListView.SelectedItem.ToString();
 
+                TableFilter.Text = "";
+
                 //Get Table Schema 
                 String[] columnRestrictions = new String[4];
                 columnRestrictions[2] = tableName;
