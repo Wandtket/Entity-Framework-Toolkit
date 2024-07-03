@@ -361,6 +361,7 @@ namespace EFToolkit
             else if (sqlType.StartsWith("numeric")) { CType = "decimal"; }
             else if (sqlType.StartsWith("decimal")) { CType = "decimal"; }
             else if (sqlType.StartsWith("datetime")) { CType = "DateTime"; }
+            else if (sqlType.StartsWith("date")) { CType = "DateTime"; }
             else if (sqlType.StartsWith("float")) { CType = "double"; }
             else if (sqlType.StartsWith("real")) { CType = "Single"; }
             else if (sqlType.StartsWith("smalldatetime")) { CType = "DateTime"; }
