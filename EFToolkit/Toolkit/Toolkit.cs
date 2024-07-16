@@ -133,7 +133,7 @@ namespace EFToolkit
                             ObjectName = Settings.Current.PrimaryKeyStandard; 
                         }
 
-                        Key = $"\t \t {Settings.Current.ConfigurationName}.HasKey(s => s.{ObjectName}) \n";
+                        Key = $"\t \t {Settings.Current.ConfigurationName}.HasKey(s => s.{ObjectName}); \n";
                     }
 
                     Body = Body + Key +
