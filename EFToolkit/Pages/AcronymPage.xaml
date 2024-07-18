@@ -30,7 +30,7 @@
         <TeachingTip x:Name="TranslationTeachTip"
                     Target="{Binding ElementName=AcronymItemList}"
                     PreferredPlacement="Center"
-                    Title="Acronym Libraries">
+                    Title="Translations">
 
             <TeachingTip.Subtitle>
                 <x:String>When creating a translation you will have several options to choose from,
