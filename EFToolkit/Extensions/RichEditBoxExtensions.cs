@@ -1,6 +1,7 @@
 ﻿using EFToolkit.Pages;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,12 @@ namespace EFToolkit.Extensions
             if (Settings.Current.CodeColoring == true)
             {
                 await text.ColorCode();
+            }
+            else
+            {
+                var range = text.Document.GetRange(0, text.GetText().Length);
+                range.CharacterFormat.ForegroundColor = (App.Current.Resources["Foreground"] as SolidColorBrush).Color;
+                text.Document.ApplyDisplayUpdates();
             }
         }
 
@@ -162,12 +169,16 @@ namespace EFToolkit.Extensions
 
             new CodeFormatting() { Text = "NotifyPropertyChanged", Color = CodeYellow },
 
+            new CodeFormatting() { BeginText = "[", EndText = "]", Color = Colors.White },
+
+            new CodeFormatting() { BeginText = "(", EndText = ")", Color = Colors.White },
+
             new CodeFormatting() { BeginText = "/// <summary>", EndText = "/// </summary>", Color = CodeGreen },
 
             new CodeFormatting() { BeginText = "[JsonPropertyName(\"", EndText = "\")]", Color = CodeLightGreen },
 
             new CodeFormatting() { BeginText = "[Column(\"", EndText = "\")]", Color = CodeLightGreen },
-        
+
         };
                
         public class CodeFormatting
