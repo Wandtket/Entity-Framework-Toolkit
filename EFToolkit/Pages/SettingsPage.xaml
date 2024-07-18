@@ -24,6 +24,7 @@
     <ScrollViewer>
         <StackPanel>
 
+            <!--Table Converter-->
             <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
                 <controls:HeaderedContentControl.Header>
                     <TextBlock Text="Table Converter" FontSize="14" Opacity=".6" Margin="5"/>
@@ -200,6 +201,31 @@
                 </StackPanel>
             </controls:HeaderedContentControl>
 
+            <!--Data Visualizer-->
+            <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
+                <controls:HeaderedContentControl.Header>
+                    <TextBlock Text="Data Visualizer" FontSize="14" Opacity=".6" Margin="5"/>
+                </controls:HeaderedContentControl.Header>
+
+                <StackPanel Spacing="3">
+                    <controls:SettingsCard Header="New Line Increment" 
+                                           Description="A new line will be added after every (x) number of columns when outputing to a select statement."
+                                           IsEnabled="True" Padding="20,0,20,0">
+
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE751;" FontFamily="Segoe MDL2 Assets"/>
+                        </controls:SettingsCard.HeaderIcon>
+
+                        <NumberBox Value="{x:Bind EF:Settings.Current.DataVisualizerNewLineIncrement, Mode=TwoWay}" 
+                                   SpinButtonPlacementMode="Inline" 
+                                   Width="150" Maximum="5" Minimum="1"/>
+
+                    </controls:SettingsCard>
+                </StackPanel>
+
+            </controls:HeaderedContentControl>
+
+            <!--Acronym Library-->
             <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10" Visibility="Collapsed">
                 <controls:HeaderedContentControl.Header>
                     <TextBlock Text="Acronym Library" FontSize="14" Opacity=".6" Margin="5"/>
@@ -220,7 +246,8 @@
                 </StackPanel>
 
             </controls:HeaderedContentControl>
-
+       
+            <!--Miscellaneous-->
             <controls:HeaderedContentControl HorizontalContentAlignment="Stretch" Margin="10">
                 <controls:HeaderedContentControl.Header>
                     <TextBlock Text="Miscellaneous" FontSize="14" Opacity=".6" Margin="5"/>

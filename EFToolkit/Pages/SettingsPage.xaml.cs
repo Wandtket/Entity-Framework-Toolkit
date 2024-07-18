@@ -230,6 +230,13 @@ namespace EFToolkit.Pages
         private string datavisualizerincludeall = "data_visualizer_include_all";
 
 
+        public int DataVisualizerNewLineIncrement
+        {
+            get { return localSettings.Values[datavisualizernewlineincrement] as int? ?? 1; }
+            set { localSettings.Values[datavisualizernewlineincrement] = value; }
+        }
+        private string datavisualizernewlineincrement = "data_visualizer_new_line_increment";
+
         /// <summary>
         /// Determines how DTO's should be built.
         /// </summary>
