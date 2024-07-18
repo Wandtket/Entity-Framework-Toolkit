@@ -68,6 +68,8 @@ namespace EFToolkit
 
         private async void MainView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
+            Settings.Current.ResetTeachTips();
+
             if (args.SelectedItem == TableConverterViewItem)
             {
                 PageFrame.Navigate(typeof(TableConverterPage));
