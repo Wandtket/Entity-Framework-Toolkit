@@ -401,6 +401,7 @@ namespace EFToolkit
         public static string ConvertTableToSelectStatement(IList<VisualizerItem> VisualizerItems, string TableName)
         {
             string Objects = "";
+            int NewLineIncrement = 0;
 
             List<VisualizerItem> SelectedItems = VisualizerItems.Where(x => x.Include == true).ToList();
             for (int i = 0; i < SelectedItems.Count; i++)
@@ -408,19 +409,32 @@ namespace EFToolkit
                 if (SelectedItems[i].ColumnName != "")
                 {
                     string ColumnName = SelectedItems[i].ColumnName.Trim();
+                    NewLineIncrement++;
 
-                    string Delimiter = ", ";
-                    if (i.ToString().EndsWith("5") || i.ToString().Length > 1 && i.ToString().EndsWith("0")) { Delimiter = ", \n"; }
-                    if (i == SelectedItems.IndexOf(SelectedItems.Last())) { Delimiter = ""; }
+                    if (!string.IsNullOrEmpty(TableName))
+                    {
+                        string Delimiter = ", ";
 
-                    Objects = Objects + TableName + "." + ColumnName + Delimiter;
+                        //Create a new line after every x number of columns
+                        if (NewLineIncrement == Settings.Current.DataVisualizerNewLineIncrement || NewLineIncrement.ToString().Length > 1 && NewLineIncrement.ToString().EndsWith("0")) { Delimiter = ", \n \t"; NewLineIncrement = 0; }
+                        if (i == SelectedItems.IndexOf(SelectedItems.Last())) { Delimiter = ""; }
+
+                        Objects = Objects + TableName + "." + ColumnName + Delimiter;
+                    }
+                    else
+                    {
+                        string Delimiter = $"";
+                        string Comma = ",";
+                        if (NewLineIncrement == Settings.Current.DataVisualizerNewLineIncrement || NewLineIncrement.ToString().Length > 1 && NewLineIncrement.ToString().EndsWith("0")) { Delimiter = $"\n \t"; NewLineIncrement = 0; }                    
+                        if (i == SelectedItems.IndexOf(SelectedItems.First())) { Comma = ""; }
+
+                        Objects = Objects + $"{Comma}[" + ColumnName + "] " + Delimiter;
+                    }
                 }
             }
 
-            //Objects = Objects.ReplaceNthOccurrence(", ", ", \n", 5);
-
-            string Body = @"" + Objects +
-                                "\n" + "--Paste joins, unions, clauses, etc here...--";
+            string Body = @"select all " + Objects + "\n" + 
+                          "--Paste joins, unions, clauses, etc here...--";
 
             return Body;
         }
@@ -444,12 +458,16 @@ namespace EFToolkit
                 return "";
             }
             else if (Options == ModelOptions.INotifyPropertyChanged)
-            {
-                if (Input.Contains(" { get; set; }"))
+            {              
+                if (ModelInputType(Input) == ModelOptions.Standard)
                 {
                     return ConvertFromStandardModel(Input);
                 }
-                else if (Input.Contains("[ObservableProperty]"))
+                else if (ModelInputType(Input) == ModelOptions.INotifyPropertyChanged)
+                {
+                    return "";
+                }
+                else if (ModelInputType(Input) == ModelOptions.MVVM)
                 {
                     return "";
                 }
@@ -458,6 +476,13 @@ namespace EFToolkit
             else { return ""; }
         }
 
+        private static ModelOptions ModelInputType(string Input)
+        {
+            if (Input.Contains(" { get; set; }")) { return ModelOptions.Standard; }
+            else if (Input.Contains("NotifyPropertyChanged")) { return ModelOptions.INotifyPropertyChanged; }
+            else if (Input.Contains("[ObservableProperty]")) { return ModelOptions.MVVM; }
+            else { return ModelOptions.Standard; }
+        }
 
         private static string ConvertFromStandardModel(string Input)
         {
@@ -520,6 +545,10 @@ namespace EFToolkit
 
             return Input;
         }
+
+
+
+
 
         #endregion
 
