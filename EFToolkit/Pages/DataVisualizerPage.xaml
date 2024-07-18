@@ -14,7 +14,50 @@
     NavigationCacheMode="Required">
 
     <Page.Resources>
-        
+        <TeachingTip x:Name="TableNameTeachTip"
+            Target="{Binding ElementName=TableName}"
+            PreferredPlacement="Bottom"
+            Title="Table Name">
+
+            <TeachingTip.Subtitle>
+                <x:String>Required for select statement output.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="VisualizerGridTeachTip"
+                Target="{Binding ElementName=VisualizerGrid}"
+                PreferredPlacement="Center"
+                Title="Data Visualization">
+
+            <TeachingTip.Subtitle>
+                <x:String>This screen will allow you to visualize data and build a custom select statement.
+                          This can be helpful for tables that have a lot of columns and you only want specific
+                          values to be pulled from them, you can search and omit columns based off of their values.
+                          An example would be if you have a screenshot of an input form in your application and you trace 
+                          the ID of that record you can omit columns.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="PastingTeachTip"
+            Target="{Binding ElementName=PasteFromSQL}"
+            PreferredPlacement="Top"
+            Title="Pasting from SQL">
+
+            <TeachingTip.Subtitle>
+                <x:String>When pasting, ensure that you're copying the results with headers, the first row that appears will
+                    be used in the data visualizer.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="AcronymTeachTip"
+                Target="{Binding ElementName=AcronymLibrarySelector}"
+                PreferredPlacement="Top"
+                Title="Acronym Libraries">
+
+            <TeachingTip.Subtitle>
+                <x:String>Libraries are only used when searching through the visualizer and selecting columns.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
     </Page.Resources>
 
     <Grid>
@@ -35,8 +78,9 @@
             </Grid.ColumnDefinitions>
 
             <AutoSuggestBox x:Name="TableName" Header="Table Name / Alias" 
-                            PlaceholderText="example: dbo.vendors"
-                            TextChanged="TableName_TextChanged"/>
+                            PlaceholderText="example: col"
+                            TextChanged="TableName_TextChanged"
+                            Width="200"/>
 
             <widgets:SearchBox x:Name="SearchBox" 
                                TextChanged="SearchTable_TextChanged"
@@ -103,7 +147,7 @@
 
             <CommandBar Grid.Row="1" HorizontalAlignment="Left" DefaultLabelPosition="Right">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"
+                    <AppBarButton x:Name="PasteFromSQL" Label="Paste from SQL" Icon="Paste" Click="PasteTable_Click"
                                   ToolTipService.ToolTip="note: include with headers"/>
                     
                     <AppBarToggleButton x:Name="IncludeAll" Label="Include All" Icon="SelectAll" Click="IncludeAll_Click"
@@ -134,7 +178,8 @@
             <RichEditBox x:Name="Output" 
                  AcceptsReturn="True"   
                  IsTextPredictionEnabled="False"
-                 IsSpellCheckEnabled="False"                    
+                 IsSpellCheckEnabled="False"   
+                 TextWrapping="NoWrap"
                  Grid.Row="0"/>
 
             <Grid Grid.Row="1">
