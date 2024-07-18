@@ -10,7 +10,28 @@
     NavigationCacheMode="Required">
 
     <Page.Resources>
-        
+        <TeachingTip x:Name="SelectStatementInputTeachTip"
+            Target="{Binding ElementName=Input}"
+            PreferredPlacement="Center"
+            Title="Select Statement Input">
+
+            <TeachingTip.Subtitle>
+                <x:String>Take any select statement (that successfully executes) that can
+                    include joins, unions, variables, etc, and the output statement will
+                    allow you to get detailed information about the columns that it contains.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="SelectStatementOutputTeachTip"
+                Target="{Binding ElementName=Output}"
+                PreferredPlacement="Center"
+                Title="Select Statement Output">
+
+            <TeachingTip.Subtitle>
+                <x:String>Copy and paste this output into SQL Server Management Studio or corresponding IDE 
+                and execute, once completed copy the output from the IDE into the Table Converter or Data Visualizer</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
     </Page.Resources>
     
     <Grid>
@@ -34,6 +55,7 @@
                  AcceptsReturn="True" 
                  IsTextPredictionEnabled="False"
                  IsSpellCheckEnabled="False"
+                 Paste="Input_Paste"
                  TextChanged="Input_TextChanged"
                  PlaceholderText="Input your custom select statement here...">
 
@@ -56,7 +78,7 @@
                  IsSpellCheckEnabled="False">
 
                 <RichEditBox.Header>
-                    <TextBlock Text="Select Statement Description" FontSize="20"/>
+                    <TextBlock Text="Output" FontSize="20"/>
                 </RichEditBox.Header>
 
             </RichEditBox>
