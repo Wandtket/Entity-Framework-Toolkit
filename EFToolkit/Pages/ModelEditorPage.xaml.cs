@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Navigation;
 using EFToolkit.Controls.Dialogs;
 using EFToolkit.Extensions;
 using Windows.ApplicationModel.DataTransfer;
+using Microsoft.UI;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -59,14 +60,14 @@ namespace EFToolkit.Pages
 
                 if (!string.IsNullOrEmpty(text))
                 {                                       
-                    Output.SetText(Toolkit.ConvertModel(text, ModelOptions.INotifyPropertyChanged));
+                    await Output.SetText(Toolkit.ConvertModel(text, ModelOptions.INotifyPropertyChanged));
+                    await Input.SetText(Input.GetText());
                 }
             }
         }
 
         private void Input_TextChanged(object sender, RoutedEventArgs e)
         {
-            
 
         }
     }
