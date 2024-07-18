@@ -40,15 +40,15 @@ namespace EFToolkit.Pages
 
         public void ToggleTeachTips(bool Toggle)
         {
-            //TeachTip.IsOpen = Toggle;
+            TableNameTeachTip.IsOpen = Toggle;
+            VisualizerGridTeachTip.IsOpen = Toggle;
+            PastingTeachTip.IsOpen = Toggle;
+            AcronymTeachTip.IsOpen = Toggle;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            //TableName.SuggestedItemsSource = Toolkit.SchemaItems;
-            //TableName.ItemsSource = Toolkit.SelectedSchemaItems;
 
             AcronymLibrarySelector.SuggestedItemsSource = Toolkit.AcronymLibraries;
             AcronymLibrarySelector.ItemsSource = Toolkit.SelectedAcronymLibraries;
@@ -172,6 +172,7 @@ namespace EFToolkit.Pages
             {
                 VisualizerItems.Clear();
                 VisualizerItemCount.Text = VisualizerItems.Count().ToString();
+                await Output.SetText("");
             }
         }
 
