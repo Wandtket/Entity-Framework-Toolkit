@@ -40,6 +40,7 @@
     <None Remove="Pages\DatabasePage.xaml" />
     <None Remove="Pages\SelectDescriberPage.xaml" />
     <None Remove="Pages\SettingsPage.xaml" />
+    <None Remove="Pages\TableComparisonPage.xaml" />
     <None Remove="Pages\TableConverterPage.xaml" />
     <None Remove="Properties\NativeMethods.txt" />
     <None Remove="Resources\Images\logo.png" />
@@ -150,6 +151,11 @@
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\TableComparisonPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\Dialogs\CredentialBox.xaml">
