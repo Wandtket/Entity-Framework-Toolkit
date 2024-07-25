@@ -27,5 +27,10 @@ namespace EFToolkit.Pages
         {
             this.InitializeComponent();
         }
+
+        public void ToggleTeachTips(bool Toggle)
+        {
+            //TableNameTeachTip.IsOpen = Toggle;
+        }
     }
 }
