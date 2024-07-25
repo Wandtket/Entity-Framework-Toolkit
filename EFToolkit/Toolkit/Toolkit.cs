@@ -26,6 +26,9 @@ using Windows.Storage;
 using System.Text.RegularExpressions;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Microsoft.UI.Xaml.Documents;
+using System.Formats.Tar;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace EFToolkit
 {
@@ -548,6 +551,289 @@ namespace EFToolkit
 
 
 
+        public static async Task<string> BaseModel(string Input, ModelOptions Options)
+        {
+            ClassItem Model = new ClassItem();
+
+            string? Line = null;
+            StringReader stringReader = new StringReader(Input);
+            int numLines = Input.Split('\n').Length;
+
+            for (int i = 0; i < numLines; i++)
+            {
+                Line = await stringReader.ReadLineAsync();
+
+                if (Options == ModelOptions.Standard)
+                {
+                    //Fix Class
+                    if (Line.Contains(" class ") && Line.Contains("INotifyPropertyChanged"))
+                    {
+                        Input = Input.Replace(Line, Line.Replace("INotifyPropertyChanged", ""));
+                    }
+                    else if (Line.Contains(" class ") && Line.Contains(" : ObservableObject"))
+                    {
+                        Input = Input.Replace(Line, Line.Replace(" : ObservableObject", ""));
+                    }
+                }
+                else if (Options == ModelOptions.INotifyPropertyChanged)
+                {
+                    //Fix Class
+                    if (Line.Contains(" class ") && !Line.Contains(":"))
+                    {
+                        Input = Input.Replace(Line, Line.TrimEnd() + " : INotifyPropertyChanged");
+                    }
+                    else if (Line.Contains(" class ") && Line.Contains(":") && !Line.Contains("ObservableObject"))
+                    {
+                        Input = Input.Replace(Line, Line.TrimEnd() + ", INotifyPropertyChanged");
+                    }
+                    else if (Line.Contains(" partial class ") && Line.Contains(" : ObservableObject"))
+                    {
+                        string NewLine = Line;
+                        NewLine = NewLine.Replace(" : ObservableObject", " : INotifyPropertyChanged");
+                        NewLine = NewLine.Replace("partial ", "");                        
+                        Input = Input.Replace(Line, NewLine);                        
+                    }
+
+
+
+                }
+                else if (Options == ModelOptions.MVVM)
+                {
+
+                }           
+            }
+
+
+            return Input;
+        }
+
+
+        public static async Task<NamespaceItem> ModelBuilder(string Input)
+        {
+            string? Line = null;
+            StringReader stringReader = new StringReader(Input);
+            int numLines = Input.Split('\n').Length;
+
+            NamespaceItem NameSpace = new();
+
+            string? CurrentSummary = "";
+
+            ClassItem? CurrentClassItem = null;
+
+            List<string>? CurrentAttributes = new();
+            PropertyItem? CurrentPropertyItem = null;
+
+            for (int i = 0; i < numLines; i++)
+            {
+                Line = await stringReader.ReadLineAsync();
+
+                if (string.IsNullOrEmpty(Line)) { continue; }
+
+                if (Line.StartsWith("using")) { NameSpace.Usings.Add(Line); }
+                if (Line.StartsWith("namespace")) { NameSpace.NameSpace = Line.Replace("namespace ", "").Trim(); }
+
+                //Summary
+                if (Line.Contains("/// ") && !Line.Contains("<"))
+                {
+                    CurrentSummary = Line.Replace("/// ", "").Trim();
+                }
+
+                //Class
+                if (Line.Contains("class "))
+                {
+                    string TempLine = Line;
+
+                    if (CurrentClassItem != null) 
+                    { 
+                        NameSpace.ClassItems.Add(CurrentClassItem);
+                        CurrentClassItem = null;
+                    }
+
+                    string Access = "";
+                    if (TempLine.Contains("public")) { Access = "public ";  }
+                    else if (TempLine.Contains("private")) { Access = "private "; }
+
+                    if (TempLine.Contains("protected")) { Access = Access + "protected "; }
+                    if (TempLine.Contains("override")) { Access = Access + "override "; }
+                    if (TempLine.Contains("partial")) { Access = Access + "partial "; }
+
+                    string ClassName = TempLine.Remove(0, TempLine.IndexOf("class ") + 6);
+                    if (ClassName.Contains(" ")) { ClassName = ClassName.Substring(0, ClassName.IndexOf(" ")); }
+                    else { ClassName = ClassName.Substring(0, ClassName.Length); }
+
+                    List<string> Interfaces = new();
+                    if (TempLine.Contains(" : ") && !TempLine.Contains(",")) 
+                    {
+                        string Interface = TempLine.Remove(0, TempLine.IndexOf(" : ") + 3);
+                        Interface = Interface.Substring(0, Interface.Length);
+                        Interfaces.Add(Interface);
+                    }
+                    else if (TempLine.Contains(" : ") && TempLine.Contains(","))
+                    {
+                        string Interface = TempLine.Remove(0, TempLine.IndexOf(" : ") + 3);
+                        string[] EachInterface = Interface.Split(", ");
+                        Interfaces = new List<string>(EachInterface);
+                    }
+
+                    ClassItem NewClassItem = new()
+                    {
+                        Summary = CurrentSummary,
+                        Name = ClassName,
+                        Interfaces = Interfaces,
+                    };
+                    CurrentClassItem = NewClassItem;
+                    CurrentSummary = "";
+                }
+
+
+                //Attributes
+                if (Line.Contains("[") && Line.Contains("]")) 
+                { 
+                    CurrentAttributes.Add(Line.Trim());
+                }
+
+
+                //Property
+                if (!Line.Contains("class ") && !Line.Contains("event") && !Line.Contains("void")
+                    && Line.Contains("public ") || Line.Contains("private ") || Line.Contains("protected "))
+                {
+                    PropertyItem subItem = new PropertyItem();
+
+                    if (Line.Contains("public ")) { subItem.Access = "public"; }
+                    else if (Line.Contains("private ")) { subItem.Access = "private"; }
+                    else if (Line.Contains("protected ")) { subItem.Access = "protected"; }
+
+                    if (Line.Contains("static ")) { subItem.IsStatic = true; Line = Line.Replace("static ", ""); }
+                    if (Line.Contains("override ")) { subItem.IsOverride = true; Line = Line.Replace("override ", ""); }
+
+                    string Type = Line.Remove(0, Line.IndexOf(subItem.Access + " ") + subItem.Access.Length + 1);
+                    if (Type.Contains(" ")) { Type = Type.Substring(0, Type.IndexOf(" ")); }
+                    else if (Type.Contains("(")) { Type = Type.Substring(0, Type.IndexOf("(")); }
+
+                    string Name = Line.Remove(0, Line.IndexOf(Type) + Type.Length).Trim();
+                    if (Name.Contains(" ")) { Name = Name.Substring(0, Name.IndexOf(" ")); }
+                    if (Name.Contains(";")) { Name = Name.Substring(0, Name.IndexOf(";")); }
+                    else { Name = Name.Substring(0, Name.Length); }
+
+                    //GetSet
+                    if (Line.Contains("{ get") && Line.Contains("}"))
+                    {
+                        string GetSet = Line.Remove(0, Line.IndexOf("{"));
+                        subItem.GetSet = GetSet.Substring(0, GetSet.IndexOf("}") + 1);
+                    }
+                    else if (Line.Contains(" => "))
+                    {
+                        string GetSet = Line.Remove(0, Line.IndexOf(" => "));
+                        subItem.GetSet = GetSet.Substring(0, GetSet.Length);
+                    }
+
+                    //Values
+                    if (Line.Contains(" = "))
+                    {
+                        string Value = Line.Remove(0, Line.IndexOf(" = ") + 3);
+                        subItem.Value = Value.Substring(0, Value.Length);
+                    }
+
+                    subItem.Summary = CurrentSummary;
+                    subItem.Attributes = new List<string>(CurrentAttributes);
+                    subItem.Type = Type;
+                    subItem.Name = Name;
+
+                    if (!Name.Contains("(") && !Type.Contains("("))
+                    {
+                        CurrentPropertyItem = subItem;
+                        CurrentClassItem.PropertyItems.Add(subItem);
+                        CurrentSummary = "";
+                        CurrentAttributes.Clear();
+
+                        continue;
+                    }
+                }
+
+            }
+
+            if (CurrentClassItem != null)
+            {
+                NameSpace.ClassItems.Add(CurrentClassItem);
+                CurrentClassItem = null;
+            }
+
+            Debug.WriteLine(JsonSerializer.Serialize<NamespaceItem>(NameSpace));
+            return NameSpace;
+        }
+
+        public static async Task<string> ConvertModel(NamespaceItem Model, ModelOptions Options)
+        {
+            string Usings = string.Join("\n", Model.Usings) + "\n";
+
+            string Namespace = "";
+            if (!string.IsNullOrEmpty(Model.NameSpace)) { Namespace = $"namespace {Model.NameSpace}\n" + "{\n\n"; }
+
+            string ClassName = "";
+            string Properties = "";
+            foreach (var Class in Model.ClassItems)
+            {
+                string Interfaces = string.Join(", ", Class.Interfaces);
+
+                Interfaces = Interfaces.Replace(", INotifyPropertyChanged", "");
+                Interfaces = Interfaces.Replace(" : INotifyPropertyChanged, ", "");
+                Interfaces = Interfaces.Replace(" : INotifyPropertyChanged", "");
+                Interfaces = Interfaces.Replace(" : INotifyPropertyChanged", "");
+
+                Interfaces = Interfaces.Replace(", ObservableObject", "");
+                Interfaces = Interfaces.Replace(" : ObservableObject, ", "");
+                Interfaces = Interfaces.Replace(" : ObservableObject", "");
+                Interfaces = Interfaces.Replace(" : ObservableObject", "");
+
+                if (Options == ModelOptions.Standard)
+                {
+                    ClassName = Class.Access + "class " + Class.Name + " " + Interfaces;
+                }
+                else if (Options == ModelOptions.INotifyPropertyChanged)
+                {
+                    ClassName = Class.Access + "class " + Class.Name + " : INotifyPropertyChanged" + Interfaces + "\n{\n\n";
+                }
+                else if (Options == ModelOptions.MVVM)
+                {
+                    ClassName = Class.Summary +  Class.Access + "class " + Class.Name + " : ObservableObject" + Interfaces +"\n{\n\n";
+                }
+
+                foreach (var Property in Class.PropertyItems)
+                {
+                    string Attributes = string.Join("\n", Property.Attributes);
+
+                    if (Options == ModelOptions.Standard)
+                    {
+                        Properties = Properties + Attributes + "\n" + Property.Access + " " + Property.Type + " " + Property.Name + Property.GetSet + Property.Value;
+                    }
+                    else if (Options == ModelOptions.INotifyPropertyChanged)
+                    {
+                        string INotifyPropertyString = "\n \t{ \n" +
+                                "\t \t get { return " + Property.Name.ToLower() + "; } \n" +
+                                "\t \t set { \n " +
+                                "\t \t \t if (" + Property.Name.ToLower() + " != value) \n" +
+                                "\t \t \t { \n" +
+                                "\t \t \t \t" + Property.Name.ToLower() + " = value; \n" +
+                                "\t \t \t \t NotifyPropertyChanged(\"" + Property.Name.Trim() + "\"); \n" +
+                                "\t \t \t } \n" +
+                                "\t \t } \n" +
+                                "\t} \n" +
+                                "\tprivate " + Property.Type.ToLower() + " " + Property.Name.ToLower() + "; \n \n";
+
+                        Properties = Properties + Attributes + "\n" + Property.Access + " " + Property.Type + " " + Property.Name + INotifyPropertyString;
+
+                    }
+                    else if (Options == ModelOptions.MVVM)
+                    {
+                        Properties = Properties + Attributes + "\n" + "private " + Property.Type + " " + Property.Name.FirstCharToLowerCase() + "; ";
+                    }
+                }
+            }
+
+            string Body = Usings + Namespace + ClassName + Properties;
+
+            return Body;
+        }
 
 
         #endregion
@@ -909,7 +1195,7 @@ namespace EFToolkit
     }
 
 
-    public partial class ModelItem : ObservableObject
+    public partial class NamespaceItem : ObservableObject
     {
         [ObservableProperty]
         private List<string> usings = new();
@@ -918,16 +1204,28 @@ namespace EFToolkit
         private string nameSpace = string.Empty;
 
         [ObservableProperty]
+        private List<ClassItem> classItems = new();
+    }
+
+    public partial class ClassItem : ObservableObject
+    {
+        [ObservableProperty]
         private string summary = string.Empty;
+
+        [ObservableProperty]
+        private string access = string.Empty;
 
         [ObservableProperty]
         private string name = string.Empty;
 
         [ObservableProperty]
-        private List<ModelSubItem> items = new();
+        private List<string> interfaces = new();
+
+        [ObservableProperty]
+        private List<PropertyItem> propertyItems = new();
     }
 
-    public partial class ModelSubItem : ObservableObject
+    public partial class PropertyItem : ObservableObject
     {
         [ObservableProperty]
         private string summary = string.Empty;
@@ -939,11 +1237,25 @@ namespace EFToolkit
         private string access = string.Empty;
 
         [ObservableProperty]
-        private string declaration = string.Empty;
+        private bool isStatic = false;
+
+        [ObservableProperty]
+        private bool isOverride = false;
+
+        [ObservableProperty]
+        private string type = string.Empty;
 
         [ObservableProperty]
         private string name = string.Empty;
+
+        [ObservableProperty]
+        private string getSet = string.Empty;
+
+        [ObservableProperty]
+        private string value = string.Empty;
     }
+
+
 
 
     public partial class AcronymLibrary : ObservableObject
