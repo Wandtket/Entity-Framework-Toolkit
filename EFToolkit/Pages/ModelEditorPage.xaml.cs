@@ -56,11 +56,17 @@ namespace EFToolkit.Pages
             {
                 string text = await dataPackageView.GetTextAsync();
 
-                ModelItem Item = new ModelItem();
-
                 if (!string.IsNullOrEmpty(text))
-                {                                       
-                    await Output.SetText(Toolkit.ConvertModel(text, ModelOptions.INotifyPropertyChanged));
+                {
+                    ModelOptions Options = ModelOptions.Standard;
+                    if (StandardModelOption.IsChecked == true) { Options = ModelOptions.Standard; }
+                    else if (INotifyModelOption.IsChecked == true) { Options = ModelOptions.INotifyPropertyChanged; }
+                    else if (MVVModelOption.IsChecked == true) { Options = ModelOptions.MVVM; }
+
+                    NamespaceItem Item = await Toolkit.ModelBuilder(text);
+                    string Body = await Toolkit.ConvertModel(Item, Options);
+
+                    await Output.SetText(Body);
                     await Input.SetText(Input.GetText());
                 }
             }
