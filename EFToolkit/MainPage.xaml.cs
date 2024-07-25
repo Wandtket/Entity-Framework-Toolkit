@@ -74,6 +74,10 @@ namespace EFToolkit
             {
                 PageFrame.Navigate(typeof(TableConverterPage));
             }
+            else if (args.SelectedItem == TableConverterViewItem)
+            {
+                PageFrame.Navigate(typeof(TableComparisonPage));
+            }
             else if (args.SelectedItem == SelectDescriberViewItem)
             {
                 PageFrame.Navigate(typeof(SelectDescriberPage));
@@ -107,6 +111,11 @@ namespace EFToolkit
             if (MainView.SelectedItem == TableConverterViewItem)
             {
                 TableConverterPage Page = PageFrame.Content as TableConverterPage;
+                Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
+            }
+            else if (MainView.SelectedItem == TableComparisonViewItem)
+            {
+                TableComparisonPage Page = PageFrame.Content as TableComparisonPage;
                 Page?.ToggleTeachTips(Settings.Current.TeachTipsOpen);
             }
             else if (MainView.SelectedItem == SelectDescriberViewItem)

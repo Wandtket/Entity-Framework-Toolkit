@@ -81,6 +81,15 @@
                         <FontIcon Glyph="&#xF156;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+
+                <NavigationViewItem x:Name="TableComparisonViewItem" Content="Table Comparison"
+                        ToolTipService.ToolTip="Compare SQL Data Tables">
+
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xF156;" FontFamily="Segoe MDL2 Assets"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
                 <NavigationViewItem x:Name="SelectDescriberViewItem" Content="Select Describer"
                     ToolTipService.ToolTip="Get SQL Column information from a custom select statement">
 
