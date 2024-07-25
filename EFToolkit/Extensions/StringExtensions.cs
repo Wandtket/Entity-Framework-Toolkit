@@ -59,6 +59,14 @@ namespace EFToolkit.Extensions
         }
 
 
+        public static string? FirstCharToLowerCase(this string? String)
+        {
+            if (!string.IsNullOrEmpty(String) && char.IsUpper(String[0]))
+                return String.Length == 1 ? char.ToLower(String[0]).ToString() : char.ToLower(String[0]) + String[1..];
+
+            return String;
+        }
+
 
         public static IEnumerable<int> AllIndicesOf(this string text, string pattern)
         {
