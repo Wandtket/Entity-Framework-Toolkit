@@ -1,17 +1,36 @@
-﻿using EFToolkit.Pages;
+﻿using ColorCode;
+using ColorCode.Common;
+using ColorCode.Parsing;
+using ColorCode.Styling;
+using ColorCode.WinUI.Common;
+using ColorCode.HTML;
+using EFToolkit.Controls.Dialogs;
+using EFToolkit.Pages;
 using Microsoft.UI;
+using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Text;
+using ColorCode.HTML.Common;
 
 namespace EFToolkit.Extensions
 {
+
+
     public static class RichEditBoxExtensions
     {
+
         public static async Task SetText(this RichEditBox text, string Value)
         {
             text.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, Value);
@@ -41,13 +60,13 @@ namespace EFToolkit.Extensions
             text.Document.GetText(Microsoft.UI.Text.TextGetOptions.None, out string value);
 
             var Range = text.Document.GetRange(0, value.Length);
-            Range.CharacterFormat.ForegroundColor = Colors.White;
+            Range.CharacterFormat.ForegroundColor = (App.Current.Resources["Foreground"] as SolidColorBrush).Color;
 
             foreach (var Format in Codelist)
             {
                 if (Format.BeginText == null && Format.EndText == null)
                 {
-                    if (value.Contains(Format.Text)) 
+                    if (value.Contains(Format.Text))
                     {
                         foreach (var index in value.AllIndicesOf(Format.Text))
                         {
@@ -60,7 +79,7 @@ namespace EFToolkit.Extensions
                                 range.CharacterFormat.ForegroundColor = Format.Color.IsThemeAware();
                             }
                         };
-                    }                   
+                    }
                 }
                 else
                 {
@@ -80,13 +99,12 @@ namespace EFToolkit.Extensions
                     }
                 }
             }
-            
+
             text.Document.ApplyDisplayUpdates();
             text.Document.ClearUndoRedoHistory();
 
             text.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
         }
-
 
         private static Color CodeBlue = Color.FromArgb(1, 84, 156, 214);
         private static Color CodeGreen = Color.FromArgb(1, 78, 201, 145);
@@ -142,11 +160,13 @@ namespace EFToolkit.Extensions
             new CodeFormatting() { Text = "static ", Color = CodeBlue },
             new CodeFormatting() { Text = "readonly ", Color = CodeBlue },
 
+            new CodeFormatting() { Text = "namespace ", Color = CodeBlue },
+            new CodeFormatting() { Text = "using ", Color = CodeBlue },
+
             new CodeFormatting() { Text = "class ", Color = CodeBlue },
             new CodeFormatting() { Text = "new ", Color = CodeBlue },
 
             new CodeFormatting() { Text = "void ", Color = CodeBlue },
-
 
             new CodeFormatting() { Text = "return ", Color = CodeBlue },
 
@@ -169,6 +189,8 @@ namespace EFToolkit.Extensions
 
             new CodeFormatting() { Text = "NotifyPropertyChanged", Color = CodeYellow },
 
+            new CodeFormatting() { Text = "INotifyPropertyChanged", Color = CodeYellow },
+
             new CodeFormatting() { BeginText = "[", EndText = "]", Color = Colors.White },
 
             new CodeFormatting() { BeginText = "(", EndText = ")", Color = Colors.White },
@@ -177,7 +199,7 @@ namespace EFToolkit.Extensions
 
             new CodeFormatting() { BeginText = "[JsonPropertyName(\"", EndText = "\")]", Color = CodeLightGreen },
 
-            new CodeFormatting() { BeginText = "[Column(\"", EndText = "\")]", Color = CodeLightGreen },
+            //new CodeFormatting() { BeginText = "[Column(\"", EndText = "\")]", Color = CodeLightGreen },
 
         };
                
@@ -193,7 +215,8 @@ namespace EFToolkit.Extensions
             public string? EndText { get; set; } = null;
 
         }
-
-
     }
+
+
+
 }
