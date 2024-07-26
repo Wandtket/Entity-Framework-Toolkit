@@ -17,6 +17,10 @@
                     <Brush x:Key="SubColor">#2C2C2C</Brush>
                     <Brush x:Key="BoxColor">#3b3b3b</Brush>
 
+                    <Brush x:Key="RichTextBlockBackground">#30343f</Brush>
+
+                    <Brush x:Key="HTMLBlockBackground">#303440</Brush>
+
                     <Brush x:Key="TabViewBackground">#00000000</Brush>
 
                     <Brush x:Key="BladeHeader">#2B2B2B</Brush>
@@ -26,7 +30,7 @@
                     <Brush x:Key="DataGridHeaderColor">#000000</Brush>
 
                     <Brush x:Key="DangerColor">#f0290e</Brush>
-
+                    
                     <SolidColorBrush x:Key="HeaderColor" Color="DimGray"></SolidColorBrush>
 
                     <Brush x:Key="Foreground">white</Brush>
@@ -61,6 +65,10 @@
                     <Brush x:Key="SubColor">#EBEBEB</Brush>
                     <Brush x:Key="BoxColor">white</Brush>
 
+                    <Brush x:Key="RichTextBlockBackground">#fdfdfe</Brush>
+
+                    <Brush x:Key="HTMLBlockBackground">#fdfdfe</Brush>
+                                      
                     <Brush x:Key="TabViewBackground">#00000000</Brush>
 
                     <Brush x:Key="BladeHeader">#F2F2F2</Brush>
