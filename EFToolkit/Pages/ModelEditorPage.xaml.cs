@@ -1,21 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using ColorCode.Styling;
+using EFToolkit.Extensions;
+using HtmlAgilityPack;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using EFToolkit.Controls.Dialogs;
-using EFToolkit.Extensions;
+using System;
 using Windows.ApplicationModel.DataTransfer;
-using Microsoft.UI;
+using EFToolkit.Models;
+using EFToolkit.Enums;
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,6 +23,9 @@ namespace EFToolkit.Pages
         public ModelEditorPage()
         {
             this.InitializeComponent();
+
+            Output.DefaultBackgroundColor = (App.Current.Resources["HTMLBlockBackground"] as SolidColorBrush).Color;
+            Output.EnsureCoreWebView2Async();
         }
 
         public void ToggleTeachTips(bool Toggle)
@@ -66,7 +62,33 @@ namespace EFToolkit.Pages
                     NamespaceItem Item = await Toolkit.ModelBuilder(text);
                     string Body = await Toolkit.ConvertModel(Item, Options);
 
-                    await Output.SetText(Body);
+                    string html = "";
+                    string NewBackgroundColor = "";
+                    if (App.Current.RequestedTheme == ApplicationTheme.Dark)
+                    {
+                        var formatter = new HtmlFormatter(StyleDictionary.DefaultDark);
+                        html = formatter.GetHtmlString(Body, ColorCode.Languages.CSharp);
+                        NewBackgroundColor = "#303440";
+                    }
+                    else if (App.Current.RequestedTheme == ApplicationTheme.Light)
+                    {
+                        var formatter = new HtmlFormatter(StyleDictionary.DefaultLight);
+                        html = formatter.GetHtmlString(Body, ColorCode.Languages.CSharp);
+
+                    }
+
+
+                    HtmlDocument Document = new HtmlDocument();
+                    Document.LoadHtml(html);
+
+                    string CurrentStyle = Document.DocumentNode.SelectSingleNode("//div").GetAttributeValue("style", "");
+                    string BackgroundColor = CurrentStyle.Substring(CurrentStyle.IndexOf("background-color:"), 7);
+                    CurrentStyle = CurrentStyle.Replace(BackgroundColor, App.Current.Resources["HTMLBlockBackground"].ToString());
+
+                    Document.DocumentNode.SelectSingleNode("//div").SetAttributeValue("style", CurrentStyle + "tab-size:5;");
+                    
+                    Output.NavigateToString(Document.DocumentNode.OuterHtml);
+
                     await Input.SetText(Input.GetText());
                 }
             }
@@ -74,7 +96,7 @@ namespace EFToolkit.Pages
 
         private void Input_TextChanged(object sender, RoutedEventArgs e)
         {
-
+            
         }
     }
 }

@@ -8,8 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:widgets="using:EFToolkit.Controls.Widgets" 
     xmlns:converters="using:EFToolkit.Converters"
-    xmlns:EFToolkit="using:EFToolkit"
-    xmlns:EF="using:EFToolkit.Pages" 
+    xmlns:EFToolkit="using:EFToolkit.Models"
+    xmlns:EF="using:EFToolkit.Pages"
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 

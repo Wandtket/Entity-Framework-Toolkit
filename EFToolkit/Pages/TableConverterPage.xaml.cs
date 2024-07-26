@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using CommunityToolkit.WinUI;
+using EFToolkit.Controls.Dialogs;
+using EFToolkit.Controls.Widgets;
+using EFToolkit.Extensions;
+using EFToolkit.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -12,23 +10,16 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
-using EFToolkit.Controls.Dialogs;
-using System.Text.RegularExpressions;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
-using EFToolkit.Extensions;
-using static System.Net.Mime.MediaTypeNames;
-using CommunityToolkit.WinUI.Controls;
-using System.Threading.Tasks;
-using EFToolkit.Controls.Widgets;
-using System.Diagnostics;
-using System.ComponentModel.Design;
-using CommunityToolkit.WinUI;
-using System.Data.SqlClient;
 using System.Data;
-using System.Data.Common;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -580,7 +571,7 @@ namespace EFToolkit.Pages
                 var SchemaItem = Toolkit.SchemaItems.Where(x => x.Schema == Schema).FirstOrDefault();
                 if (SchemaItem == null)
                 {
-                    SchemaItem = new EFToolkit.SchemaItem() { Schema = Schema };
+                    SchemaItem = new SchemaItem() { Schema = Schema };
                     Toolkit.SchemaItems.Add(SchemaItem);
                 }
                 Toolkit.SelectedSchemaItems.Clear();

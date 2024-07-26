@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls" 
-    xmlns:EFToolkit="using:EFToolkit" 
+    xmlns:EFToolkit="using:EFToolkit.Models" 
     xmlns:EF="using:EFToolkit.Pages" 
     xmlns:widgets="using:EFToolkit.Controls.Widgets" 
     xmlns:converters="using:EFToolkit.Converters"

@@ -6,7 +6,7 @@
     xmlns:local="using:EFToolkit.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:widgets="using:EFToolkit.Controls.Widgets" 
+    xmlns:widgets="using:EFToolkit.Controls.Widgets" xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d" 
     NavigationCacheMode="Required">
 
@@ -33,7 +33,7 @@
             </Grid.RowDefinitions>
             
             <RichEditBox x:Name="Input" 
-                 AcceptsReturn="True" 
+                 AcceptsReturn="True"
                  IsTextPredictionEnabled="False"
                  IsSpellCheckEnabled="False"
                  Paste="Input_Paste"
@@ -69,19 +69,36 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            
-            <RichEditBox x:Name="Output" 
+
+            <!--<RichEditBox x:Name="Output" 
                 AcceptsReturn="True"   
                 IsTextPredictionEnabled="False"
                 IsSpellCheckEnabled="False"
                 Grid.Row="0" Margin="0,0,0,5">
 
                 <RichEditBox.Header>
-                    <TextBlock Text="Output Properties" FontSize="20"/>
+                    <TextBlock Text="Output Model" FontSize="20"/>
                 </RichEditBox.Header>
 
-            </RichEditBox>
+            </RichEditBox>-->
 
+            <controls:HeaderedContentControl Grid.Row="0" Margin="0,0,0,5"
+                                             HorizontalContentAlignment="Stretch"
+                                             VerticalContentAlignment="Stretch">
+                <controls:HeaderedContentControl.Header>
+                    <TextBlock Text="Output" FontSize="22" Margin="0,0,0,5"/>
+                </controls:HeaderedContentControl.Header>
+
+                <Grid Background="{ThemeResource RichTextBlockBackground}" Padding="10" CornerRadius="5">
+                    <ScrollViewer>
+                        <!--<RichTextBlock x:Name="Output"/>-->
+                        <WebView2 x:Name="Output" DefaultBackgroundColor="Transparent"/>
+                    </ScrollViewer>
+                </Grid>
+            </controls:HeaderedContentControl>
+
+            
+           
 
             <CommandBar Grid.Row="1" DefaultLabelPosition="Right" Margin="0,0,0,5" VerticalAlignment="Bottom" HorizontalAlignment="Left">
                 <CommandBar.PrimaryCommands>
@@ -95,7 +112,7 @@
                         <AppBarButton.Flyout>
                             <MenuFlyout>
                                 <RadioMenuFlyoutItem x:Name="StandardModelOption" Text="Standard" />
-                                <RadioMenuFlyoutItem x:Name="INotifyModelOption" Text="INotifyPropertyChanged" />
+                                <RadioMenuFlyoutItem x:Name="INotifyModelOption" Text="INotifyPropertyChanged" IsChecked="True" />
                                 <RadioMenuFlyoutItem x:Name="MVVModelOption" Text="MVVM" />
                             </MenuFlyout>
                         </AppBarButton.Flyout>

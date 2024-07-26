@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls" 
     xmlns:controls2="using:CommunityToolkit.WinUI.Controls" 
-    xmlns:EFToolkit="using:EFToolkit" 
+    xmlns:EFToolkit="using:EFToolkit.Models" 
     xmlns:widgets="using:EFToolkit.Controls.Widgets"
     mc:Ignorable="d"
     NavigationCacheMode="Required">
