@@ -647,7 +647,7 @@ namespace EFToolkit.Pages
 
                     TableListView.ItemsSource = filteredList.Distinct();
                 }
-                else if (SearchBox.Text == "")
+                else if (TableFilter.Text == "")
                 {
                     TableListView.ItemsSource = TableList;
                 }
