@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="EFToolkit.Controls.Widgets.SchemaBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EFToolkit.Controls.Widgets"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls" 
+    xmlns:EFToolkit="using:EFToolkit"
+    mc:Ignorable="d"
+    x:Name="Box">
+
+    
+    <controls:TokenizingTextBox x:Name="SchemaTextBox" 
+                                Header="Table Structure"
+                                PlaceholderText="Table Name"
+                                TextChanged="SchemaTextBox_TextChanged"
+                                TokenItemAdded="SchemaTextBox_TokenItemAdded"
+                                TokenItemRemoved="SchemaTextBox_TokenItemRemoved"
+                                DisplayMemberPath="Schema"
+                                TextMemberPath="Schema"
+                                Height="59" MaxWidth="300"
+                                ToolTipService.ToolTip="A Schema library will help convert SQL Column Names to Object Names.">
+
+        <controls:TokenizingTextBox.TokenItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                    <Viewbox Width="16">
+                        <FontIcon Glyph="&#xF003;" FontFamily="Segoe MDL2 Assets" />
+                    </Viewbox>
+
+                    <TextBlock Padding="8,0,0,0"
+                        Text="{Binding Schema}" />
+                </StackPanel>
+            </DataTemplate>
+        </controls:TokenizingTextBox.TokenItemTemplate>
+
+        <controls:TokenizingTextBox.QueryIcon>
+            <FontIconSource Glyph="&#xE62F;" FontFamily="Segoe MDL2 Assets" FontSize="18"/>
+        </controls:TokenizingTextBox.QueryIcon>
+        
+    </controls:TokenizingTextBox>
+
+</UserControl>

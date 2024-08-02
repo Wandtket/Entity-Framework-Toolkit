@@ -62,7 +62,7 @@ namespace EFToolkit.Extensions
 
         public static bool IsPortrait()
         {
-            var WindowSize = UI.RootWindow.GetAppWindow().ClientSize;
+            var WindowSize = App.Current.ActiveWindow.GetAppWindow().ClientSize;
 
             if (WindowSize.Height > WindowSize.Width)
             {
@@ -143,7 +143,7 @@ namespace EFToolkit.Extensions
 
         public static double GetScaleAdjustment()
         {
-            IntPtr hWnd = WindowNative.GetWindowHandle(UI.RootWindow);
+            IntPtr hWnd = WindowNative.GetWindowHandle(App.Current.ActiveWindow);
             WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
             DisplayArea displayArea = DisplayArea.GetFromWindowId(wndId, DisplayAreaFallback.Primary);
             IntPtr hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);

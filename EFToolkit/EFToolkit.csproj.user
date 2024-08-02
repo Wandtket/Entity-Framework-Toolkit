@@ -9,21 +9,61 @@
     <AppIconSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</AppIconSource>
     <SplashScreenSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</SplashScreenSource>
     <PackageLogoSource>C:\Users\wandt\source\repos\EFToolkit\EFToolkit\Resources\Images\logo.png</PackageLogoSource>
+    <AppxShowAllApps>False</AppxShowAllApps>
+    <UapAppxPackageBuildMode>StoreAndSideload</UapAppxPackageBuildMode>
+    <AppxBuildConfigurationSelection>x86|x64|arm64</AppxBuildConfigurationSelection>
+    <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
   </PropertyGroup>
   <ItemGroup>
     <None Update="App.xaml">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="Controls\Dialogs\ErrorBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\TableComparisonPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Dialogs\CredentialBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Widgets\RearrangeBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="MainPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Widgets\SearchBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Widgets\SchemaBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Controls\Widgets\AcronymBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <None Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </None>
     <None Update="Package.appxmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="Pages\DatabasePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\DataVisualizerPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\AcronymPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\SelectDescriberPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\ModelFixerPage.xaml">
+    <Page Update="Pages\ModelEditorPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pages\TableConverterPage.xaml">

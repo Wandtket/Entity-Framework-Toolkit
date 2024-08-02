@@ -20,7 +20,7 @@ namespace EFToolkit.Controls.Dialogs
             {
                 //Prepare Dialog
                 var Dialog = new MessageBoxContent();
-                Dialog.XamlRoot = UI.RootWindow.Content.XamlRoot;
+                Dialog.XamlRoot = App.Current.ActiveWindow.Content.XamlRoot;
                 Dialog.Title = Title;
                 Dialog.PrimaryButtonText = buttonText;
                 Dialog.DefaultButton = ContentDialogButton.Primary;

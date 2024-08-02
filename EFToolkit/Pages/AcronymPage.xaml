@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="EFToolkit.Pages.AcronymPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EFToolkit.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:widgets="using:EFToolkit.Controls.Widgets" 
+    xmlns:converters="using:EFToolkit.Converters"
+    xmlns:EFToolkit="using:EFToolkit.Models"
+    xmlns:EF="using:EFToolkit.Pages"
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
+
+    <Page.Resources>
+
+        <TeachingTip x:Name="LibraryTeachTip"
+                    Target="{Binding ElementName=AcronymLibraryList}"
+                    PreferredPlacement="Center"
+                    Title="Acronym Libraries">
+
+            <TeachingTip.Subtitle>
+                <x:String>Separating acronym libraries allow you to quickly swap between 
+                    them if working with multiple databases or different organizations / 
+                    preferences.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="TranslationTeachTip"
+                    Target="{Binding ElementName=AcronymItemList}"
+                    PreferredPlacement="Center"
+                    Title="Translations">
+
+            <TeachingTip.Subtitle>
+                <x:String>When creating a translation you will have several options to choose from,
+                each translation will be seperated based on PascalCase or Snake_Case formatting.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="PastingTeachTip"
+                    Target="{Binding ElementName=PasteTranslationItem}"
+                    PreferredPlacement="Center"
+                    Title="Pasting Translations">
+
+            <TeachingTip.Subtitle>
+                <x:String>When pasting from a table the first column should contain the acronym and the second 
+                    column should contain the translation.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Margin="15,15,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <CommandBar DefaultLabelPosition="Right">
+                <CommandBar.Content>
+                    <TextBlock Text="Libraries:" FontSize="22" Margin="0,10,0,0"/>
+                </CommandBar.Content>
+                <CommandBar.PrimaryCommands>
+                    <AppBarButton x:Name="AddLibrary" Icon="Add" Label="Add Library" Click="AddLibrary_Click"/>
+                    <AppBarButton x:Name="SaveLibrary" Icon="Save" Label="Save" Click="SaveLibrary_Click"/>
+
+                </CommandBar.PrimaryCommands>
+            </CommandBar>
+            
+            <ListView x:Name="AcronymLibraryList" 
+                      SelectionChanged="AcronymLibraryList_SelectionChanged"
+                      Grid.Row="1" CanDragItems="True" AllowDrop="True" CanReorderItems="True">
+                
+                <ListView.DataContext>
+                    <EFToolkit:AcronymLibrary/>
+                </ListView.DataContext>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnSpacing="10">
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Glyph="&#xE94E;" FontFamily="Segoe MDL2 Assets"
+                                ToolTipService.ToolTip="Drag and drop to reorder"
+                                VerticalAlignment="Center"
+                                Grid.Column="0"/>
+
+                            <TextBox PlaceholderText="Library Title" Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1"/>
+                            <Button x:Name="RemoveLibrary" Content="X" Click="RemoveLibrary_Click" Grid.Column="2"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <CommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right" Grid.Row="2">
+                <CommandBar.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="Total:" FontSize="16" Margin="0,12,0,0"/>
+                        <TextBlock x:Name="LibrariesTotal" Text="0" FontSize="16" Margin="0,12,15,0"/>
+                    </StackPanel>
+                </CommandBar.Content>
+            </CommandBar>
+        </Grid>
+
+        <widgets:Separator Grid.Column="1" Orientation="Vertical" Margin="15,0,15,15" Opacity=".2"/>
+
+        <Grid Margin="0,15,15,0" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <CommandBar DefaultLabelPosition="Right">
+                <CommandBar.Content>
+                    <TextBlock Text="Translations:" FontSize="22" Margin="0,10,0,0"/>
+                </CommandBar.Content>
+                
+                <CommandBar.PrimaryCommands>
+                    <AppBarButton x:Name="AddTranslationItem" Icon="Add" Label="Add Translation" 
+                                  IsEnabled="False"
+                                  Click="AddTranslation_Click"/>
+                    <AppBarButton x:Name="PasteTranslationItem" Icon="Paste" Label="Paste from Excel" 
+                                  IsEnabled="False"
+                                  Click="PasteTranslationItem_Click"/>
+                </CommandBar.PrimaryCommands>
+            </CommandBar>
+
+            <AutoSuggestBox x:Name="SearchTranslation"
+                            PlaceholderText="Search Translations" 
+                            TextChanged="SearchTranslation_TextChanged"
+                            IsEnabled="False"
+                            QueryIcon="Find"
+                            Grid.Row="1" Margin="0,0,0,10" />
+
+            <ListView x:Name="AcronymItemList" Grid.Row="2"
+                      CanDragItems="True" AllowDrop="True" CanReorderItems="True"
+                      ItemsSource="{Binding ElementName=AcronymLibraryList, Path=SelectedItem.LibraryItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      SelectionMode="Extended">
+                
+                <ListView.DataContext>
+                    <EFToolkit:AcronymLibrary/>
+                </ListView.DataContext>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Glyph="&#xE94E;" FontFamily="Segoe MDL2 Assets"
+                                ToolTipService.ToolTip="Drag and drop to reorder"
+                                VerticalAlignment="Center"
+                                Grid.Column="0"/>
+
+                            <TextBlock Text="if value" Grid.Column="1" VerticalAlignment="Center"/>
+
+                            <ComboBox x:Name="TranslationOptions" 
+                                      SelectedItem="{Binding Options, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      LostFocus="TranslationOptions_LostFocus"
+                                      Width="120" Grid.Column="2">
+
+                                <ComboBox.Items>
+                                    <x:String>Contains</x:String>
+                                    <x:String>Equals</x:String>
+                                    <x:String>Starts With</x:String>
+                                    <x:String>Ends With</x:String>
+                                </ComboBox.Items>
+                            </ComboBox>
+                            
+                            <TextBox PlaceholderText="Acronym" 
+                                     Text="{Binding Acronym, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                     Grid.Column="3" KeyUp="Acronym_KeyUp" LostFocus="Acronym_LostFocus"/>
+
+                            <TextBlock Text="replace with" Grid.Column="4"  VerticalAlignment="Center"/>
+
+                            <TextBox PlaceholderText="Translation" 
+                                     Text="{Binding Translation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                     Grid.Column="5" KeyUp="Acronym_KeyUp" LostFocus="Translation_LostFocus"/>
+
+                            <Button x:Name="MoveItem" Click="MoveItem_Click" Grid.Column="6" IsTabStop="False"
+                                    Tag="{Binding ElementName=MoveLibrary}"
+                                    ToolTipService.ToolTip="Move Acronym">
+                                <Button.Content>
+                                    <FontIcon Glyph="&#xE751;" FontFamily="Segoe MDL2 Assets" FontSize="17"/>
+                                </Button.Content>
+                               
+                                <Button.Flyout>
+                                    <Flyout x:Name="MoveFlyout">
+                                        <ListView x:Name="MoveLibrary" 
+                                                  DisplayMemberPath="Title" 
+                                                  SelectionMode="Single"
+                                                  SelectionChanged="MoveLibrary_SelectionChanged"
+                                                  Tag="{Binding ElementName=MoveFlyout}"/>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+
+                            <Button x:Name="RemoveItem" Content="X" Click="RemoveItem_Click" Grid.Column="7" IsTabStop="False"
+                                    ToolTipService.ToolTip="Remove Acronym"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <CommandBar HorizontalAlignment="Right" DefaultLabelPosition="Right" Grid.Row="3">
+                <CommandBar.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="Total:" FontSize="16" Margin="0,12,0,0"/>
+                        <TextBlock x:Name="TranslationsTotal" Text="0" FontSize="16" Margin="0,12,15,0"/>
+                    </StackPanel>
+                </CommandBar.Content>
+
+                <CommandBar.PrimaryCommands>
+                    <AppBarButton x:Name="ClearTranslations" Icon="Delete" Label="Clear" Click="ClearTranslations_Click"/>
+                </CommandBar.PrimaryCommands>
+            </CommandBar>
+        </Grid>
+        
+        
+    </Grid>
+</Page>

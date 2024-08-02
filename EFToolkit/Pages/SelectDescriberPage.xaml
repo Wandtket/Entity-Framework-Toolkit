@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="EFToolkit.Pages.SelectDescriberPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EFToolkit.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
+
+    <Page.Resources>
+        <TeachingTip x:Name="SelectStatementInputTeachTip"
+            Target="{Binding ElementName=Input}"
+            PreferredPlacement="Center"
+            Title="Select Statement Input">
+
+            <TeachingTip.Subtitle>
+                <x:String>Take any select statement (that successfully executes) that can
+                    include joins, unions, variables, etc, and the output statement will
+                    allow you to get detailed information about the columns that it contains.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="SelectStatementOutputTeachTip"
+                Target="{Binding ElementName=Output}"
+                PreferredPlacement="Center"
+                Title="Select Statement Output">
+
+            <TeachingTip.Subtitle>
+                <x:String>Copy and paste this output into SQL Server Management Studio or corresponding IDE 
+                and execute, once completed copy the output from the IDE into the Table Converter or Data Visualizer</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="20,10,10,20" Grid.Row="1" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <RichEditBox x:Name="Input" 
+                 AcceptsReturn="True" 
+                 IsTextPredictionEnabled="False"
+                 IsSpellCheckEnabled="False"
+                 Paste="Input_Paste"
+                 TextChanged="Input_TextChanged"
+                 PlaceholderText="Input your custom select statement here...">
+
+                <RichEditBox.Header>
+                    <TextBlock Text="Select Statement" FontSize="20"/>
+                </RichEditBox.Header>
+            </RichEditBox>
+
+        </Grid>
+
+        <Grid Margin="10,10,20,20" Grid.Row="1" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            
+            <RichEditBox x:Name="Output" 
+                 AcceptsReturn="True"   
+                 IsTextPredictionEnabled="False"
+                 IsSpellCheckEnabled="False">
+
+                <RichEditBox.Header>
+                    <TextBlock Text="Output" FontSize="20"/>
+                </RichEditBox.Header>
+
+            </RichEditBox>
+
+        </Grid>
+
+        
+        
+    </Grid>
+</Page>
