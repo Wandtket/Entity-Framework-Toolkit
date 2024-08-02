@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -63,6 +64,14 @@ namespace EFToolkit.Extensions
         {
             if (!string.IsNullOrEmpty(String) && char.IsUpper(String[0]))
                 return String.Length == 1 ? char.ToLower(String[0]).ToString() : char.ToLower(String[0]) + String[1..];
+
+            return String;
+        }
+
+        public static string? FirstCharToUpperCase(this string? String)
+        {
+            if (!string.IsNullOrEmpty(String) && char.IsLower(String[0]))
+                return String.Length == 1 ? char.ToUpper(String[0]).ToString() : char.ToUpper(String[0]) + String[1..];
 
             return String;
         }
@@ -149,5 +158,63 @@ namespace EFToolkit.Extensions
 
             return $"{leadWord}{string.Join(string.Empty, tailWords)}";
         }
+
+
+
+
+        /// <summary>
+        /// Formats a string to be used wtih mailto: URI schema.
+        /// https://www.w3docs.com/snippets/html/how-to-create-mailto-links.html
+        /// </summary>
+        /// <param name="String"></param>
+        /// <returns></returns>
+        public static string FormatForMailTo(this string String)
+        {
+            return String.Replace(" ", "%20").Replace("\n", "%0D%0A").Replace(Environment.NewLine, "%0D%0A").Replace("\"", "");
+        }
+
+
+        /// <summary>
+        /// Determines if a string is a valid email.
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
+        public static bool IsValidEmail(this string Email)
+        {
+            if (Email == null)
+            {
+                return false;
+            }
+
+            if (new EmailAddressAttribute().IsValid(Email))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Determines if a string is a valid URL.
+        /// </summary>
+        /// <param name="URL"></param>
+        /// <returns></returns>
+        public static bool IsValidURL(this string URL)
+        {
+            if (string.IsNullOrEmpty(URL))
+            {
+                return false;
+            }
+            if (!URL.StartsWith(@"http://") && !URL.StartsWith(@"https://"))
+            {
+                return false;
+            }
+            return Uri.IsWellFormedUriString(URL, UriKind.Absolute);
+        }
+
+
+
     }
 }
