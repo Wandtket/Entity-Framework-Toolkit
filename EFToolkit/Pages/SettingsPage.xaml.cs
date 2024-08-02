@@ -205,6 +205,22 @@ namespace EFToolkit.Pages
         private string primarykeystandard = "primary_key_standard";
 
 
+
+        public bool TableComparisonMismatches
+        {
+            get { return localSettings.Values[tablecomparisonmismatches] as bool? ?? true; }
+            set { localSettings.Values[tablecomparisonmismatches] = value; }
+        }
+        private string tablecomparisonmismatches = "table_comparison_mismatches";
+
+        public bool TableComparisonMissing
+        {
+            get { return localSettings.Values[tablecomparisonmissing] as bool? ?? false; }
+            set { localSettings.Values[tablecomparisonmissing] = value; }
+        }
+        private string tablecomparisonmissing = "table_comparison_missing";
+
+
         /// <summary>
         /// Determines if the RichEditBoxes should color code.
         /// </summary>
@@ -262,6 +278,31 @@ namespace EFToolkit.Pages
         }
         private string codeformatoptions = "code_format_options";
         public IList<CodeFormatOptions> CodeFormatOptionsList = Enum.GetValues(typeof(CodeFormatOptions)).Cast<CodeFormatOptions>().ToList();
+
+
+        public string ModelEditorSelectedType
+        {
+
+            get { return localSettings.Values[modeleditorselectedtype] as string ?? "StandardModelOption"; }
+            set { localSettings.Values[modeleditorselectedtype] = value; }
+        }
+        private string modeleditorselectedtype = "model_editor_selected_type";
+
+
+        public bool ModelEditorIncludeJsonAttribute
+        {
+            get { return localSettings.Values[modeleditorincludejsonattribute] as bool? ?? true; }
+            set { localSettings.Values[modeleditorincludejsonattribute] = value; }
+        }
+        private string modeleditorincludejsonattribute = "model_editor_include_json_attribute";
+
+        public bool ModelEditorIncludeColumnAttribute
+        {
+            get { return localSettings.Values[modeleditorincludecolumnattribute] as bool? ?? false; }
+            set { localSettings.Values[modeleditorincludecolumnattribute] = value; }
+        }
+        private string modeleditorincludecolumnattribute = "model_editor_include_column_attribute";
+
 
 
         public bool AcronymCharacterReplacer
