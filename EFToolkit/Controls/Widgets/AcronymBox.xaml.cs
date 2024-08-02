@@ -23,20 +23,24 @@ namespace EFToolkit.Controls.Widgets
         /// </summary>
         public string Text { get { return AcronymTextBox.Text; } }
 
-        public object ItemsSource { get { return AcronymTextBox.ItemsSource; } set { AcronymTextBox.ItemsSource = value; } }
+        public object ItemsSource { get { return AcronymTextBox.ItemsSource; } set { AcronymTextBox.ItemsSource = value; AcronymFlyoutBox.ItemsSource = value; } }
 
-        public object SuggestedItemsSource { get { return AcronymTextBox.SuggestedItemsSource; } set { AcronymTextBox.SuggestedItemsSource = value; } }
+        public object SuggestedItemsSource { get { return AcronymTextBox.SuggestedItemsSource; } set { AcronymTextBox.SuggestedItemsSource = value; AcronymFlyoutBox.SuggestedItemsSource = value; } }
 
 
         private void AcronymTextBox_TokenItemAdded(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args)
         {
             Toolkit.SaveData();
+            TokenItemAdded?.Invoke(sender, args);
         }
 
         private void AcronymTextBox_TokenItemRemoved(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args)
         {
             Toolkit.SaveData();
+            TokenItemRemoved?.Invoke(sender, args);
         }
+
+
 
         public delegate void TextChangedHandler(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args);
         public event TextChangedHandler TextChanged;
@@ -58,5 +62,27 @@ namespace EFToolkit.Controls.Widgets
 
             TextChanged?.Invoke(sender, args);
         }
+
+        private void UserControl_SizeChanged(object sender, Microsoft.UI.Xaml.SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Width <= 300)
+            {
+                CollapseButton.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+                AcronymTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+            }
+            else
+            {
+                CollapseButton.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                AcronymTextBox.Visibility = Microsoft.UI.Xaml.Visibility.Visible;
+            }
+        }
+
+
+        public delegate void TokenItemAddedHandler(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args);
+        public event TokenItemAddedHandler TokenItemAdded;
+
+        public delegate void TokenItemRemovedHandler(CommunityToolkit.WinUI.Controls.TokenizingTextBox sender, object args);
+        public event TokenItemRemovedHandler TokenItemRemoved;
+
     }
 }

@@ -8,33 +8,92 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls" 
     xmlns:EFToolkit="using:EFToolkit"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    SizeChanged="UserControl_SizeChanged">
 
-    <controls:TokenizingTextBox x:Name="AcronymTextBox" 
+    <Grid>
+        <controls:TokenizingTextBox x:Name="AcronymTextBox" 
                             PlaceholderText="Select Acronym Libraries:"
+                            TextChanged="AcronymTextBox_TextChanged"
+                            TokenItemAdded="AcronymTextBox_TokenItemAdded"
+                            TokenItemRemoved="AcronymTextBox_TokenItemRemoved"                           
+                            DisplayMemberPath="Title"
+                            TextMemberPath="Title"
+                            Height="40"
+                            ToolTipService.ToolTip="An acronym library will help convert SQL Column Names to Object Names.">
+
+            <controls:TokenizingTextBox.TokenItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Viewbox Width="16">
+                            <SymbolIcon Symbol="Library" />
+                        </Viewbox>
+
+                        <TextBlock Padding="8,0,0,0"
+                                        Text="{Binding Title}" />
+                    </StackPanel>
+                </DataTemplate>
+            </controls:TokenizingTextBox.TokenItemTemplate>
+
+            <controls:TokenizingTextBox.QueryIcon>
+                <FontIconSource Glyph="&#xE82D;" FontFamily="Segoe MDL2 Assets" FontSize="18"/>
+            </controls:TokenizingTextBox.QueryIcon>
+        </controls:TokenizingTextBox>
+
+        <Button x:Name="CollapseButton" 
+                Background="Transparent" 
+                Visibility="Collapsed"
+                BorderThickness="0" 
+                Margin="0,9,0,0" Height="35">
+            <Button.Content>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <FontIcon Glyph="&#xE736;" FontFamily="Segoe MDL2 Assets" FontSize="15" />
+                    <TextBlock Text="Acronyms" FontSize="12"/>
+                </StackPanel>
+            </Button.Content>
+
+            <Button.Flyout>
+                <Flyout Placement="TopEdgeAlignedRight">
+                    <controls:TokenizingTextBox x:Name="AcronymFlyoutBox" 
+                            PlaceholderText="Select Acronym Libraries:"
+                            Text="{Binding ElementName=AcronymTextBox, Path=Text, UpdateSourceTrigger=PropertyChanged}"
+                            ItemsSource="{Binding ElementName=AcronymTextBox, Path=ItemsSource, UpdateSourceTrigger=PropertyChanged}"
+                            SuggestedItemsSource="{Binding ElementName=AcronymTextBox, Path=ItemsSource, UpdateSourceTrigger=PropertyChanged}"
                             TextChanged="AcronymTextBox_TextChanged"
                             TokenItemAdded="AcronymTextBox_TokenItemAdded"
                             TokenItemRemoved="AcronymTextBox_TokenItemRemoved"
                             DisplayMemberPath="Title"
                             TextMemberPath="Title"
-                            Height="40"
-                            ToolTipService.ToolTip="An acronym library will help convert SQL Column Names to Object Names.">
+                            Height="40" Width="425"
+                            ToolTipService.ToolTip="An acronym library will help convert SQL Column Names to Object Names."
+                            Margin="-5,-10,-5,-5">
+
+                        <controls:TokenizingTextBox.TokenItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Width="16">
+                                        <SymbolIcon Symbol="Library" />
+                                    </Viewbox>
+
+                                    <TextBlock Padding="8,0,0,0"
+                                        Text="{Binding Title}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </controls:TokenizingTextBox.TokenItemTemplate>
+
+                        <controls:TokenizingTextBox.QueryIcon>
+                            <FontIconSource Glyph="&#xE82D;" FontFamily="Segoe MDL2 Assets" FontSize="18"/>
+                        </controls:TokenizingTextBox.QueryIcon>
+                    </controls:TokenizingTextBox>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
         
-        <controls:TokenizingTextBox.TokenItemTemplate>
-            <DataTemplate>
-                <StackPanel Orientation="Horizontal">
-                    <Viewbox Width="16">
-                        <SymbolIcon Symbol="Library" />
-                    </Viewbox>
+                
+    </Grid>
+    
+    
 
-                    <TextBlock Padding="8,0,0,0"
-                   Text="{Binding Title}" />
-                </StackPanel>
-            </DataTemplate>
-        </controls:TokenizingTextBox.TokenItemTemplate>
-
-        <controls:TokenizingTextBox.QueryIcon>
-            <FontIconSource Glyph="&#xE82D;" FontFamily="Segoe MDL2 Assets" FontSize="18"/>
-        </controls:TokenizingTextBox.QueryIcon>
-    </controls:TokenizingTextBox>
+    
+    
 </UserControl>
