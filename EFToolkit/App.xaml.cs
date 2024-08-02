@@ -8,6 +8,7 @@ using System.Linq;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
 using EFToolkit.Enums;
+using EFToolkit.Controls.Dialogs;
 
 
 
@@ -28,7 +29,9 @@ namespace EFToolkit
         public App()
         {
             this.InitializeComponent();
+            this.UnhandledException += App_UnhandledException;
         }
+
 
         public new static App Current => (App)Application.Current;
 
@@ -72,6 +75,10 @@ namespace EFToolkit
             App.Current.ActiveWindow.Maximize();
         }
 
-
+        private async void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            await ErrorBox.Show(e.Exception);
+        }
     }
 }
