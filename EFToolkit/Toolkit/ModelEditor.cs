@@ -10,171 +10,17 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EFToolkit.Models;
 using EFToolkit.Enums;
+using System.Xml.Linq;
+using System.Net.NetworkInformation;
+using System.Collections.ObjectModel;
+using EFToolkit.Controls.Dialogs;
 
 namespace EFToolkit
 {
 
+
     public partial class Toolkit
     {
-
-        public static string ConvertModel(string Input, ModelOptions Options)
-        {
-
-            if (Options == ModelOptions.Standard)
-            {
-                return "";
-            }
-            else if (Options == ModelOptions.MVVM)
-            {
-                return "";
-            }
-            else if (Options == ModelOptions.INotifyPropertyChanged)
-            {
-                if (ModelInputType(Input) == ModelOptions.Standard)
-                {
-                    return ConvertFromStandardModel(Input);
-                }
-                else if (ModelInputType(Input) == ModelOptions.INotifyPropertyChanged)
-                {
-                    return "";
-                }
-                else if (ModelInputType(Input) == ModelOptions.MVVM)
-                {
-                    return "";
-                }
-                else { return ""; }
-            }
-            else { return ""; }
-        }
-
-        private static ModelOptions ModelInputType(string Input)
-        {
-            if (Input.Contains(" { get; set; }")) { return ModelOptions.Standard; }
-            else if (Input.Contains("NotifyPropertyChanged")) { return ModelOptions.INotifyPropertyChanged; }
-            else if (Input.Contains("[ObservableProperty]")) { return ModelOptions.MVVM; }
-            else { return ModelOptions.Standard; }
-        }
-
-        private static string ConvertFromStandardModel(string Input)
-        {
-            int InputCount = Regex.Matches(Input, " { get; set; }").Count();
-
-            for (int i = 0; i < InputCount; i++)
-            {
-                try
-                {
-                    int StartIndex = Input.IndexOf(" { get; set; }");
-
-                    string Subject = Input.Substring(StartIndex - 50, 50);
-
-                    string Type = Input.Substring(StartIndex - 50, 50).TrimStart().TrimEnd();
-                    Type = Type.Replace(Type.Substring(0, Type.IndexOf(" ")), "");
-                    Type = Type.Replace("</summary>", "");
-                    Type = Type.Replace(">", "");
-                    Type = Type.Replace("<", "");
-                    Type = Type.Replace("/", "");
-                    Type = Type.Replace("private", "");
-                    Type = Type.Replace("public", "");
-                    Type = Type.Replace("readonly", "");
-                    Type = Type.TrimEnd().TrimStart();
-
-                    Subject = Subject.Replace(Subject.Substring(0, Subject.LastIndexOf(" ")), "").Trim();
-
-                    string INotifyPropertyString = "\n \t{ \n" +
-                        "\t \t get { return " + Subject.ToLower() + "; } \n" +
-                        "\t \t set { \n " +
-                        "\t \t \t if (" + Subject.ToLower() + " != value) \n" +
-                        "\t \t \t { \n" +
-                        "\t \t \t \t" + Subject.ToLower() + " = value; \n" +
-                        "\t \t \t \t NotifyPropertyChanged(\"" + Subject.Trim() + "\"); \n" +
-                        "\t \t \t } \n" +
-                        "\t \t } \n" +
-                        "\t} \n" +
-                        "\tprivate " + Type.ToLower() + "; \n \n";
-
-                    Input = Input.Replace(Subject + " { get; set; }", Subject + INotifyPropertyString);
-
-                    Input = Input.Replace("public " + Type, "\tpublic " + Type);
-
-                    //Input = Input.Replace("/// ", "\t///");
-
-
-                    //MessageBox.Show(Type);
-                }
-                catch { }
-            }
-
-            string Event = "\t" + "public event PropertyChangedEventHandler PropertyChanged;" + "\n" +
-                                "\t" + "public void NotifyPropertyChanged(string propertyName)" + "\n" +
-                                "\t" + "{" + "\n" +
-                                "\t" + "\t" + "PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));" + "\n" +
-                                "\t" + "}" +
-
-                                "\n" + "}";
-
-            Input = Input.Replace("    }\r\n}", "    }\r" + Event);
-
-            return Input;
-        }
-
-
-
-        public static async Task<string> BaseModel(string Input, ModelOptions Options)
-        {
-            ClassItem Model = new ClassItem();
-
-            string? Line = null;
-            StringReader stringReader = new StringReader(Input);
-            int numLines = Input.Split('\n').Length;
-
-            for (int i = 0; i < numLines; i++)
-            {
-                Line = await stringReader.ReadLineAsync();
-
-                if (Options == ModelOptions.Standard)
-                {
-                    //Fix Class
-                    if (Line.Contains(" class ") && Line.Contains("INotifyPropertyChanged"))
-                    {
-                        Input = Input.Replace(Line, Line.Replace("INotifyPropertyChanged", ""));
-                    }
-                    else if (Line.Contains(" class ") && Line.Contains(" : ObservableObject"))
-                    {
-                        Input = Input.Replace(Line, Line.Replace(" : ObservableObject", ""));
-                    }
-                }
-                else if (Options == ModelOptions.INotifyPropertyChanged)
-                {
-                    //Fix Class
-                    if (Line.Contains(" class ") && !Line.Contains(":"))
-                    {
-                        Input = Input.Replace(Line, Line.TrimEnd() + " : INotifyPropertyChanged");
-                    }
-                    else if (Line.Contains(" class ") && Line.Contains(":") && !Line.Contains("ObservableObject"))
-                    {
-                        Input = Input.Replace(Line, Line.TrimEnd() + ", INotifyPropertyChanged");
-                    }
-                    else if (Line.Contains(" partial class ") && Line.Contains(" : ObservableObject"))
-                    {
-                        string NewLine = Line;
-                        NewLine = NewLine.Replace(" : ObservableObject", " : INotifyPropertyChanged");
-                        NewLine = NewLine.Replace("partial ", "");
-                        Input = Input.Replace(Line, NewLine);
-                    }
-
-
-
-                }
-                else if (Options == ModelOptions.MVVM)
-                {
-
-                }
-            }
-
-
-            return Input;
-        }
-
 
         public static async Task<NamespaceItem> ModelBuilder(string Input)
         {
@@ -229,7 +75,7 @@ namespace EFToolkit
                     if (ClassName.Contains(" ")) { ClassName = ClassName.Substring(0, ClassName.IndexOf(" ")); }
                     else { ClassName = ClassName.Substring(0, ClassName.Length); }
 
-                    List<string> Interfaces = new();
+                    ObservableCollection<string> Interfaces = new();
                     if (TempLine.Contains(" : ") && !TempLine.Contains(","))
                     {
                         string Interface = TempLine.Remove(0, TempLine.IndexOf(" : ") + 3);
@@ -240,7 +86,7 @@ namespace EFToolkit
                     {
                         string Interface = TempLine.Remove(0, TempLine.IndexOf(" : ") + 3);
                         string[] EachInterface = Interface.Split(", ");
-                        Interfaces = new List<string>(EachInterface);
+                        Interfaces = new ObservableCollection<string>(EachInterface);
                     }
 
                     ClassItem NewClassItem = new()
@@ -284,6 +130,10 @@ namespace EFToolkit
                     if (Name.Contains(";")) { Name = Name.Substring(0, Name.IndexOf(";")); }
                     else { Name = Name.Substring(0, Name.Length); }
 
+                    //Skip if item is duplicate
+                    if (CurrentClassItem.PropertyItems.Where(x => x.OriginalName.ToLower() == Name.ToLower()).FirstOrDefault() != null)
+                    { continue; }
+
                     //GetSet
                     if (Line.Contains("{ get") && Line.Contains("}"))
                     {
@@ -305,16 +155,17 @@ namespace EFToolkit
                     }
 
                     subItem.Summary = CurrentSummary;
-                    subItem.Attributes = new List<string>(CurrentAttributes);
+                    subItem.Attributes = new ObservableCollection<string>(CurrentAttributes);
                     subItem.Type = Type;
-                    subItem.Name = Name;
+                    subItem.OriginalName = Name;
+                    subItem.NewName = Toolkit.ConvertSQLColumnName(Name);
 
                     if (!Name.Contains("(") && !Type.Contains("("))
-                    {
+                    {                      
                         CurrentPropertyItem = subItem;
                         CurrentClassItem.PropertyItems.Add(subItem);
                         CurrentSummary = "";
-                        CurrentAttributes.Clear();
+                        CurrentAttributes.Clear();                   
 
                         continue;
                     }
@@ -328,12 +179,38 @@ namespace EFToolkit
                 CurrentClassItem = null;
             }
 
+            //Remove Duplicates
             Debug.WriteLine(JsonSerializer.Serialize<NamespaceItem>(NameSpace));
             return NameSpace;
         }
 
-        public static async Task<string> ConvertModel(NamespaceItem Model, ModelOptions Options)
+        public static async Task<string> ConvertModel(NamespaceItem Model, ModelOptions Options, List<ModelAttributes> SelectedAttributes)
         {
+            if (Options == ModelOptions.Standard)
+            {
+                var System = Model.Usings.Where(x => x.Contains("System.ComponentModel")).FirstOrDefault();
+                if (System != null) { Model.Usings.Remove(System); }
+
+                var Mvvm = Model.Usings.Where(x => x.Contains("Mvvm.ComponentModel")).FirstOrDefault();
+                if (Mvvm != null) { Model.Usings.Remove(Mvvm); }
+            }
+            if (Options == ModelOptions.INotifyPropertyChanged)
+            {
+                var Using = Model.Usings.Where(x => x.Contains("System.ComponentModel")).FirstOrDefault();
+                if (Using == null) { Model.Usings.Add("using System.ComponentModel;"); }
+
+                var Mvvm = Model.Usings.Where(x => x.Contains("Mvvm.ComponentModel")).FirstOrDefault();
+                if (Mvvm != null) { Model.Usings.Remove(Mvvm); }
+            }
+            else if (Options == ModelOptions.MVVM)
+            {
+                var Using = Model.Usings.Where(x => x.Contains("Mvvm.ComponentModel")).FirstOrDefault();
+                if (Using == null) { Model.Usings.Add("using CommunityToolkit.Mvvm.ComponentModel;"); }
+
+                var System = Model.Usings.Where(x => x.Contains("System.ComponentModel")).FirstOrDefault();
+                if (System != null) { Model.Usings.Remove(System); }
+            }
+
             string Usings = string.Join("\n", Model.Usings) + "\n\n";
 
             string Namespace = "";
@@ -354,10 +231,21 @@ namespace EFToolkit
 
                     if (INotify != null) { Class.Interfaces.Remove(INotify); }
                     if (Observable != null) { Class.Interfaces.Remove(Observable); }
+                }
 
-                    if (Options == ModelOptions.INotifyPropertyChanged) { Class.Interfaces.Add("INotifyPropertyChanged"); }
-                    else if (Options == ModelOptions.MVVM) { Class.Interfaces.Insert(0, "ObservableObject"); }
+                if (Options == ModelOptions.INotifyPropertyChanged) { Class.Interfaces.Add("INotifyPropertyChanged"); }
+                else if (Options == ModelOptions.MVVM) 
+                {                    
+                    Class.Interfaces.Clear(); 
+                    Class.Interfaces.Insert(0, "ObservableObject");
+                    if (!Class.Access.Contains("partial"))
+                    {
+                        Class.Access = Class.Access + "partial ";
+                    }
+                }
 
+                if (Class.Interfaces.Count > 0)
+                {
                     Interfaces = " : " + string.Join(", ", Class.Interfaces);
                 }
 
@@ -365,37 +253,66 @@ namespace EFToolkit
 
                 foreach (var Property in Class.PropertyItems)
                 {
-                    string Attributes = string.Join("\n\t\t", Property.Attributes);
+                    string Summary = "";
+                    if (!string.IsNullOrEmpty(Property.Summary))
+                    {
+                        Summary = "\t\t/// <summary>\n" +
+                            $"\t\t/// {Property.Summary}\n" +
+                            "\t\t/// </summary>\n";
+                    }
+
+                    Property.NewName = Property.NewName.FirstCharToUpperCase();
+                    Property.Attributes = AddOrRemoveAttributes(Property, SelectedAttributes);
 
                     if (Options == ModelOptions.Standard)
                     {
-                        Properties = Properties + "\t\t" + Attributes + "\n\t\t" +
-                            Property.Access + " " + Property.Type + " " + Property.Name + " " + Property.GetSet + Property.Value + "\n\n";
+                        var ObservableProperty = Property.Attributes.Where(x => x.Contains("[ObservableProperty]")).FirstOrDefault();
+                        if (ObservableProperty != null) { Property.Attributes.Remove(ObservableProperty); }
+
+                        string Attributes = string.Join("\n\t\t", Property.Attributes);
+
+                        if (string.IsNullOrEmpty(Property.GetSet)) { Property.GetSet = "{ get; set; }"; }
+
+                        Properties = Properties + Summary + "\t\t" + Attributes + "\n\t\t" +
+                            Property.Access + " " + Property.Type + " " + Property.NewName + " " + Property.GetSet + Property.Value + "\n\n";
                     }
                     else if (Options == ModelOptions.INotifyPropertyChanged)
                     {
+                        var ObservableProperty = Property.Attributes.Where(x => x.Contains("[ObservableProperty]")).FirstOrDefault();
+                        if (ObservableProperty != null) { Property.Attributes.Remove(ObservableProperty); }
+
+                        string Attributes = string.Join("\n\t\t", Property.Attributes);
+
                         string Value = "";
                         if (!string.IsNullOrEmpty(Property.Value)) { Value = $" = {Property.Value}"; }
 
                         string INotifyPropertyString = "\n\t\t{\n" +
-                                "\t\t\tget { return " + Property.Name.ToLower() + "; } \n" +
+                                "\t\t\tget { return " + Property.NewName.ToLower() + "; } \n" +
                                 "\t\t\tset { \n " +
-                                "\t\t\t\tif (" + Property.Name.ToLower() + " != value) \n" +
+                                "\t\t\t\tif (" + Property.NewName.ToLower() + " != value) \n" +
                                 "\t\t\t\t{ \n" +
-                                "\t\t\t\t\t" + Property.Name.ToLower() + " = value; \n" +
-                                "\t\t\t\t\tNotifyPropertyChanged(\"" + Property.Name.Trim() + "\"); \n" +
+                                "\t\t\t\t\t" + Property.NewName.ToLower() + " = value; \n" +
+                                "\t\t\t\t\tNotifyPropertyChanged(\"" + Property.NewName.Trim() + "\"); \n" +
                                 "\t\t\t\t} \n" +
                                 "\t\t\t} \n" +
                                 "\t\t}\n" +
-                                "\t\tprivate " + Property.Type + " " + Property.Name.ToLower() + Value + "; \n \n";
+                                "\t\tprivate " + Property.Type + " " + Property.NewName.ToLower() + Value + "; \n \n";
 
-                        Properties = Properties + "\t\t" + Attributes + "\n\t\t" +
-                            Property.Access + " " + Property.Type + " " + Property.Name + INotifyPropertyString;
+                        Properties = Properties + Summary + "\t\t" + Attributes + "\n\t\t" +
+                            Property.Access + " " + Property.Type + " " + Property.NewName + INotifyPropertyString;
 
                     }
                     else if (Options == ModelOptions.MVVM)
                     {
-                        Properties = Properties + Attributes + "\n" + "private " + Property.Type + " " + Property.Name.FirstCharToLowerCase() + "; ";
+                        string Attributes = string.Join("\n\t\t", Property.Attributes);
+
+                        string Value = "";
+                        if (!string.IsNullOrEmpty(Property.Value)) { Value = $" = {Property.Value}"; }
+
+                        if (!Attributes.Contains("ObservableProperty")) { Attributes = Attributes + "\n\t\t" + "[ObservableProperty]"; }
+
+                        Properties = Properties + Summary + "\t\t" + Attributes + "\n\t\t" + 
+                            "private " + Property.Type + " " + Property.NewName.FirstCharToLowerCase() + Value + "; \n \n";
                     }
                 }
             }
@@ -418,6 +335,43 @@ namespace EFToolkit
 
 
             return Body;
+        }
+
+        public static ObservableCollection<string> AddOrRemoveAttributes(PropertyItem Item, List<ModelAttributes> SelectedAttributes)
+        {
+            //Column
+            if (SelectedAttributes.Contains(ModelAttributes.Column))
+            {
+                var Value = Item.Attributes.Where(x => x.StartsWith("[Column")).FirstOrDefault();
+                if (Value == null) { Item.Attributes.Add("[Column(\"" + Item.OriginalName + "\")]"); }
+            }
+            else
+            {
+                var Value = Item.Attributes.Where(x => x.StartsWith("[Column")).FirstOrDefault();
+                if (Value != null) { Item.Attributes.Remove(Value); }
+            }
+
+            //JsonPropertyValue
+            if (SelectedAttributes.Contains(ModelAttributes.JsonPropertyName))
+            {
+                var Value = Item.Attributes.Where(x => x.StartsWith("[JsonPropertyName")).FirstOrDefault();
+                if (Value == null)
+                {
+                    Item.Attributes.Add("[JsonPropertyName(\"" + Item.NewName + "\")]");
+                }
+                else
+                {
+                    Item.Attributes.Remove(Value);
+                    Item.Attributes.Insert(0, "[JsonPropertyName(\"" + Item.NewName + "\")]");
+                }
+            }
+            else
+            {
+                var Value = Item.Attributes.Where(x => x.StartsWith("[JsonPropertyName")).FirstOrDefault();
+                if (Value != null) { Item.Attributes.Remove(Value); }
+            }
+
+            return Item.Attributes;
         }
 
 

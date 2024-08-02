@@ -102,7 +102,7 @@ namespace EFToolkit
 
         }
 
-        public static async void SaveData()
+        public static async Task SaveData()
         {
             StorageFolder Folder = ApplicationData.Current.LocalFolder;
 

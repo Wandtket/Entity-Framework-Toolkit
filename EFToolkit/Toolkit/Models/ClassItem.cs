@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,9 @@ namespace EFToolkit.Models
         private string name = string.Empty;
 
         [ObservableProperty]
-        private List<string> interfaces = new();
+        private ObservableCollection<string> interfaces = new();
 
         [ObservableProperty]
-        private List<PropertyItem> propertyItems = new();
+        private ObservableCollection<PropertyItem> propertyItems = new();
     }
 }

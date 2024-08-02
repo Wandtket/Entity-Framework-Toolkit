@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace EFToolkit.Models
         private string summary = string.Empty;
 
         [ObservableProperty]
-        private List<string> attributes = new();
+        private ObservableCollection<string> attributes = new();
 
         [ObservableProperty]
         private string access = string.Empty;
@@ -29,7 +30,10 @@ namespace EFToolkit.Models
         private string type = string.Empty;
 
         [ObservableProperty]
-        private string name = string.Empty;
+        private string originalName = string.Empty;
+
+        [ObservableProperty]
+        private string newName = string.Empty;
 
         [ObservableProperty]
         private string getSet = string.Empty;
