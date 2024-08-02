@@ -37,7 +37,7 @@ namespace EFToolkit.Extensions
 
             if (Settings.Current.CodeColoring == true)
             {
-                await text.ColorCode();
+                try { await text.ColorCode(); } catch { }
             }
             else
             {
@@ -49,7 +49,7 @@ namespace EFToolkit.Extensions
 
         public static string GetText(this RichEditBox text)
         {
-            text.Document.GetText(Microsoft.UI.Text.TextGetOptions.None, out string value);
+            text.Document.GetText(Microsoft.UI.Text.TextGetOptions.UseCrlf, out string value);
             return value;
         }
 
