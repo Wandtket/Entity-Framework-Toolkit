@@ -74,7 +74,7 @@ namespace EFToolkit
             {
                 PageFrame.Navigate(typeof(TableConverterPage));
             }
-            else if (args.SelectedItem == TableConverterViewItem)
+            else if (args.SelectedItem == TableComparisonViewItem)
             {
                 PageFrame.Navigate(typeof(TableComparisonPage));
             }

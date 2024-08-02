@@ -47,6 +47,7 @@
 
                     <Image Source="\Resources\Images\logo.png" Height="30" VerticalAlignment="Top" 
                            Margin="5,0,5,5" Grid.Column="0"/>
+                    
                     <TextBlock FontSize="22" Text="{Binding ElementName=MainView, Path=SelectedItem.Content}" 
                                Margin="10,-1,0,0" Grid.Column="1"  />
 
@@ -72,13 +73,14 @@
             </NavigationView.Header>
 
             <NavigationView.MenuItems>
+                
                 <NavigationViewItemHeader Content="Tools"/>
 
-                <NavigationViewItem x:Name="TableConverterViewItem" Content="Table Converter"
+                <NavigationViewItem x:Name="TableConverterViewItem" Content="SQL Converter"
                     ToolTipService.ToolTip="Convert SQL Columns to C# Models">
 
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF156;" FontFamily="Segoe MDL2 Assets"/>
+                        <FontIcon Glyph="&#xE9A1;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
@@ -97,6 +99,7 @@
                         <FontIcon Glyph="&#xE762;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                
                 <NavigationViewItem x:Name="DataVisualizerViewItem" Content="Data Visualizer"
                     ToolTipService.ToolTip="Create a custom SQL Select Statement from a Query">
 
@@ -104,6 +107,7 @@
                         <FontIcon Glyph="&#xE773;" FontFamily="Segoe MDL2 Assets"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                
                 <NavigationViewItem x:Name="ModelEditorViewItem" Content="Model Editor"
                     ToolTipService.ToolTip="Convert a model to and from Standard, INotifyPropertyChanged, and MVVM"
                     Visibility="Visible">
