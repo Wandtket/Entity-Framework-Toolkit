@@ -25,6 +25,68 @@
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:InvertedBoolToVisibilityConverter x:Key="InvertedBoolToVisibilityConverter"/>
 
+        <TeachingTip x:Name="SelectPrimaryTeachTip"
+                    Target="{Binding ElementName=SelectPrimaryButton}"
+                    PreferredPlacement="BottomLeft"
+                    Title="Primary Database">
+
+            <TeachingTip.Subtitle>
+                <x:String>The left most database that you wish to remain consistent across servers.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="SelectSecondaryTeachTip"
+            Target="{Binding ElementName=SelectSecondaryButton}"
+            PreferredPlacement="Bottom"
+            Title="Secondary Database">
+
+            <TeachingTip.Subtitle>
+                <x:String>The database you wish to compare to the primary databse.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="QueryTablesTeachTip"
+            Target="{Binding ElementName=QueryTablesButton}"
+            PreferredPlacement="BottomRight"
+            Title="Query Tables">
+
+            <TeachingTip.Subtitle>
+                <x:String>This will populate the tables list and will allow you to select the tables that have inconsistencies and view their differences.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="TableListViewTeachTip"
+            Target="{Binding ElementName=TableListView}"
+            PreferredPlacement="Center"
+            Title="Table List">
+
+            <TeachingTip.Subtitle>
+                <x:String>By default, all tables that are mismatched will show up here, to view all tables use the filter button.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="PrimaryDesignerGridTeachTip"
+                 Target="{Binding ElementName=PrimaryDesignerGrid}"
+                 PreferredPlacement="Center"
+                 Title="Primary Design Grid">
+
+            <TeachingTip.Subtitle>
+                <x:String>Under no circumstances will this report modify existing structures, it is meant to highlight 
+                    mismatching tables, any items that do not appear in the secondary grid will be highlighted green here.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+
+        <TeachingTip x:Name="SecondaryDesignerGridTeachTip"
+                 Target="{Binding ElementName=SecondaryDesignerGrid}"
+                 PreferredPlacement="Center"
+                 Title="Secondary Design Grid">
+
+            <TeachingTip.Subtitle>
+                <x:String>Under no circumstances will this report modify existing structures, it is meant to highlight 
+                        mismatching tables, any items that do not appear in the primary grid will be highlighted green here.</x:String>
+            </TeachingTip.Subtitle>
+        </TeachingTip>
+        
     </Page.Resources>
     
     
@@ -72,6 +134,15 @@
             </CommandBar.Content>
 
             <CommandBar.PrimaryCommands>
+
+                <AppBarButton x:Name="ExportFile" Label="Export to File" Icon="OpenFile" Click="ExportFile_Click" />
+
+                <AppBarButton Label="Open in Excel" Click="OpenInExcel_Click">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE17C;" FontFamily="Segoe MDL2 Assets"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+
                 <AppBarButton Label="Reset" Click="Reset_Click">
                     <AppBarButton.Icon>
                         <FontIcon Glyph="&#xEBC4;" FontFamily="Segoe MDL2 Assets"/>
@@ -228,7 +299,7 @@
                             BorderThickness="2"                            
                             FrozenColumnCount="3"
                             Grid.ColumnSpan="2"
-                            MaxWidth="900">
+                            LoadingRow="PrimaryDesignerGrid_LoadingRow">
 
                     <controls:DataGrid.DataContext>
                         <EFToolkit:DesignItem/>
@@ -279,7 +350,7 @@
 
                 <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Left" Grid.Row="1">
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton Label="Copy to clipboard" Icon="Copy"/>
+                        <AppBarButton Label="Copy to clipboard" Icon="Copy" Click="CopyPrimary_Click" Visibility="Collapsed"/>
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
 
@@ -331,7 +402,7 @@
                             BorderThickness="2"                         
                             FrozenColumnCount="3"
                             Grid.ColumnSpan="2"
-                            MaxWidth="900">
+                            LoadingRow="SecondaryDesignerGrid_LoadingRow">
 
                     <controls:DataGrid.DataContext>
                         <EFToolkit:DesignItem/>
@@ -382,7 +453,7 @@
 
                 <CommandBar DefaultLabelPosition="Right" HorizontalAlignment="Left" Grid.Row="1">
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton Label="Copy to clipboard" Icon="Copy"/>
+                        <AppBarButton Label="Copy to clipboard" Icon="Copy" Click="CopySecondary_Click" Visibility="Collapsed"/>
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
 
