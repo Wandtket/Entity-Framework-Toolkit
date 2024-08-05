@@ -1,28 +1,18 @@
+using CommunityToolkit.WinUI.UI.Controls;
 using EFToolkit.Controls.Dialogs;
+using EFToolkit.Extensions;
 using EFToolkit.Models;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using EFToolkit.Controls.Widgets;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CommunityToolkit.WinUI.UI.Controls;
-using System.Diagnostics;
-using System.Text.Json;
-using Windows.System.Profile;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using Microsoft.UI;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -46,7 +36,12 @@ namespace EFToolkit.Pages
 
         public void ToggleTeachTips(bool Toggle)
         {
-            //TableNameTeachTip.IsOpen = Toggle;
+            SelectPrimaryTeachTip.IsOpen = Toggle;
+            SelectSecondaryTeachTip.IsOpen = Toggle;
+            QueryTablesTeachTip.IsOpen = Toggle;
+            TableListViewTeachTip.IsOpen = Toggle;
+            PrimaryDesignerGridTeachTip.IsOpen = Toggle;
+            SecondaryDesignerGridTeachTip.IsOpen = Toggle;
         }
 
 
@@ -91,12 +86,13 @@ namespace EFToolkit.Pages
 
         private async void PrimaryMenuItem_Click(object sender, RoutedEventArgs e)
         {
-
             if (PrimaryTableMenu.Items.Count == 0)
             {
                 await MessageBox.Show("You must add at least two databases in the database library to use this feature.", "NOTICE");
                 return;
             }
+
+            Reset();
 
             RadioMenuFlyoutItem menu = (RadioMenuFlyoutItem)sender;
             DatabaseItem DatabaseItem = (DatabaseItem)menu.Tag;
@@ -116,6 +112,8 @@ namespace EFToolkit.Pages
         {
             RadioMenuFlyoutItem menu = (RadioMenuFlyoutItem)sender;
             DatabaseItem DatabaseItem = (DatabaseItem)menu.Tag;
+
+            Reset();
 
             SelectedSecondaryDatabase = DatabaseItem;
 
@@ -463,6 +461,74 @@ namespace EFToolkit.Pages
 
             PrimaryDesignItemCount.Text = "0";
             SecondaryDesignItemCount.Text = "0";
+        }
+
+        private async void OpenInExcel_Click(object sender, RoutedEventArgs e)
+        {
+            if (TableListView.ItemsSource != null)
+            {
+                IEnumerable<TableItem> DataSource = (IEnumerable<TableItem>)TableListView.ItemsSource;
+                await DataSource.OpenInExcel(SelectedPrimaryDatabase.Title + " - " + SelectedSecondaryDatabase.Title + " Comparison");
+            }
+        }
+
+        private async void ExportFile_Click(object sender, RoutedEventArgs e)
+        {
+            if (TableListView.ItemsSource != null)
+            {
+                IEnumerable<TableItem> DataSource = (IEnumerable<TableItem>)TableListView.ItemsSource;
+                await DataSource.ExportToExcel(SelectedPrimaryDatabase.Title + " - " + SelectedSecondaryDatabase.Title + " Comparison");
+            }
+        }
+
+        private async void PrimaryDesignerGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            var Item = e.Row.DataContext as DesignItem;
+
+            var Table = TableListView.SelectedItem as TableItem;
+
+            var Comparison = Table.SecondaryDesignItems
+                .Where(x => x.ColumnName == Item.ColumnName &&
+                        x.DataType == Item.DataType &&
+                        x.DefaultValue == Item.DefaultValue &&
+                        x.IsPrimaryKey == Item.IsPrimaryKey &&
+                        x.AllowNulls == Item.AllowNulls)
+                .FirstOrDefault();
+
+            if (Comparison == null)
+            {
+                e.Row.Background = new SolidColorBrush(Colors.Green.IsThemeAware());
+            }
+        }
+
+        private void SecondaryDesignerGrid_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            var Item = e.Row.DataContext as DesignItem;
+
+            var Table = TableListView.SelectedItem as TableItem;
+
+            var Comparison = Table.PrimaryDesignItems
+                .Where(x => x.ColumnName == Item.ColumnName &&
+                        x.DataType == Item.DataType &&
+                        x.DefaultValue == Item.DefaultValue &&
+                        x.IsPrimaryKey == Item.IsPrimaryKey &&
+                        x.AllowNulls == Item.AllowNulls)
+                .FirstOrDefault();
+
+            if (Comparison == null)
+            {
+                e.Row.Background = new SolidColorBrush(Colors.Green.IsThemeAware());
+            }
+        }
+
+        private void CopyPrimary_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CopySecondary_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
     }
