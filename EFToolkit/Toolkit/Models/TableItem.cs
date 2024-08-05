@@ -5,15 +5,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CsvHelper.Configuration;
+using CsvHelper.Configuration.Attributes;
+
 
 namespace EFToolkit.Models
 {
+
     public partial class TableItem : ObservableObject
     {
 
         [ObservableProperty]
         private string primaryTable = "";
 
+        [Ignore]
         public string PrimaryTableShort 
         { 
             get 
@@ -32,6 +37,7 @@ namespace EFToolkit.Models
         [ObservableProperty]
         private string secondaryTable = "";
 
+        [Ignore]
         public string SecondaryTableShort
         {
             get
@@ -46,11 +52,14 @@ namespace EFToolkit.Models
 
         [ObservableProperty]
         private ObservableCollection<DesignItem> secondaryDesignItems = new();
+   
 
         [ObservableProperty]
+        [Ignore]
         private bool existsInPrimary = true;
 
         [ObservableProperty]
+        [Ignore]
         private bool existsInSecondary = false;
 
         [ObservableProperty]
